@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Original 30-Pack — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --gradient-water: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 180, 180, 0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated water background */
+        .water-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--flow-dark);
+        }
+
+        .water-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 180, 180, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+            animation: floatBg 20s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.9);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            color: var(--flow-white);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+        }
+
+        .cart-btn .cart-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-btn:hover .cart-text {
+            max-width: 50px;
+            opacity: 1;
+        }
+
+        .cart-count {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .profile-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+            width: auto;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            gap: 0.4rem;
+        }
+
+        .profile-btn .profile-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .profile-btn:hover .profile-text {
+            max-width: 60px;
+            opacity: 1;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 7rem 8% 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .breadcrumb span {
+            color: var(--flow-gray);
+        }
+
+        .breadcrumb .current {
+            color: var(--flow-white);
+        }
+
+        /* Product Container */
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            padding: 2rem 8% 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Product Gallery */
+        .product-gallery {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .main-image {
+            background: linear-gradient(145deg, rgba(13, 26, 45, 0.8) 0%, rgba(13, 26, 45, 0.4) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 24px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .main-image::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: var(--flow-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+
+        .sachet-visual-large {
+            width: 180px;
+            height: 260px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 18px 18px 28px 28px;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 2;
+            transition: transform 0.4s ease;
+        }
+
+        .sachet-visual-large:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .sachet-visual-large::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.2) 0%, transparent 100%);
+            border-radius: 18px 18px 0 0;
+        }
+
+        .sachet-content-large {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .sachet-logo-large {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sachet-flavor-large {
+            font-size: 0.7rem;
+            color: var(--flow-cyan);
+            margin-top: 0.35rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .thumbnail-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .thumbnail {
+            flex: 1;
+            height: 100px;
+            background: linear-gradient(145deg, rgba(13, 26, 45, 0.8) 0%, rgba(13, 26, 45, 0.4) 100%);
+            border: 2px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--flow-cyan);
+        }
+
+        .thumbnail.active {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .thumbnail .mini-sachet {
+            width: 35px;
+            height: 50px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 6px 6px 10px 10px;
+        }
+
+        .thumbnail-icon {
+            color: var(--flow-gray);
+            transition: color 0.3s ease;
+        }
+
+        .thumbnail:hover .thumbnail-icon {
+            color: var(--flow-cyan);
+        }
+
+        /* Product Info */
+        .product-info {
+            padding-top: 1rem;
+        }
+
+        .product-category {
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .product-title span {
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .star {
+            color: #FFD700;
+        }
+
+        .star.empty {
+            color: var(--flow-gray);
+            opacity: 0.3;
+        }
+
+        .rating-text {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        .rating-text strong {
+            color: var(--flow-white);
+        }
+
+        .product-price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-current {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .price-original {
+            font-size: 1.25rem;
+            color: var(--flow-gray);
+            text-decoration: line-through;
+        }
+
+        .price-discount {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .product-description {
+            color: var(--flow-gray);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        /* Product Highlights */
+        .product-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .highlight-item {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-item:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .highlight-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            color: var(--flow-cyan);
+        }
+
+        .highlight-item h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .highlight-item p {
+            color: var(--flow-gray);
+            font-size: 0.8rem;
+        }
+
+        /* Variant Selector */
+        .variant-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .variant-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .variant-label span {
+            color: var(--flow-gray);
+            font-weight: 400;
+        }
+
+        .variant-options {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .variant-option {
+            padding: 0.85rem 1.5rem;
+            background: rgba(13, 26, 45, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .variant-option:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .variant-option.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .variant-option .variant-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .variant-option .variant-price {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .variant-option.selected .variant-price {
+            color: var(--flow-cyan);
+        }
+
+        /* Flavour Selector */
+        .flavour-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .flavour-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flavour-label span {
+            color: var(--flow-gray);
+            font-weight: 400;
+        }
+
+        .flavour-options {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .flavour-option {
+            padding: 0.75rem 1.25rem;
+            background: rgba(13, 26, 45, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .flavour-option:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .flavour-option.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .flavour-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .flavour-dot.original {
+            background: linear-gradient(135deg, #00D4FF, #00B4B4);
+        }
+
+        .flavour-dot.citrus {
+            background: linear-gradient(135deg, #FFD93D, #FF9500);
+        }
+
+        .flavour-dot.berry {
+            background: linear-gradient(135deg, #FF6B9D, #C44569);
+        }
+
+        .flavour-dot.tropical {
+            background: linear-gradient(135deg, #00D9A5, #00B386);
+        }
+
+        .flavour-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Quantity & Add to Cart */
+        .purchase-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.5rem;
+        }
+
+        .qty-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-white);
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .qty-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .add-to-cart-btn {
+            flex: 1;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .buy-now-btn {
+            width: 100%;
+            background: transparent;
+            border: 2px solid var(--flow-cyan);
+            color: var(--flow-cyan);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .buy-now-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(13, 26, 45, 0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .trust-badge svg {
+            color: var(--flow-cyan);
+        }
+
+        /* Product Details Tabs */
+        .product-details-section {
+            padding: 4rem 8%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--flow-white);
+        }
+
+        .tab-btn.active {
+            color: var(--flow-cyan);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--flow-cyan);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ingredients Tab */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ingredient-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .ingredient-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ingredient-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-cyan);
+        }
+
+        .ingredient-card h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .ingredient-card p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Nutrition Tab */
+        .nutrition-table {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            max-width: 500px;
+        }
+
+        .nutrition-header {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 1rem 1.5rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+        }
+
+        .nutrition-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .nutrition-row:last-child {
+            border-bottom: none;
+        }
+
+        .nutrition-row span:first-child {
+            color: var(--flow-gray);
+        }
+
+        .nutrition-row span:last-child {
+            font-weight: 600;
+        }
+
+        /* Reviews Tab */
+        .reviews-summary {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .rating-big {
+            text-align: center;
+        }
+
+        .rating-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .rating-big .stars {
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+
+        .rating-big p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        .rating-bars {
+            flex: 1;
+        }
+
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-bar-label {
+            width: 60px;
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+        }
+
+        .rating-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            background: var(--flow-cyan);
+            border-radius: 10px;
+        }
+
+        .rating-bar-count {
+            width: 40px;
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+            text-align: right;
+        }
+
+        .review-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .review-content {
+            color: var(--flow-gray);
+            line-height: 1.7;
+        }
+
+        .verified-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: #10B981;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Related Products */
+        .related-section {
+            padding: 4rem 8%;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--flow-gray);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .related-card {
+            background: linear-gradient(145deg, rgba(13, 26, 45, 0.8) 0%, rgba(13, 26, 45, 0.4) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .related-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
+        }
+
+        .related-image {
+            height: 200px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .related-image .mini-sachet {
+            width: 70px;
+            height: 100px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 10px 10px 16px 16px;
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .related-info {
+            padding: 1.25rem;
+        }
+
+        .related-info h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info .price {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-dark);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .product-gallery {
+                position: static;
+            }
+
+            .main-image {
+                height: 400px;
+            }
+
+            .product-highlights {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .breadcrumb {
+                padding: 6rem 5% 1rem;
+            }
+
+            .product-container {
+                padding: 1rem 5% 4rem;
+            }
+
+            .product-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .purchase-section {
+                flex-direction: column;
+            }
+
+            .trust-badges {
+                flex-wrap: wrap;
+            }
+
+            .reviews-summary {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-image {
+                height: 320px;
+            }
+
+            .sachet-visual-large {
+                width: 140px;
+                height: 200px;
+            }
+
+            .thumbnail-row {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .thumbnail {
+                height: 70px;
+            }
+
+            .tabs-header {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .tab-btn {
+                white-space: nowrap;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="flow-shop-2.html" class="active">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#benefits">Benefits</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+        <div class="nav-right">
+            <button class="cart-btn" id="cartToggle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <span class="cart-text">Cart</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <a href="profile.html" class="profile-btn" aria-label="Profile">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="profile-text">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="flow-shop-2.html">Shop</a>
+        <span>/</span>
+        <span class="current">Flow Original 30-Pack</span>
+    </div>
+
+    <!-- Product Container -->
+    <div class="product-container">
+        <!-- Product Gallery -->
+        <div class="product-gallery">
+            <div class="main-image">
+                <span class="product-badge">Bestseller</span>
+                <div class="sachet-visual-large">
+                    <div class="sachet-content-large">
+                        <div class="sachet-logo-large">Flow</div>
+                        <div class="sachet-flavor-large">Original</div>
+                    </div>
+                </div>
+            </div>
+            <div class="thumbnail-row">
+                <div class="thumbnail active">
+                    <div class="mini-sachet"></div>
+                </div>
+                <div class="thumbnail">
+                    <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                </div>
+                <div class="thumbnail">
+                    <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                    </svg>
+                </div>
+                <div class="thumbnail">
+                    <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <div class="product-category">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                </svg>
+                Multi-Pack
+            </div>
+            <h1 class="product-title">Flow Original <span>30-Pack</span></h1>
+            
+            <div class="product-rating">
+                <div class="stars">
+                    <svg class="star" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <span class="rating-text"><strong>4.9</strong> (234 reviews)</span>
+            </div>
+
+            <div class="product-price-section">
+                <span class="price-current">₹1,499</span>
+                <span class="price-original">₹1,799</span>
+                <span class="price-discount">Save 17%</span>
+            </div>
+
+            <p class="product-description">
+                Our signature electrolyte blend with the perfect balance of sodium, potassium, and magnesium. 
+                Zero sugar, zero calories, maximum hydration. Each sachet mixes instantly with 500ml of water 
+                for clean, refreshing hydration that powers your day.
+            </p>
+
+            <!-- Product Highlights -->
+            <div class="product-highlights">
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
+                    <h4>Zero Sugar</h4>
+                    <p>Clean hydration</p>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h4>Instant Energy</h4>
+                    <p>Fast absorption</p>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h4>Lab Tested</h4>
+                    <p>Quality assured</p>
+                </div>
+            </div>
+
+            <!-- Flavour Selector -->
+            <div class="flavour-section">
+                <div class="flavour-label">Flavour: <span>Original</span></div>
+                <div class="flavour-options">
+                    <div class="flavour-option selected" data-flavour="original">
+                        <div class="flavour-dot original"></div>
+                        <span class="flavour-name">Original</span>
+                    </div>
+                    <div class="flavour-option" data-flavour="citrus">
+                        <div class="flavour-dot citrus"></div>
+                        <span class="flavour-name">Citrus Burst</span>
+                    </div>
+                    <div class="flavour-option" data-flavour="berry">
+                        <div class="flavour-dot berry"></div>
+                        <span class="flavour-name">Berry Blast</span>
+                    </div>
+                    <div class="flavour-option" data-flavour="tropical">
+                        <div class="flavour-dot tropical"></div>
+                        <span class="flavour-name">Tropical Surge</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pack Size Selector -->
+            <div class="variant-section">
+                <div class="variant-label">Pack Size: <span>30 Sachets</span></div>
+                <div class="variant-options">
+                    <div class="variant-option">
+                        <div class="variant-name">10-Pack</div>
+                        <div class="variant-price">₹549</div>
+                    </div>
+                    <div class="variant-option selected">
+                        <div class="variant-name">30-Pack</div>
+                        <div class="variant-price">₹1,499</div>
+                    </div>
+                    <div class="variant-option">
+                        <div class="variant-name">60-Pack</div>
+                        <div class="variant-price">₹2,699</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantity & Add to Cart -->
+            <div class="purchase-section">
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="updateQty(-1)">−</button>
+                    <span class="qty-value" id="qtyValue">1</span>
+                    <button class="qty-btn" onclick="updateQty(1)">+</button>
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    Add to Cart — ₹1,499
+                </button>
+            </div>
+
+            <button class="buy-now-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                Buy Now
+            </button>
+
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                    Free shipping over ₹999
+                </div>
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    Secure checkout
+                </div>
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    Made with love in India
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="product-details-section">
+        <div class="tabs-header">
+            <button class="tab-btn active" data-tab="ingredients">Ingredients</button>
+            <button class="tab-btn" data-tab="nutrition">Nutrition</button>
+            <button class="tab-btn" data-tab="how-to-use">How to Use</button>
+            <button class="tab-btn" data-tab="reviews">Reviews</button>
+        </div>
+
+        <!-- Ingredients Tab -->
+        <div class="tab-content active" id="ingredients">
+            <div class="ingredients-grid">
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <h4>Sodium</h4>
+                    </div>
+                    <p>Essential for fluid balance and nerve function. Helps replace electrolytes lost through sweat during physical activity.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <h4>Potassium</h4>
+                    </div>
+                    <p>Supports muscle function and heart health. Works with sodium to maintain proper cellular fluid balance.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <h4>Magnesium</h4>
+                    </div>
+                    <p>Crucial for energy production and muscle recovery. Helps reduce fatigue and supports over 300 enzymatic reactions.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h4>Zinc</h4>
+                    </div>
+                    <p>Supports immune function and protein synthesis. Essential for athletic recovery and overall wellness.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutrition Tab -->
+        <div class="tab-content" id="nutrition">
+            <div class="nutrition-table">
+                <div class="nutrition-header">Nutrition Facts (per sachet)</div>
+                <div class="nutrition-row">
+                    <span>Calories</span>
+                    <span>0</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Total Carbohydrates</span>
+                    <span>0g</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Sugars</span>
+                    <span>0g</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Sodium</span>
+                    <span>1000mg</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Potassium</span>
+                    <span>200mg</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Magnesium</span>
+                    <span>60mg</span>
+                </div>
+                <div class="nutrition-row">
+                    <span>Zinc</span>
+                    <span>3mg</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Use Tab -->
+        <div class="tab-content" id="how-to-use">
+            <div class="ingredients-grid">
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon" style="background: rgba(0, 212, 255, 0.2);">
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;">1</span>
+                        </div>
+                        <h4>Pour</h4>
+                    </div>
+                    <p>Empty one Flow sachet into 500ml (16oz) of cold water. Works with still or sparkling water.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon" style="background: rgba(0, 212, 255, 0.2);">
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;">2</span>
+                        </div>
+                        <h4>Mix</h4>
+                    </div>
+                    <p>Stir or shake until fully dissolved. Our formula mixes instantly with no gritty texture.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon" style="background: rgba(0, 212, 255, 0.2);">
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;">3</span>
+                        </div>
+                        <h4>Drink</h4>
+                    </div>
+                    <p>Enjoy anytime — morning, pre/post workout, or whenever you need optimal hydration.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div class="tab-content" id="reviews">
+            <div class="reviews-summary">
+                <div class="rating-big">
+                    <div class="rating-number">4.9</div>
+                    <div class="stars">
+                        <svg class="star" width="20" height="20" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg class="star" width="20" height="20" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg class="star" width="20" height="20" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg class="star" width="20" height="20" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg class="star" width="20" height="20" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p>234 reviews</p>
+                </div>
+                <div class="rating-bars">
+                    <div class="rating-bar-row">
+                        <span class="rating-bar-label">5 stars</span>
+                        <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 85%"></div></div>
+                        <span class="rating-bar-count">199</span>
+                    </div>
+                    <div class="rating-bar-row">
+                        <span class="rating-bar-label">4 stars</span>
+                        <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 10%"></div></div>
+                        <span class="rating-bar-count">23</span>
+                    </div>
+                    <div class="rating-bar-row">
+                        <span class="rating-bar-label">3 stars</span>
+                        <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 3%"></div></div>
+                        <span class="rating-bar-count">8</span>
+                    </div>
+                    <div class="rating-bar-row">
+                        <span class="rating-bar-label">2 stars</span>
+                        <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 1%"></div></div>
+                        <span class="rating-bar-count">3</span>
+                    </div>
+                    <div class="rating-bar-row">
+                        <span class="rating-bar-label">1 star</span>
+                        <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 0.5%"></div></div>
+                        <span class="rating-bar-count">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Cards -->
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">RK</div>
+                        <div>
+                            <div class="reviewer-name">Rahul Kumar</div>
+                            <div class="review-date">January 15, 2026</div>
+                        </div>
+                    </div>
+                    <div class="verified-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        Verified Purchase
+                    </div>
+                </div>
+                <div class="stars" style="margin-bottom: 0.75rem;">
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <p class="review-content">Game changer for my morning runs! I've tried many electrolyte drinks but Flow is the cleanest tasting one. No artificial sweetness, just pure hydration. The 30-pack is great value.</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">PS</div>
+                        <div>
+                            <div class="reviewer-name">Priya Sharma</div>
+                            <div class="review-date">January 10, 2026</div>
+                        </div>
+                    </div>
+                    <div class="verified-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        Verified Purchase
+                    </div>
+                </div>
+                <div class="stars" style="margin-bottom: 0.75rem;">
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <p class="review-content">Finally an electrolyte powder that doesn't have any sugar or weird aftertaste. I use it during my yoga sessions and it keeps me energized without any crash. Highly recommend!</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">AM</div>
+                        <div>
+                            <div class="reviewer-name">Arjun Mehta</div>
+                            <div class="review-date">January 5, 2026</div>
+                        </div>
+                    </div>
+                    <div class="verified-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        Verified Purchase
+                    </div>
+                </div>
+                <div class="stars" style="margin-bottom: 0.75rem;">
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="star empty" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <p class="review-content">Great product for cycling. I've noticed better endurance on longer rides. Only wish they had more flavor options. The original is good but variety would be nice. Still, 4 stars because it works!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <section class="related-section">
+        <div class="section-header">
+            <h2>You May Also Like</h2>
+            <p>Complete your hydration routine</p>
+        </div>
+        <div class="related-grid" id="relatedProductsGrid">
+            <!-- Dynamically loaded from server -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Premium electrolyte hydration engineered for optimal performance. Zero sugar, maximum results.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">All Products</a></li>
+                    <li><a href="#">Bundles</a></li>
+                    <li><a href="#">Subscribe & Save</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Science</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">contact@flowhydration.in</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Track Order</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <span id="toastMessage">Added to cart!</span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--flow-dark); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 3px solid rgba(0, 212, 255, 0.1); border-top-color: var(--flow-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+            <p style="color: var(--flow-gray);">Loading product...</p>
+        </div>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+    <script>
+        // Get product slug from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const productSlug = urlParams.get('product') || 'flow-original';
+        const preselectedFlavour = urlParams.get('flavour');
+        const preselectedPack = urlParams.get('pack');
+        
+        // Product state
+        let product = null;
+        let allProducts = []; // All products for flavour switching
+        let selectedFlavour = null;
+        let selectedPackSize = null;
+        let quantity = 1;
+
+        // DOM Elements
+        const qtyValue = document.getElementById('qtyValue');
+
+        // Load product on page load
+        document.addEventListener('DOMContentLoaded', loadProduct);
+
+        async function loadProduct() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            try {
+                // Load all products for flavour switching
+                const allResponse = await fetch('/api/products');
+                const allData = await allResponse.json();
+                if (allData.success && allData.data) {
+                    allProducts = allData.data; // Keep all products including bundles
+                }
+                
+                const response = await fetch(`/api/products/${productSlug}`);
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    product = data.data;
+                    renderProduct();
+                } else {
+                    showError('Product not found');
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showError('Failed to load product');
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            document.querySelector('.product-container').innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="1.5" style="margin-bottom: 1rem;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <h2 style="margin-bottom: 0.5rem;">${message}</h2>
+                    <p style="color: var(--flow-gray); margin-bottom: 1.5rem;">The product you're looking for might have been removed or is temporarily unavailable.</p>
+                    <a href="flow-shop-2.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--flow-cyan); color: var(--flow-dark); border-radius: 50px; text-decoration: none; font-weight: 600;">
+                        Browse Products
+                    </a>
+                </div>
+            `;
+        }
+
+        function renderProduct() {
+            // Update page title
+            document.title = `${product.name} — Flow Hydration`;
+            
+            const isBundle = product.category === 'bundle';
+            
+            // Set defaults or use URL params
+            if (isBundle) {
+                // For bundles, don't set a single selected flavour
+                selectedFlavour = null;
+            } else {
+                selectedFlavour = product.flavours.find(f => f.slug === preselectedFlavour) || product.flavours[0];
+            }
+            selectedPackSize = product.packSizes.find(p => p.size === parseInt(preselectedPack)) || product.packSizes[0];
+            
+            // Update breadcrumb
+            document.querySelector('.breadcrumb .current').textContent = product.name;
+            
+            // Update product category
+            document.querySelector('.product-category').innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                </svg>
+                ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+            `;
+            
+            // Update product title
+            document.querySelector('.product-title').innerHTML = `${product.name} <span>${selectedPackSize.label}</span>`;
+            
+            // Update rating
+            renderRating();
+            
+            // Update price
+            updatePriceDisplay();
+            
+            // Update description - use full description from API
+            document.querySelector('.product-description').textContent = product.description || product.shortDescription;
+            
+            // Render flavour selector
+            renderFlavourSelector();
+            
+            // Render pack size selector
+            renderPackSizeSelector();
+            
+            // Update visual elements
+            updateVisuals();
+            
+            // Update add to cart button
+            updateAddToCartPrice();
+            
+            // Render tabs content
+            renderIngredients();
+            renderNutrition();
+            renderHowToUse();
+            renderReviews();
+            
+            // Update badge
+            if (product.badges && product.badges.length > 0) {
+                document.querySelector('.product-badge').textContent = product.badges[0].text;
+                document.querySelector('.product-badge').style.display = 'block';
+            } else {
+                document.querySelector('.product-badge').style.display = 'none';
+            }
+            
+            // Render related products
+            renderRelatedProducts();
+        }
+
+        function renderRating() {
+            const rating = product.rating?.average || 0;
+            const count = product.rating?.count || 0;
+            const starsHtml = Array(5).fill(0).map((_, i) => {
+                const filled = i < Math.round(rating);
+                return `<svg class="star${filled ? '' : ' empty'}" width="18" height="18" viewBox="0 0 24 24" fill="${filled ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            }).join('');
+            
+            document.querySelector('.product-rating').innerHTML = `
+                <div class="stars">${starsHtml}</div>
+                <span class="rating-text"><strong>${rating.toFixed(1)}</strong> (${count} reviews)</span>
+            `;
+        }
+
+        function updatePriceDisplay() {
+            const priceSection = document.querySelector('.product-price-section');
+            const isBundle = product.category === 'bundle';
+            
+            // If bundle in individual mode, get price from single-flavour product
+            let priceData = selectedPackSize;
+            if (isBundle && bundleViewMode === 'individual') {
+                const singleFlavourProduct = allProducts.find(p => p.category !== 'bundle');
+                if (singleFlavourProduct && singleFlavourProduct.packSizes) {
+                    const matchingPack = singleFlavourProduct.packSizes.find(p => p.size === selectedPackSize?.size);
+                    if (matchingPack) {
+                        priceData = matchingPack;
+                    }
+                }
+            }
+            
+            const discount = priceData?.comparePrice 
+                ? Math.round((1 - priceData.price / priceData.comparePrice) * 100)
+                : 0;
+            
+            priceSection.innerHTML = `
+                <span class="price-current">₹${priceData?.price?.toLocaleString() || '0'}</span>
+                ${priceData?.comparePrice ? `<span class="price-original">₹${priceData.comparePrice.toLocaleString()}</span>` : ''}
+                ${discount > 0 ? `<span class="price-discount">Save ${discount}%</span>` : ''}
+            `;
+        }
+
+        // Track bundle view mode: 'all' or 'individual'
+        let bundleViewMode = 'all';
+        
+        function renderFlavourSelector() {
+            const isBundle = product.category === 'bundle';
+            
+            // Check if variety pack exists in allProducts
+            const varietyPack = allProducts.find(p => p.category === 'bundle');
+            const hasVarietyPack = !!varietyPack;
+            
+            // Determine current mode based on product type
+            const isAllMode = isBundle && bundleViewMode === 'all';
+            
+            // Toggle switch HTML - show on all products if variety pack exists
+            const toggleHtml = hasVarietyPack ? `
+                <div class="bundle-toggle" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <button class="toggle-btn${isBundle && bundleViewMode === 'all' ? ' active' : ''}" onclick="setBundleMode('all')" style="
+                        padding: 0.5rem 1rem;
+                        border-radius: 50px;
+                        border: 1px solid ${isBundle && bundleViewMode === 'all' ? 'var(--flow-cyan)' : 'rgba(0, 212, 255, 0.2)'};
+                        background: ${isBundle && bundleViewMode === 'all' ? 'rgba(0, 212, 255, 0.15)' : 'rgba(13, 26, 45, 0.6)'};
+                        color: ${isBundle && bundleViewMode === 'all' ? 'var(--flow-cyan)' : 'var(--flow-gray)'};
+                        font-family: 'Outfit', sans-serif;
+                        font-size: 0.85rem;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">All 3 Flavours</button>
+                    <button class="toggle-btn${!isBundle || bundleViewMode === 'individual' ? ' active' : ''}" onclick="setBundleMode('individual')" style="
+                        padding: 0.5rem 1rem;
+                        border-radius: 50px;
+                        border: 1px solid ${!isBundle || bundleViewMode === 'individual' ? 'var(--flow-cyan)' : 'rgba(0, 212, 255, 0.2)'};
+                        background: ${!isBundle || bundleViewMode === 'individual' ? 'rgba(0, 212, 255, 0.15)' : 'rgba(13, 26, 45, 0.6)'};
+                        color: ${!isBundle || bundleViewMode === 'individual' ? 'var(--flow-cyan)' : 'var(--flow-gray)'};
+                        font-family: 'Outfit', sans-serif;
+                        font-size: 0.85rem;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">Single Flavour</button>
+                </div>
+            ` : '';
+            
+            // For bundles in "all" mode, show all flavours as included
+            if (isBundle && bundleViewMode === 'all' && product.flavours && product.flavours.length > 1) {
+                const flavoursHtml = product.flavours.map(f => `
+                    <div class="flavour-option selected" style="cursor: default;">
+                        <div class="flavour-dot" style="background: ${f.color};"></div>
+                        <span class="flavour-name">${f.name}</span>
+                        <span style="font-size: 0.75rem; color: var(--flow-gray); margin-left: 0.25rem;">×10</span>
+                    </div>
+                `).join('');
+                
+                document.querySelector('.flavour-section').innerHTML = `
+                    ${toggleHtml}
+                    <div class="flavour-label">Includes: <span>All 3 Flavours (10 each)</span></div>
+                    <div class="flavour-options">${flavoursHtml}</div>
+                `;
+                return;
+            }
+            
+            // Get all unique flavours from all products (excluding bundles)
+            const allFlavours = getAllFlavoursFromProducts();
+            
+            if (allFlavours.length === 0 && !hasVarietyPack) {
+                document.querySelector('.flavour-section').style.display = 'none';
+                return;
+            }
+            
+            // Find current flavour
+            const currentFlavourSlug = selectedFlavour?.slug || product.flavours[0]?.slug;
+            
+            const flavoursHtml = allFlavours.map(f => `
+                <div class="flavour-option${f.slug === currentFlavourSlug ? ' selected' : ''}" 
+                     data-flavour="${f.slug}" 
+                     data-product="${f.productSlug}"
+                     onclick="selectFlavour('${f.slug}', '${f.productSlug}')">
+                    <div class="flavour-dot" style="background: ${f.color};"></div>
+                    <span class="flavour-name">${f.name}</span>
+                </div>
+            `).join('');
+            
+            document.querySelector('.flavour-section').innerHTML = `
+                ${toggleHtml}
+                <div class="flavour-label">Flavour: <span>${selectedFlavour?.name || product.flavours[0]?.name || 'Original'}</span></div>
+                <div class="flavour-options">${flavoursHtml}</div>
+            `;
+        }
+        
+        function getAllFlavoursFromProducts() {
+            const allFlavours = [];
+            allProducts.forEach(p => {
+                // Exclude bundles from flavour switching
+                if (p.category === 'bundle') return;
+                if (p.flavours && p.flavours.length > 0) {
+                    p.flavours.forEach(f => {
+                        if (!allFlavours.find(af => af.slug === f.slug)) {
+                            allFlavours.push({
+                                ...f,
+                                productSlug: p.slug
+                            });
+                        }
+                    });
+                }
+            });
+            return allFlavours;
+        }
+        
+        function setBundleMode(mode) {
+            bundleViewMode = mode;
+            
+            if (mode === 'all') {
+                // Navigate to variety pack
+                const varietyPack = allProducts.find(p => p.category === 'bundle');
+                if (varietyPack && product.slug !== varietyPack.slug) {
+                    window.location.href = `product.html?product=${varietyPack.slug}`;
+                    return;
+                }
+            } else if (mode === 'individual') {
+                // If currently on variety pack, need to select a default single-flavour product
+                if (product.category === 'bundle') {
+                    // Find the first single-flavour product
+                    const singleFlavourProduct = allProducts.find(p => p.category !== 'bundle');
+                    if (singleFlavourProduct) {
+                        // Set selectedFlavour to first flavour of that product
+                        selectedFlavour = singleFlavourProduct.flavours[0];
+                        // Update pack sizes to show single-flavour options
+                        // We'll use the single product's pack sizes for display
+                    }
+                }
+            }
+            
+            renderFlavourSelector();
+            renderPackSizeSelector();
+            updateVisuals();
+            updatePriceDisplay();
+            updateAddToCartPrice();
+        }
+
+        function renderPackSizeSelector() {
+            const isBundle = product.category === 'bundle';
+            
+            // If bundle in individual mode, show pack sizes from a single-flavour product
+            let packSizesToShow = product.packSizes;
+            let packSizeSource = product;
+            
+            if (isBundle && bundleViewMode === 'individual') {
+                // Find a single-flavour product to get its pack sizes
+                const singleFlavourProduct = allProducts.find(p => p.category !== 'bundle');
+                if (singleFlavourProduct && singleFlavourProduct.packSizes) {
+                    packSizesToShow = singleFlavourProduct.packSizes;
+                    packSizeSource = singleFlavourProduct;
+                    // Update selectedPackSize to match
+                    if (!selectedPackSize || !packSizesToShow.find(p => p.size === selectedPackSize.size)) {
+                        selectedPackSize = packSizesToShow[0];
+                    }
+                }
+            }
+            
+            if (!packSizesToShow || packSizesToShow.length === 0) {
+                document.querySelector('.variant-section').style.display = 'none';
+                return;
+            }
+            
+            document.querySelector('.variant-section').style.display = 'block';
+            
+            const sizesHtml = packSizesToShow.map((p, i) => `
+                <div class="variant-option${p.size === selectedPackSize?.size ? ' selected' : ''}" data-size="${p.size}" onclick="selectPackSize(${p.size})">
+                    <div class="variant-name">${p.label}</div>
+                    <div class="variant-price">₹${p.price.toLocaleString()}</div>
+                </div>
+            `).join('');
+            
+            document.querySelector('.variant-section').innerHTML = `
+                <div class="variant-label">Pack Size: <span>${selectedPackSize?.size || packSizesToShow[0].size} Sachets</span></div>
+                <div class="variant-options">${sizesHtml}</div>
+            `;
+        }
+
+        function selectFlavour(slug, targetProductSlug) {
+            // If selecting a different product's flavour, switch products
+            if (targetProductSlug && targetProductSlug !== product.slug) {
+                const newProduct = allProducts.find(p => p.slug === targetProductSlug);
+                if (newProduct) {
+                    product = newProduct;
+                    selectedFlavour = newProduct.flavours.find(f => f.slug === slug) || newProduct.flavours[0];
+                    
+                    // Keep same pack size if available, otherwise use first
+                    const samePackSize = newProduct.packSizes.find(p => p.size === selectedPackSize?.size);
+                    selectedPackSize = samePackSize || newProduct.packSizes[0];
+                    
+                    // Update URL without reload
+                    const newUrl = `product.html?product=${targetProductSlug}&flavour=${slug}&pack=${selectedPackSize.size}`;
+                    window.history.pushState({}, '', newUrl);
+                    
+                    // Re-render the page with new product
+                    renderProduct();
+                    return;
+                }
+            }
+            
+            // Same product, just update flavour
+            selectedFlavour = product.flavours.find(f => f.slug === slug);
+            
+            document.querySelectorAll('.flavour-option').forEach(o => o.classList.remove('selected'));
+            document.querySelector(`.flavour-option[data-flavour="${slug}"]`)?.classList.add('selected');
+            document.querySelector('.flavour-label span').textContent = selectedFlavour?.name || 'Original';
+            
+            updateVisuals();
+        }
+
+        function selectPackSize(size) {
+            const isBundle = product.category === 'bundle';
+            
+            // If bundle in individual mode, get pack size from single-flavour product
+            if (isBundle && bundleViewMode === 'individual') {
+                const singleFlavourProduct = allProducts.find(p => p.category !== 'bundle');
+                if (singleFlavourProduct && singleFlavourProduct.packSizes) {
+                    selectedPackSize = singleFlavourProduct.packSizes.find(p => p.size === size) || singleFlavourProduct.packSizes[0];
+                }
+            } else {
+                selectedPackSize = product.packSizes.find(p => p.size === size);
+            }
+            
+            document.querySelectorAll('.variant-option').forEach(o => o.classList.remove('selected'));
+            document.querySelector(`.variant-option[data-size="${size}"]`)?.classList.add('selected');
+            document.querySelector('.variant-label span').textContent = `${size} Sachets`;
+            document.querySelector('.product-title').innerHTML = `${product.name} <span>${selectedPackSize?.label || 'Pack of ' + size}</span>`;
+            
+            // Update URL without reload
+            const newUrl = `product.html?product=${product.slug}&flavour=${selectedFlavour?.slug || ''}&pack=${size}`;
+            window.history.pushState({}, '', newUrl);
+            
+            updatePriceDisplay();
+            updateAddToCartPrice();
+        }
+
+        function updateVisuals() {
+            const mainImage = document.querySelector('.main-image');
+            const isBundle = product.category === 'bundle';
+            
+            // For bundles in 'all' mode, show all 3 sachets
+            if (isBundle && product.flavours && product.flavours.length > 1 && bundleViewMode === 'all') {
+                // Show multiple sachets for variety pack
+                const sachetsHtml = product.flavours.map(f => `
+                    <div class="sachet-visual-large" style="width: 120px; height: 180px; box-shadow: 0 20px 50px ${hexToRgba(f.color, 0.3)};">
+                        <div class="sachet-content-large">
+                            <div class="sachet-logo-large" style="font-size: 1.2rem;">Flow</div>
+                            <div class="sachet-flavor-large" style="font-size: 0.55rem;">${f.name}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Update main image to show all 3 sachets
+                const badge = mainImage.querySelector('.product-badge');
+                
+                // Clear and rebuild
+                mainImage.innerHTML = '';
+                if (badge) mainImage.appendChild(badge.cloneNode(true));
+                
+                const sachetsContainer = document.createElement('div');
+                sachetsContainer.style.cssText = 'display: flex; gap: 12px; align-items: flex-end;';
+                sachetsContainer.innerHTML = sachetsHtml;
+                mainImage.appendChild(sachetsContainer);
+                
+                // Re-add badge
+                if (product.badges && product.badges.length > 0) {
+                    const newBadge = document.createElement('span');
+                    newBadge.className = 'product-badge';
+                    newBadge.textContent = product.badges[0].text;
+                    mainImage.insertBefore(newBadge, mainImage.firstChild);
+                }
+            } else {
+                // Single flavour view - show single sachet (for regular products OR bundle in individual mode)
+                const displayFlavour = selectedFlavour || (product.flavours && product.flavours[0]);
+                
+                // Rebuild single sachet view
+                const sachetsContainer = mainImage.querySelector('div[style*="display: flex"]');
+                if (sachetsContainer || !mainImage.querySelector('.sachet-visual-large')) {
+                    // Rebuild single sachet
+                    mainImage.innerHTML = `
+                        ${product.badges && product.badges.length > 0 ? `<span class="product-badge">${product.badges[0].text}</span>` : '<span class="product-badge" style="display:none;"></span>'}
+                        <div class="sachet-visual-large">
+                            <div class="sachet-content-large">
+                                <div class="sachet-logo-large">Flow</div>
+                                <div class="sachet-flavor-large">${displayFlavour?.name || 'Original'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const sachetFlavor = document.querySelector('.sachet-flavor-large');
+                const sachetVisual = document.querySelector('.sachet-visual-large');
+                
+                if (sachetFlavor && displayFlavour) {
+                    sachetFlavor.textContent = displayFlavour.name;
+                }
+                
+                // Update main image glow color based on flavour
+                if (sachetVisual && displayFlavour?.color) {
+                    sachetVisual.style.boxShadow = `0 30px 80px ${hexToRgba(displayFlavour.color, 0.4)}`;
+                }
+            }
+        }
+        
+        function hexToRgba(hex, alpha) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (result) {
+                return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`;
+            }
+            return `rgba(0, 212, 255, ${alpha})`;
+        }
+
+        function updateQty(change) {
+            quantity = Math.max(1, quantity + change);
+            qtyValue.textContent = quantity;
+            updateAddToCartPrice();
+        }
+
+        function updateAddToCartPrice() {
+            const isBundle = product.category === 'bundle';
+            let packSize = selectedPackSize;
+            
+            // If viewing bundle in individual mode, get pack size from a single-flavour product
+            if (isBundle && bundleViewMode === 'individual' && selectedPackSize) {
+                const singleProduct = allProducts.find(p => p.category !== 'bundle');
+                if (singleProduct) {
+                    packSize = singleProduct.packSizes.find(p => p.size === selectedPackSize.size) || singleProduct.packSizes[0];
+                }
+            }
+            
+            const total = (packSize?.price || 0) * quantity;
+            document.querySelector('.add-to-cart-btn').innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                Add to Cart — ₹${total.toLocaleString()}
+            `;
+        }
+
+        function renderIngredients() {
+            if (!product.ingredients || product.ingredients.length === 0) return;
+            
+            const ingredientsHtml = product.ingredients.map(ing => `
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <h4>${ing.name}${ing.amount ? ` (${ing.amount})` : ''}</h4>
+                    </div>
+                    <p>${ing.description || 'Essential ingredient for optimal hydration.'}</p>
+                </div>
+            `).join('');
+            
+            document.querySelector('#ingredients .ingredients-grid').innerHTML = ingredientsHtml;
+        }
+
+        function renderNutrition() {
+            if (!product.nutrition) return;
+            
+            const n = product.nutrition;
+            document.querySelector('#nutrition .nutrition-table').innerHTML = `
+                <div class="nutrition-header">Nutrition Facts (${n.servingSize || 'per sachet'})</div>
+                <div class="nutrition-row"><span>Calories</span><span>${n.calories || 0}</span></div>
+                <div class="nutrition-row"><span>Total Carbohydrates</span><span>0g</span></div>
+                <div class="nutrition-row"><span>Sugars</span><span>${n.sugar || '0g'}</span></div>
+                <div class="nutrition-row"><span>Sodium</span><span>${n.sodium || '0mg'}</span></div>
+                <div class="nutrition-row"><span>Potassium</span><span>${n.potassium || '0mg'}</span></div>
+                <div class="nutrition-row"><span>Magnesium</span><span>${n.magnesium || '0mg'}</span></div>
+            `;
+        }
+
+        function renderHowToUse() {
+            if (!product.howToUse || product.howToUse.length === 0) return;
+            
+            const stepsHtml = product.howToUse.map((step, i) => `
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon" style="background: rgba(0, 212, 255, 0.2);">
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;">${i + 1}</span>
+                        </div>
+                        <h4>Step ${i + 1}</h4>
+                    </div>
+                    <p>${step}</p>
+                </div>
+            `).join('');
+            
+            document.querySelector('#how-to-use .ingredients-grid').innerHTML = stepsHtml;
+        }
+
+        function renderReviews() {
+            if (!product.reviews || product.reviews.length === 0) {
+                document.querySelector('#reviews').innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="1.5" style="margin-bottom: 1rem;">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                        <h3>No reviews yet</h3>
+                        <p style="color: var(--flow-gray);">Be the first to review this product!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const avgRating = product.rating?.average || 0;
+            const reviewCount = product.reviews.length;
+            
+            // Calculate rating distribution
+            const distribution = [5, 4, 3, 2, 1].map(star => ({
+                star,
+                count: product.reviews.filter(r => r.rating === star).length,
+                percent: (product.reviews.filter(r => r.rating === star).length / reviewCount * 100).toFixed(0)
+            }));
+            
+            const reviewsHtml = product.reviews.slice(0, 5).map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">${review.author.charAt(0).toUpperCase()}</div>
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">${review.author}${review.verified ? ' <span class="verified-badge">✓ Verified</span>' : ''}</div>
+                            <div class="review-date">${new Date(review.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        </div>
+                        <div class="review-rating">
+                            ${Array(5).fill(0).map((_, i) => `<svg width="14" height="14" viewBox="0 0 24 24" fill="${i < review.rating ? '#FFD700' : 'none'}" stroke="${i < review.rating ? '#FFD700' : 'var(--flow-gray)'}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
+                        </div>
+                    </div>
+                    ${review.title ? `<h4 class="review-title">${review.title}</h4>` : ''}
+                    <p class="review-content">${review.content}</p>
+                    <div class="review-helpful">
+                        <button onclick="markHelpful(this)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                            </svg>
+                            Helpful (${review.helpful || 0})
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.querySelector('#reviews').innerHTML = `
+                <div class="reviews-summary">
+                    <div class="rating-overview">
+                        <div class="rating-big">${avgRating.toFixed(1)}</div>
+                        <div class="rating-stars">
+                            ${Array(5).fill(0).map((_, i) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="${i < Math.round(avgRating) ? '#FFD700' : 'none'}" stroke="${i < Math.round(avgRating) ? '#FFD700' : 'var(--flow-gray)'}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
+                        </div>
+                        <div class="rating-count">${reviewCount} reviews</div>
+                    </div>
+                    <div class="rating-bars">
+                        ${distribution.map(d => `
+                            <div class="rating-bar-row">
+                                <span>${d.star} star</span>
+                                <div class="rating-bar"><div class="rating-bar-fill" style="width: ${d.percent}%"></div></div>
+                                <span>${d.count}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="reviews-list">${reviewsHtml}</div>
+            `;
+        }
+
+        function renderRelatedProducts() {
+            const grid = document.getElementById('relatedProductsGrid');
+            
+            if (!allProducts || allProducts.length === 0) {
+                grid.innerHTML = '<p style="color: var(--flow-gray); text-align: center; grid-column: 1/-1;">No related products found</p>';
+                return;
+            }
+            
+            // Filter out current product and expand to individual product cards
+            const relatedItems = [];
+            allProducts.forEach(p => {
+                if (p.slug === product.slug) return; // Skip current product
+                
+                // For each product, create entries for different pack sizes
+                if (p.packSizes && p.packSizes.length > 0) {
+                    p.packSizes.forEach(packSize => {
+                        const flavour = p.flavours && p.flavours[0];
+                        relatedItems.push({
+                            product: p,
+                            packSize: packSize,
+                            flavour: flavour
+                        });
+                    });
+                }
+            });
+            
+            // Shuffle array (Fisher-Yates algorithm)
+            for (let i = relatedItems.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [relatedItems[i], relatedItems[j]] = [relatedItems[j], relatedItems[i]];
+            }
+            
+            // Take first 3 items
+            const displayItems = relatedItems.slice(0, 3);
+            
+            if (displayItems.length === 0) {
+                grid.innerHTML = '<p style="color: var(--flow-gray); text-align: center; grid-column: 1/-1;">No related products found</p>';
+                return;
+            }
+            
+            grid.innerHTML = displayItems.map(item => {
+                const { product: p, packSize, flavour } = item;
+                const isBundle = p.category === 'bundle';
+                const productUrl = `product.html?product=${p.slug}${flavour ? `&flavour=${flavour.slug}` : ''}&pack=${packSize.size}`;
+                const glowColor = flavour?.color || '#00D4FF';
+                
+                // For bundles, show multiple small sachets
+                let sachetHtml;
+                if (isBundle && p.flavours && p.flavours.length > 1) {
+                    sachetHtml = `
+                        <div style="display: flex; gap: 6px;">
+                            ${p.flavours.slice(0, 3).map(f => `
+                                <div class="mini-sachet" style="width: 40px; height: 55px; box-shadow: 0 10px 25px ${hexToRgba(f.color, 0.25)};"></div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    sachetHtml = `<div class="mini-sachet" style="box-shadow: 0 15px 40px ${hexToRgba(glowColor, 0.3)};"></div>`;
+                }
+                
+                return `
+                    <a href="${productUrl}" class="related-card">
+                        <div class="related-image">
+                            ${sachetHtml}
+                        </div>
+                        <div class="related-info">
+                            <h4>${p.name} ${packSize.label}</h4>
+                            <span class="price">₹${packSize.price.toLocaleString()}</span>
+                            ${packSize.comparePrice ? `<span style="color: var(--flow-gray); text-decoration: line-through; font-size: 0.85rem; margin-left: 0.5rem;">₹${packSize.comparePrice.toLocaleString()}</span>` : ''}
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function markHelpful(btn) {
+            const span = btn.querySelector('svg').nextSibling;
+            const match = btn.textContent.match(/\((\d+)\)/);
+            if (match) {
+                const count = parseInt(match[1]) + 1;
+                btn.innerHTML = `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                    Helpful (${count})
+                `;
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+            }
+        }
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Thumbnails
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Add to Cart
+        function addToCart() {
+            showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+            const cartCount = document.getElementById('cartCount');
+            cartCount.textContent = parseInt(cartCount.textContent) + quantity;
+        }
+    </script>
+</body>
+</html>

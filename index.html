@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Hydration — Clean Hydration to Fuel Your Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --gradient-water: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 180, 180, 0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated water background */
+        .water-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--flow-dark);
+        }
+
+        .water-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 180, 180, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+            animation: floatBg 20s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.7);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--flow-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--flow-white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--flow-white);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cart-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+        }
+
+        .cart-btn .cart-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-btn:hover .cart-text {
+            max-width: 50px;
+            opacity: 1;
+        }
+
+        .cart-count {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .profile-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+            width: auto;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            gap: 0.4rem;
+        }
+
+        .profile-btn .profile-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .profile-btn:hover .profile-text {
+            max-width: 60px;
+            opacity: 1;
+        }
+
+        .nav-cta {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            padding: 0.6rem 1.25rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 8% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--flow-cyan);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--flow-gray);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn-primary {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 60px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--flow-white);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 600px;
+            aspect-ratio: 1;
+        }
+
+        .product-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-glow {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .product-image {
+            position: relative;
+            width: 60%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .product-sachet {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 20px 60px rgba(0, 212, 255, 0.4));
+        }
+
+        /* Stylized sachet representation */
+        .sachet-visual {
+            width: 200px;
+            height: 280px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 20px 20px 30px 30px;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .sachet-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.2) 0%, transparent 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .sachet-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .sachet-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sachet-tag {
+            font-size: 0.7rem;
+            color: var(--flow-gray);
+            margin-top: 0.5rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .water-drops {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .drop {
+            position: absolute;
+            width: 10px;
+            height: 14px;
+            background: var(--flow-cyan);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.6;
+            animation: dropFall 3s ease-in infinite;
+        }
+
+        .drop:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .drop:nth-child(2) { left: 50%; animation-delay: 1s; }
+        .drop:nth-child(3) { left: 80%; animation-delay: 2s; }
+
+        @keyframes dropFall {
+            0% { top: -20px; opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            padding: 3rem 8%;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(0, 212, 255, 0.02);
+        }
+
+        .stat-item {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+        }
+
+        .stat-item.animate {
+            animation: fadeInUpStat 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .stat-item:nth-child(1).animate { animation-delay: 0.1s; }
+        .stat-item:nth-child(2).animate { animation-delay: 0.25s; }
+        .stat-item:nth-child(3).animate { animation-delay: 0.4s; }
+        .stat-item:nth-child(4).animate { animation-delay: 0.55s; }
+
+        @keyframes fadeInUpStat {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 200;
+            color: var(--flow-cyan);
+            letter-spacing: -0.03em;
+            font-style: italic;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--flow-gray);
+            margin-top: 0.5rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* Ingredients Section */
+        .ingredients {
+            padding: 8rem 8%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            color: var(--flow-gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .ingredients-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.25rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .ingredient-card {
+            flex: 0 0 calc(33.333% - 0.85rem);
+            max-width: calc(33.333% - 0.85rem);
+        }
+
+        @media (max-width: 900px) {
+            .ingredient-card {
+                flex: 0 0 calc(50% - 0.65rem);
+                max-width: calc(50% - 0.65rem);
+            }
+        }
+
+        @media (max-width: 580px) {
+            .ingredient-card {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .ingredient-card {
+            background: linear-gradient(145deg, rgba(10, 22, 40, 0.95) 0%, rgba(10, 22, 40, 0.6) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.75rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(40px);
+            cursor: default;
+        }
+
+        .ingredient-card.animate {
+            animation: cardFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .ingredient-card:nth-child(1).animate { animation-delay: 0.05s; }
+        .ingredient-card:nth-child(2).animate { animation-delay: 0.12s; }
+        .ingredient-card:nth-child(3).animate { animation-delay: 0.19s; }
+        .ingredient-card:nth-child(4).animate { animation-delay: 0.26s; }
+        .ingredient-card:nth-child(5).animate { animation-delay: 0.33s; }
+
+        @keyframes cardFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .ingredient-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--flow-cyan), var(--flow-teal));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ingredient-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .ingredient-card:hover {
+            transform: translateY(-10px) scale(1.06);
+            border-color: rgba(0, 212, 255, 0.25);
+            box-shadow: 
+                0 30px 60px rgba(0, 212, 255, 0.15),
+                0 0 0 1px rgba(0, 212, 255, 0.1);
+        }
+
+        .ingredient-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ingredient-card:hover::after {
+            opacity: 1;
+        }
+
+        .ingredient-card:hover .ingredient-name {
+            color: var(--flow-cyan);
+        }
+
+        .ingredient-card:hover .ingredient-amount {
+            transform: translateX(4px);
+        }
+
+        .ingredient-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.08);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .ingredient-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--flow-cyan);
+            stroke-width: 1.5;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-card:hover .ingredient-icon {
+            background: rgba(0, 212, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .ingredient-card:hover .ingredient-icon svg {
+            stroke-width: 2;
+        }
+
+        .ingredient-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        .ingredient-amount {
+            display: inline-block;
+            color: var(--flow-cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .ingredient-card:hover .ingredient-amount {
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .ingredient-desc {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 8rem 8%;
+            background: var(--gradient-water);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefits::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .benefits-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefits-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flow-circle {
+            width: 320px;
+            height: 320px;
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            border-radius: 50%;
+            position: relative;
+            animation: rotate 30s linear infinite;
+        }
+
+        .flow-circle::after {
+            content: '';
+            position: absolute;
+            inset: 30px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .flow-circle::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--flow-cyan), 0 0 40px var(--flow-cyan);
+        }
+
+        /* Orbiting dots */
+        .orbit-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--flow-cyan), 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .dot-1 {
+            top: 50%;
+            left: -4px;
+            transform: translateY(-50%);
+        }
+
+        .dot-2 {
+            bottom: 15%;
+            right: 10%;
+        }
+
+        .dot-3 {
+            top: 10%;
+            right: 20%;
+        }
+
+        /* Additional rings */
+        .flow-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.08);
+        }
+
+        .ring-outer {
+            width: 420px;
+            height: 420px;
+            animation: pulsRing 4s ease-in-out infinite;
+        }
+
+        .ring-middle {
+            width: 240px;
+            height: 240px;
+            border-color: rgba(0, 212, 255, 0.12);
+            animation: pulsRing 4s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes pulsRing {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.5; }
+        }
+
+        .flow-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .flow-center-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulseText 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        .benefits-content {
+            padding-left: 2rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.7) 0%, rgba(10, 22, 40, 0.4) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .benefit-item.animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .benefit-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--flow-cyan), var(--flow-teal));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .benefit-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 0% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .benefit-item:hover {
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateX(12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .benefit-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .benefit-item:hover::after {
+            opacity: 1;
+        }
+
+        .benefit-item:hover .benefit-icon {
+            background: rgba(0, 212, 255, 0.2);
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .benefit-item:hover .benefit-icon svg {
+            stroke-width: 2;
+        }
+
+        .benefit-item:hover .benefit-text h4 {
+            color: var(--flow-cyan);
+        }
+
+        .benefit-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefit-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--flow-cyan);
+            stroke-width: 1.5;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefit-text h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+
+        .benefit-text p {
+            color: var(--flow-gray);
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 8rem 8%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how-it-works::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 70px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), var(--flow-cyan), rgba(0, 212, 255, 0.3), transparent);
+            z-index: 0;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            max-width: 320px;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(145deg, rgba(10, 22, 40, 0.6) 0%, rgba(10, 22, 40, 0.3) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 20px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:nth-child(1).animate { transition-delay: 0.1s; }
+        .step:nth-child(2).animate { transition-delay: 0.25s; }
+        .step:nth-child(3).animate { transition-delay: 0.4s; }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .step:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.12);
+        }
+
+        .step:hover::before {
+            opacity: 1;
+        }
+
+        .step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
+        }
+
+        .step:hover .step-icon-container {
+            transform: scale(1.05);
+        }
+
+        .step:hover .step-icon-container svg {
+            stroke-width: 2;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-icon-container {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 212, 255, 0.08);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-icon-container svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--flow-cyan);
+            stroke-width: 1.5;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+
+        .step-icon {
+            display: none;
+        }
+
+        .step h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+
+        .step:hover h3 {
+            color: var(--flow-cyan);
+        }
+
+        .step p {
+            color: var(--flow-gray);
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 10rem 8%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 55%);
+            transform: translate(-50%, -50%);
+            animation: ctaPulse 6s ease-in-out infinite;
+        }
+
+        .cta::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 180, 180, 0.08) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            animation: ctaPulse 6s ease-in-out infinite 1s;
+        }
+
+        @keyframes ctaPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 750px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .cta-content.animate {
+            animation: ctaFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes ctaFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--flow-cyan);
+            margin-bottom: 2rem;
+            animation: badgeFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .cta h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .cta h2 span {
+            background: linear-gradient(135deg, #00D4FF 0%, #00B4B4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta p {
+            color: var(--flow-gray);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .btn-primary {
+            padding: 1.1rem 2.75rem;
+            font-size: 1.05rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-buttons .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-buttons .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .cta-buttons .btn-secondary {
+            padding: 1.1rem 2.5rem;
+            font-size: 1.05rem;
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .cta-buttons .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--flow-cyan);
+        }
+
+        .cta-features {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 3.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        .cta-feature svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--flow-cyan);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .footer-contact a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .hero-visual {
+                display: none;
+            }
+
+            .hero {
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero p {
+                margin: 0 auto 2.5rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .benefits-container {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-visual {
+                height: 300px;
+            }
+
+            .benefits-content {
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .stats-bar {
+                flex-wrap: wrap;
+                gap: 2rem;
+            }
+
+            .stat-item {
+                flex: 1 1 40%;
+            }
+
+            .steps-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="flow-shop-2.html">Shop</a></li>
+            <li><a href="#ingredients">Ingredients</a></li>
+            <li><a href="#benefits">Benefits</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-right">
+            <a href="flow-shop-2.html" class="cart-btn" aria-label="Cart">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 01-8 0"/>
+                </svg>
+                <span class="cart-text">Cart</span>
+                <span class="cart-count">0</span>
+            </a>
+            <a href="profile.html" class="profile-btn" aria-label="Profile">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="profile-text">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">Pan-India Delivery Available</div>
+            <h1>
+                Find Your
+                <span>Flow</span>
+            </h1>
+            <p>Clean hydration engineered for optimal performance. Precise electrolyte formulation to fuel your day, power your workouts, and support total body function.</p>
+            <div class="hero-buttons">
+                <a href="flow-shop-2.html" class="btn-primary">
+                    Buy Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#ingredients" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="product-container">
+                <div class="product-glow"></div>
+                <div class="product-image">
+                    <div class="sachet-visual">
+                        <div class="sachet-content">
+                            <div class="sachet-logo">Flow</div>
+                            <div class="sachet-tag">Electrolyte Hydration</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="water-drops">
+                    <div class="drop"></div>
+                    <div class="drop"></div>
+                    <div class="drop"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Key Electrolytes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">0g</div>
+            <div class="stat-label">Added Sugar</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">300+</div>
+            <div class="stat-label">Biochemical Reactions</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Clean Formula</div>
+        </div>
+    </div>
+
+    <!-- Ingredients Section -->
+    <section class="ingredients" id="ingredients">
+        <div class="section-header">
+            <div class="section-tag">Know Your Ingredients</div>
+            <h2 class="section-title">Electrolyte Balance & Osmoregulation</h2>
+            <p class="section-subtitle">A precise blend of sodium, potassium, magnesium and calcium to keep fluid levels stable, muscles firing and nerves responsive.</p>
+        </div>
+        <div class="ingredients-grid">
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                </div>
+                <div class="ingredient-name">Sodium Chloride (NaCl)</div>
+                <div class="ingredient-amount">1320 mg</div>
+                <p class="ingredient-desc">Primary extracellular ion for fluid balance and nerve transmission. Essential for maintaining blood pressure and cellular hydration.</p>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <div class="ingredient-name">Potassium Chloride (KCl)</div>
+                <div class="ingredient-amount">408 mg</div>
+                <p class="ingredient-desc">Supports cardiac rhythm and neuromuscular activity. Critical for heart function and muscle contraction.</p>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <div class="ingredient-name">Magnesium Lactate</div>
+                <div class="ingredient-amount">120 mg</div>
+                <p class="ingredient-desc">Cofactor in 300+ biochemical reactions. Helps prevent cramps and fatigue while supporting energy production.</p>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"/>
+                        <path d="M8 18h8"/>
+                        <path d="M10 22h4"/>
+                        <path d="M12 18v4"/>
+                    </svg>
+                </div>
+                <div class="ingredient-name">Calcium Carbonate</div>
+                <div class="ingredient-amount">20 mg</div>
+                <p class="ingredient-desc">Stabilises cell membranes and aids muscle contraction. Essential for bone health and nerve signaling.</p>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        <path d="M12 6v6"/>
+                        <path d="M12 18h.01"/>
+                    </svg>
+                </div>
+                <div class="ingredient-name">Trisodium Citrate</div>
+                <div class="ingredient-amount">Buffer</div>
+                <p class="ingredient-desc">Buffers lactic acid for smoother endurance performance. Helps maintain optimal pH during intense activity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="benefits-container">
+            <div class="benefits-visual">
+                <div class="flow-circle">
+                    <div class="orbit-dot dot-1"></div>
+                    <div class="orbit-dot dot-2"></div>
+                    <div class="orbit-dot dot-3"></div>
+                </div>
+                <div class="flow-ring ring-outer"></div>
+                <div class="flow-ring ring-middle"></div>
+                <div class="flow-center">
+                    <div class="flow-center-text">Flow</div>
+                </div>
+            </div>
+            <div class="benefits-content">
+                <div class="section-tag">Why Flow?</div>
+                <h2 class="section-title">Beyond Plain Water</h2>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <h4>Optimal Fluid Balance</h4>
+                        <p>Precise mineral ratios maintain cellular hydration levels for peak performance.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <h4>Nerve & Muscle Function</h4>
+                        <p>Essential electrolytes support smooth signal transmission and muscle response.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2v4"/>
+                            <path d="M12 18v4"/>
+                            <path d="M4.93 4.93l2.83 2.83"/>
+                            <path d="M16.24 16.24l2.83 2.83"/>
+                            <path d="M2 12h4"/>
+                            <path d="M18 12h4"/>
+                            <path d="M4.93 19.07l2.83-2.83"/>
+                            <path d="M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <h4>Enhanced Endurance</h4>
+                        <p>Lactic acid buffering keeps you going longer with reduced fatigue.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <h4>Clean Formula</h4>
+                        <p>No sugar, no artificial colors. Just pure, functional hydration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how">
+        <div class="section-header">
+            <div class="section-tag">Simple & Effective</div>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Clean hydration in three easy steps.</p>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-icon-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="5" y="3" width="14" height="18" rx="2"/>
+                        <path d="M5 8h14"/>
+                        <path d="M12 12v5"/>
+                        <path d="M9 14l3-2 3 2"/>
+                    </svg>
+                </div>
+                <h3>Open Your Sachet</h3>
+                <p>Tear open a single-serve Flow sachet, perfectly portioned for optimal hydration.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-icon-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                </div>
+                <h3>Add to Water</h3>
+                <p>Mix with 500ml of cold water and stir until fully dissolved.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-icon-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <h3>Find Your Flow</h3>
+                <p>Drink and feel the difference. Optimal hydration for your active lifestyle.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="shop">
+        <div class="cta-content">
+            <div class="cta-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13" rx="2"/>
+                    <path d="M16 8h4l3 3v5h-7V8z"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+                Free Pan-India Shipping on Select Orders
+            </div>
+            <h2>Ready to <span>Find Your Flow?</span></h2>
+            <p>Experience clean hydration engineered for performance. Join thousands who've upgraded their daily hydration routine.</p>
+            <div class="cta-buttons">
+                <a href="flow-shop-2.html" class="btn-primary">
+                    Shop Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#about" class="btn-secondary">Contact Us</a>
+            </div>
+            <div class="cta-features">
+                <div class="cta-feature">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 12l5 5L20 7"/>
+                    </svg>
+                    Zero Sugar
+                </div>
+                <div class="cta-feature">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 12l5 5L20 7"/>
+                    </svg>
+                    5+ Electrolytes
+                </div>
+                <div class="cta-feature">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 12l5 5L20 7"/>
+                    </svg>
+                    Fast Delivery
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="flow-shop-2.html">Subscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#ingredients">Science</a></li>
+                    <li><a href="#about">Careers</a></li>
+                    <li><a href="#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Rewards</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="footer-contact">
+                <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe benefit items
+        document.querySelectorAll('.benefit-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Separate observer for steps with staggered animation
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.step').forEach(el => {
+            stepObserver.observe(el);
+        });
+
+        // Separate observer for ingredient cards with staggered animation
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.ingredient-card').forEach(el => {
+            cardObserver.observe(el);
+        });
+
+        // Observe stats items for scroll animation
+        document.querySelectorAll('.stat-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add animate class to stats when they become visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.stat-item').forEach(el => {
+            statsObserver.observe(el);
+        });
+
+        // Add animate class to benefit items when they become visible
+        const benefitObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.benefit-item').forEach((el, index) => {
+            el.style.transitionDelay = `${index * 0.15}s`;
+            benefitObserver.observe(el);
+        });
+
+        // Add animate class to CTA content when visible
+        const ctaObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.cta-content').forEach(el => {
+            ctaObserver.observe(el);
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(2, 8, 23, 0.95)';
+            } else {
+                nav.style.background = 'rgba(2, 8, 23, 0.7)';
+            }
+        });
+
+        // Update cart count from storage
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountEl = document.querySelector('.cart-count');
+            if (cartCountEl) {
+                cartCountEl.textContent = totalItems;
+            }
+        }
+
+        // Initialize cart count on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // If user is logged in, sync cart from server
+            if (window.CustomerAuth && CustomerAuth.isLoggedIn()) {
+                await CustomerAuth.initCart();
+            }
+            updateCartCount();
+        });
+
+        // Listen for cart updates from other pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'flow_cart') {
+                updateCartCount();
+            }
+        });
+    </script>
+    <script src="assets/js/customerAuth.js"></script>
+</body>
+</html>

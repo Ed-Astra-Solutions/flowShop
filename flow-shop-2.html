@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --gradient-water: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 180, 180, 0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated water background */
+        .water-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--flow-dark);
+        }
+
+        .water-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 180, 180, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+            animation: floatBg 20s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.9);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            color: var(--flow-white);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+        }
+
+        .cart-btn .cart-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-btn:hover .cart-text {
+            max-width: 50px;
+            opacity: 1;
+        }
+
+        .cart-count {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .profile-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+            width: auto;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            gap: 0.4rem;
+        }
+
+        .profile-btn .profile-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .profile-btn:hover .profile-text {
+            max-width: 60px;
+            opacity: 1;
+        }
+
+        /* Shop Layout */
+        .shop-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            padding: 7rem 8% 6rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Header */
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .sidebar-header h1 span {
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-header p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Sidebar Filters */
+        .shop-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .filter-section {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-option:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .filter-option.active {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .filter-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .filter-option.active .filter-checkbox {
+            background: var(--flow-cyan);
+            border-color: var(--flow-cyan);
+        }
+
+        .filter-option.active .filter-checkbox::after {
+            content: '✓';
+            color: var(--flow-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .filter-label {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            flex: 1;
+            padding: 0.1rem 0;
+        }
+
+        .filter-option.active .filter-label,
+        .filter-option:hover .filter-label {
+            color: var(--flow-white);
+        }
+
+        .filter-count {
+            margin-left: auto;
+            color: var(--flow-gray);
+            font-size: 0.8rem;
+        }
+
+        /* Promo Banner in Sidebar */
+        .promo-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 180, 180, 0.1) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .promo-banner h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .promo-banner p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .promo-code {
+            background: var(--flow-dark);
+            border: 1px dashed var(--flow-cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            color: var(--flow-cyan);
+            font-size: 0.9rem;
+        }
+
+        /* Products Grid */
+        .products-section {
+            flex: 1;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .products-count {
+            color: var(--flow-gray);
+            font-size: 0.95rem;
+        }
+
+        .sort-dropdown {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+        }
+
+        .sort-dropdown:hover,
+        .sort-dropdown:focus {
+            border-color: var(--flow-cyan);
+        }
+
+        .sort-dropdown option {
+            background: var(--flow-dark);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: linear-gradient(145deg, rgba(13, 26, 45, 0.8) 0%, rgba(13, 26, 45, 0.4) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 25px 80px rgba(0, 212, 255, 0.15);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(10, 22, 40, 0.85);
+            color: var(--flow-white);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            z-index: 2;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-badge.bestseller {
+            background: rgba(10, 22, 40, 0.9);
+            border-color: rgba(255, 215, 0, 0.4);
+            color: #FFD700;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.1);
+        }
+
+        .product-badge.new {
+            background: rgba(10, 22, 40, 0.9);
+            border-color: rgba(0, 212, 255, 0.4);
+            color: var(--flow-cyan);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15), inset 0 1px 0 rgba(0, 212, 255, 0.1);
+        }
+
+        .product-badge.sale {
+            background: rgba(10, 22, 40, 0.9);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #10B981;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(16, 185, 129, 0.1);
+        }
+
+        .product-image {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .sachet-visual {
+            width: 120px;
+            height: 170px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 14px 14px 20px 20px;
+            position: relative;
+            box-shadow: 
+                0 20px 50px rgba(0, 212, 255, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 2;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .sachet-visual {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .sachet-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.2) 0%, transparent 100%);
+            border-radius: 14px 14px 0 0;
+        }
+
+        .sachet-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .sachet-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sachet-flavor {
+            font-size: 0.55rem;
+            color: var(--flow-cyan);
+            margin-top: 0.25rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Different sachet colors for flavors */
+        .product-card[data-flavor="citrus"] .sachet-visual {
+            background: linear-gradient(135deg, #1a2d1a 0%, #2d4a2d 50%, #1a2d1a 100%);
+        }
+
+        .product-card[data-flavor="berry"] .sachet-visual {
+            background: linear-gradient(135deg, #2d1a2d 0%, #4a2d4a 50%, #2d1a2d 100%);
+        }
+
+        .product-card[data-flavor="tropical"] .sachet-visual {
+            background: linear-gradient(135deg, #2d2a1a 0%, #4a3d2d 50%, #2d2a1a 100%);
+        }
+
+        .product-card[data-flavor="mint"] .sachet-visual {
+            background: linear-gradient(135deg, #1a2d2d 0%, #2d4a4a 50%, #1a2d2d 100%);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-category {
+            color: var(--flow-cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-desc {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--flow-gray);
+            font-size: 0.8rem;
+        }
+
+        .meta-item svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--flow-cyan);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .price-current {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--flow-white);
+        }
+
+        .price-original {
+            font-size: 1rem;
+            color: var(--flow-gray);
+            text-decoration: line-through;
+        }
+
+        .add-to-cart {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .add-to-cart.added {
+            background: #00B4B4;
+        }
+
+        /* Quantity Selector (shown after adding) */
+        .quantity-selector {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            padding: 0.35rem;
+        }
+
+        .quantity-selector.active {
+            display: flex;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .qty-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Featured Product (larger card) */
+        .product-card.featured {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .product-card.featured .product-image {
+            height: 100%;
+            min-height: 350px;
+        }
+
+        .product-card.featured .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2.5rem;
+        }
+
+        .product-card.featured .product-name {
+            font-size: 1.75rem;
+        }
+
+        .product-card.featured .product-desc {
+            font-size: 1rem;
+        }
+
+        /* Bundle Card Special Styling */
+        .product-card.bundle .product-image {
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        .product-card.bundle .sachet-visual {
+            width: 80px;
+            height: 115px;
+        }
+
+        .product-card.bundle .sachet-logo {
+            font-size: 0.9rem;
+        }
+
+        /* Cart Drawer */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            max-width: 100%;
+            height: 100%;
+            background: var(--flow-dark);
+            border-left: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 2001;
+            transition: right 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+        }
+
+        .cart-close {
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0.5rem;
+        }
+
+        .cart-close:hover {
+            color: var(--flow-white);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--flow-gray);
+        }
+
+        .cart-empty-icon {
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(13, 26, 45, 0.5);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .cart-item-image {
+            width: 70px;
+            height: 90px;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-image .mini-sachet {
+            width: 40px;
+            height: 55px;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
+            border-radius: 6px 6px 10px 10px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-variant {
+            color: var(--flow-gray);
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.25rem;
+        }
+
+        .cart-item-qty button {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: none;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cart-item-qty span {
+            min-width: 24px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .cart-item-remove:hover {
+            color: #FF6B6B;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(13, 26, 45, 0.5);
+        }
+
+        .cart-subtotal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: var(--flow-gray);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .checkout-btn:hover {
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .continue-shopping {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--flow-white);
+            padding: 0.85rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Free Shipping Bar */
+        .shipping-progress {
+            margin-bottom: 1rem;
+        }
+
+        .shipping-text {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .shipping-text span {
+            color: var(--flow-cyan);
+            font-weight: 600;
+        }
+
+        .shipping-bar {
+            height: 6px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .shipping-bar-fill {
+            height: 100%;
+            background: var(--gradient-flow);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-dark);
+            font-size: 0.8rem;
+        }
+
+        /* ========== QUICK CHECKOUT MODAL ========== */
+        .quick-checkout-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .quick-checkout-overlay.active {
+            display: flex;
+        }
+
+        .quick-checkout-modal {
+            background: linear-gradient(145deg, #0d1a2d 0%, #091220 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 212, 255, 0.1);
+        }
+
+        .quick-checkout-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .quick-checkout-modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .quick-checkout-modal::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .quick-checkout-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--flow-gray);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .quick-checkout-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--flow-white);
+        }
+
+        /* Progress Steps */
+        .qc-progress {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .qc-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .qc-step.active {
+            opacity: 1;
+        }
+
+        .qc-step.completed {
+            opacity: 1;
+        }
+
+        .qc-step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .qc-step.active .qc-step-dot {
+            background: var(--flow-cyan);
+            box-shadow: 0 0 15px var(--flow-cyan);
+        }
+
+        .qc-step.completed .qc-step-dot {
+            background: #10B981;
+        }
+
+        .qc-step span {
+            font-size: 0.75rem;
+            color: var(--flow-gray);
+            font-weight: 500;
+        }
+
+        .qc-step.active span {
+            color: var(--flow-white);
+        }
+
+        /* Content Area */
+        .qc-content {
+            padding: 1.5rem 2rem 2rem;
+        }
+
+        .qc-content.hidden {
+            display: none;
+        }
+
+        .qc-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .qc-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .qc-header p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Form Inputs */
+        .qc-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .qc-input-group {
+            width: 100%;
+        }
+
+        .qc-input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .qc-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .qc-input:focus {
+            border-color: var(--flow-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .qc-input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .qc-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+        }
+
+        /* Shipping Options */
+        .qc-shipping-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .qc-shipping-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qc-shipping-option:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .qc-shipping-option.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qc-shipping-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .qc-shipping-option.selected .qc-shipping-radio {
+            border-color: var(--flow-cyan);
+        }
+
+        .qc-shipping-option.selected .qc-shipping-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+        }
+
+        .qc-shipping-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qc-shipping-name {
+            font-size: 0.9rem;
+        }
+
+        .qc-shipping-price {
+            font-weight: 600;
+            color: var(--flow-cyan);
+        }
+
+        .qc-shipping-price.free {
+            color: #10B981;
+        }
+
+        /* Payment Methods */
+        .qc-payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-payment-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.85rem 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .qc-payment-method:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .qc-payment-method.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qc-payment-icon {
+            font-size: 1.25rem;
+        }
+
+        .qc-payment-form {
+            margin-bottom: 1rem;
+        }
+
+        .qc-payment-form.hidden {
+            display: none;
+        }
+
+        .qc-upi-apps {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .qc-upi-app {
+            flex: 1;
+            padding: 0.6rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--flow-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qc-upi-app:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-white);
+        }
+
+        .qc-cod-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        /* Order Summary */
+        .qc-summary {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            padding: 0.4rem 0;
+            color: var(--flow-gray);
+        }
+
+        .qc-summary-row.qc-total {
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--flow-white);
+        }
+
+        /* Buttons */
+        .qc-btn-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .qc-continue-btn {
+            width: 100%;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            padding: 0.95rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .qc-continue-btn:hover {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .qc-back-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--flow-gray);
+            padding: 0.95rem 1.25rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .qc-back-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            color: var(--flow-white);
+        }
+
+        .qc-place-order-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.95rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .qc-place-order-btn:hover {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .qc-place-order-btn.loading .qc-btn-text {
+            display: none;
+        }
+
+        .qc-place-order-btn .qc-spinner {
+            display: none;
+        }
+
+        .qc-place-order-btn.loading .qc-spinner {
+            display: block;
+        }
+
+        .qc-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: qcSpin 0.8s linear infinite;
+        }
+
+        @keyframes qcSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .qc-secure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--flow-gray);
+        }
+
+        .qc-secure svg {
+            color: #10B981;
+        }
+
+        /* Success State */
+        .qc-success-content {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .qc-success-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 2rem;
+            color: #10B981;
+            animation: successPop 0.4s ease;
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .qc-success-content h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-success-content p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .qc-order-number {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px dashed var(--flow-cyan);
+            padding: 0.85rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .qc-order-number span {
+            color: var(--flow-gray);
+        }
+
+        .qc-order-number strong {
+            color: var(--flow-cyan);
+            font-family: 'Syne', sans-serif;
+        }
+
+        .qc-done-btn {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            padding: 0.85rem 2.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qc-done-btn:hover {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .shop-container {
+                grid-template-columns: 1fr;
+                padding-top: 6rem;
+            }
+
+            .shop-sidebar {
+                position: static;
+            }
+
+            .sidebar-header {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .sidebar-header h1 {
+                font-size: clamp(2rem, 5vw, 2.5rem);
+            }
+
+            .sidebar-filters {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .filter-section,
+            .promo-banner {
+                margin-bottom: 0;
+            }
+
+            .product-card.featured {
+                grid-column: span 1;
+                display: block;
+            }
+
+            .product-card.featured .product-image {
+                min-height: 280px;
+            }
+
+            .product-card.featured .product-info {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .shop-container {
+                padding: 6rem 5% 4rem;
+            }
+
+            .sidebar-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .cart-drawer {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .add-to-cart {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#" class="active">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#benefits">Benefits</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+        <div class="nav-right">
+            <button class="cart-btn" id="cartToggle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 01-8 0"/>
+                </svg>
+                <span class="cart-text">Cart</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <a href="profile.html" class="profile-btn" aria-label="Profile">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="profile-text">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Shop Container -->
+    <div class="shop-container">
+        <!-- Sidebar -->
+        <aside class="shop-sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h1>Shop <span>Flow</span></h1>
+                <p>Clean hydration products engineered for optimal performance. Free shipping on orders over ₹999.</p>
+            </div>
+
+            <div class="sidebar-filters">
+                <div class="filter-section" id="categoryFilters">
+                    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Category</h3>
+                    <div class="filter-option active" data-category="all" onclick="setCategory('all')">
+                        <div class="filter-checkbox"></div>
+                        <span class="filter-label">All Products</span>
+                        <span class="filter-count" id="countAll">0</span>
+                    </div>
+                    <div class="filter-option" data-category="single" onclick="setCategory('single')">
+                        <div class="filter-checkbox"></div>
+                        <span class="filter-label">Single Flavours</span>
+                        <span class="filter-count" id="countSingle">0</span>
+                    </div>
+                    <div class="filter-option" data-category="bundle" onclick="setCategory('bundle')">
+                        <div class="filter-checkbox"></div>
+                        <span class="filter-label">Variety Packs</span>
+                        <span class="filter-count" id="countBundle">0</span>
+                    </div>
+                </div>
+
+                <div class="filter-section" id="flavourFilters">
+                    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Flavour</h3>
+                    <!-- Dynamically populated -->
+                </div>
+
+                <div class="promo-banner">
+                    <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg> First Order Discount</h4>
+                    <p>Get 15% off your first order with code:</p>
+                    <div class="promo-code">FIRSTFLOW15</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="products-header">
+                <span class="products-count">Showing <strong>8</strong> products</span>
+                <select class="sort-dropdown" id="sortDropdown" onchange="setSort(this.value)">
+                    <option value="featured">Sort by: Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name-az">Name: A to Z</option>
+                    <option value="name-za">Name: Z to A</option>
+                </select>
+            </div>
+
+            <div class="products-grid">
+                <!-- Featured Product -->
+                <div class="product-card featured" data-flavor="original" data-category="pack">
+                    <div class="product-badge bestseller">Bestseller</div>
+                    <div class="product-image">
+                        <div class="sachet-visual">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Original</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Starter Pack</div>
+                        <h3 class="product-name">Flow Original — 30 Pack</h3>
+                        <p class="product-desc">Our signature electrolyte formula. Perfect for daily hydration, workouts, and recovery. One month supply of clean, sugar-free hydration.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                30 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                                </svg>
+                                0g sugar
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹1,499</span>
+                                <span class="price-original">₹1,799</span>
+                            </div>
+                            <button class="add-to-cart" data-product="flow-original-30" data-name="Flow Original — 30 Pack" data-price="1499">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card" data-flavor="citrus" data-category="pack">
+                    <div class="product-badge new">New</div>
+                    <div class="product-image">
+                        <div class="sachet-visual" style="background: linear-gradient(135deg, #1a2d1a 0%, #2d4a2d 50%, #1a2d1a 100%);">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Citrus</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Multi-Pack</div>
+                        <h3 class="product-name">Citrus Burst — 20 Pack</h3>
+                        <p class="product-desc">Refreshing citrus twist with the same powerful electrolyte formula.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                20 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Natural flavor
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹999</span>
+                            </div>
+                            <button class="add-to-cart" data-product="citrus-burst-20" data-name="Citrus Burst — 20 Pack" data-price="999">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card" data-flavor="berry" data-category="pack">
+                    <div class="product-image">
+                        <div class="sachet-visual" style="background: linear-gradient(135deg, #2d1a2d 0%, #4a2d4a 50%, #2d1a2d 100%);">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Berry</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Multi-Pack</div>
+                        <h3 class="product-name">Berry Blast — 20 Pack</h3>
+                        <p class="product-desc">Rich berry flavor packed with essential electrolytes.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                20 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Natural flavor
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹999</span>
+                            </div>
+                            <button class="add-to-cart" data-product="berry-blast-20" data-name="Berry Blast — 20 Pack" data-price="999">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 - Trial Pack -->
+                <div class="product-card" data-flavor="original" data-category="single">
+                    <div class="product-image">
+                        <div class="sachet-visual">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Original</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Trial Size</div>
+                        <h3 class="product-name">Flow Original — 5 Pack</h3>
+                        <p class="product-desc">Try our signature formula. Perfect starter size.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                5 sachets
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹299</span>
+                            </div>
+                            <button class="add-to-cart" data-product="flow-original-5" data-name="Flow Original — 5 Pack" data-price="299">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 - Variety Bundle -->
+                <div class="product-card bundle" data-flavor="variety" data-category="bundle">
+                    <div class="product-badge sale">Save 20%</div>
+                    <div class="product-image">
+                        <div class="sachet-visual" style="width: 70px; height: 100px;">
+                            <div class="sachet-content">
+                                <div class="sachet-logo" style="font-size: 0.8rem;">Flow</div>
+                            </div>
+                        </div>
+                        <div class="sachet-visual" style="width: 70px; height: 100px; background: linear-gradient(135deg, #1a2d1a 0%, #2d4a2d 50%, #1a2d1a 100%);">
+                            <div class="sachet-content">
+                                <div class="sachet-logo" style="font-size: 0.8rem;">Flow</div>
+                            </div>
+                        </div>
+                        <div class="sachet-visual" style="width: 70px; height: 100px; background: linear-gradient(135deg, #2d1a2d 0%, #4a2d4a 50%, #2d1a2d 100%);">
+                            <div class="sachet-content">
+                                <div class="sachet-logo" style="font-size: 0.8rem;">Flow</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Variety Bundle</div>
+                        <h3 class="product-name">Flavor Discovery Pack</h3>
+                        <p class="product-desc">All 3 flavors in one bundle. 10 sachets of each variety.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                30 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                                </svg>
+                                3 flavors
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹1,299</span>
+                                <span class="price-original">₹1,599</span>
+                            </div>
+                            <button class="add-to-cart" data-product="variety-pack" data-name="Flavor Discovery Pack" data-price="1299">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 - Tropical -->
+                <div class="product-card" data-flavor="tropical" data-category="pack">
+                    <div class="product-badge new">New</div>
+                    <div class="product-image">
+                        <div class="sachet-visual" style="background: linear-gradient(135deg, #2d2a1a 0%, #4a3d2d 50%, #2d2a1a 100%);">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Tropical</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Multi-Pack</div>
+                        <h3 class="product-name">Tropical Surge — 20 Pack</h3>
+                        <p class="product-desc">Exotic tropical blend for a refreshing hydration experience.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                20 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Natural flavor
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹999</span>
+                            </div>
+                            <button class="add-to-cart" data-product="tropical-surge-20" data-name="Tropical Surge — 20 Pack" data-price="999">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 7 - Mega Pack -->
+                <div class="product-card" data-flavor="original" data-category="bundle">
+                    <div class="product-badge bestseller">Best Value</div>
+                    <div class="product-image">
+                        <div class="sachet-visual">
+                            <div class="sachet-content">
+                                <div class="sachet-logo">Flow</div>
+                                <div class="sachet-flavor">Original</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Bulk Pack</div>
+                        <h3 class="product-name">Flow Original — 60 Pack</h3>
+                        <p class="product-desc">Two month supply at the best value. Never run out of hydration.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                60 sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                Free shipping
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹2,499</span>
+                                <span class="price-original">₹3,299</span>
+                            </div>
+                            <button class="add-to-cart" data-product="flow-original-60" data-name="Flow Original — 60 Pack" data-price="2499">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 8 - Single Sachet Sampler -->
+                <div class="product-card" data-flavor="variety" data-category="single">
+                    <div class="product-image">
+                        <div class="sachet-visual" style="width: 80px; height: 115px;">
+                            <div class="sachet-content">
+                                <div class="sachet-logo" style="font-size: 0.9rem;">Flow</div>
+                                <div class="sachet-flavor">Sample</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Single Sachet</div>
+                        <h3 class="product-name">Single Sachet — Any Flavor</h3>
+                        <p class="product-desc">Try before you commit. Single sachet of your choice.</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                1 sachet
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹69</span>
+                            </div>
+                            <button class="add-to-cart" data-product="single-sachet" data-name="Single Sachet" data-price="69">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Your Cart</h3>
+            <button class="cart-close" id="cartClose">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be dynamically inserted here -->
+            <div class="cart-empty" id="cartEmpty">
+                <div class="cart-empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                <p>Your cart is empty</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Add some Flow to get started!</p>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="shipping-progress">
+                <p class="shipping-text" id="shippingText">Add <span>₹999</span> more for free shipping!</p>
+                <div class="shipping-bar">
+                    <div class="shipping-bar-fill" id="shippingBar" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="cart-subtotal">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">₹0</span>
+            </div>
+            <div class="cart-subtotal">
+                <span>Shipping</span>
+                <span id="cartShipping">₹99</span>
+            </div>
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="openQuickCheckout()">
+                Proceed to Checkout
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </button>
+            <button class="continue-shopping" id="continueShopping">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <span id="toastMessage">Added to cart!</span>
+    </div>
+
+    <!-- Quick Checkout Modal -->
+    <div class="quick-checkout-overlay" id="quickCheckoutOverlay">
+        <div class="quick-checkout-modal">
+            <button class="quick-checkout-close" id="quickCheckoutClose">×</button>
+            
+            <!-- Progress Steps -->
+            <div class="qc-progress">
+                <div class="qc-step active" data-step="1">
+                    <div class="qc-step-dot"></div>
+                    <span>Contact</span>
+                </div>
+                <div class="qc-step" data-step="2">
+                    <div class="qc-step-dot"></div>
+                    <span>Shipping</span>
+                </div>
+                <div class="qc-step" data-step="3">
+                    <div class="qc-step-dot"></div>
+                    <span>Payment</span>
+                </div>
+            </div>
+
+            <!-- Step 1: Contact -->
+            <div class="qc-content" id="qcStep1">
+                <div class="qc-header">
+                    <h3>📧 Contact Information</h3>
+                    <p>We'll send your order confirmation here</p>
+                </div>
+                <div class="qc-form">
+                    <div class="qc-input-group">
+                        <input type="email" class="qc-input" id="qcEmail" placeholder="Email address" required>
+                    </div>
+                    <div class="qc-input-group">
+                        <input type="tel" class="qc-input" id="qcPhone" placeholder="Phone number" required>
+                    </div>
+                </div>
+                <button class="qc-continue-btn" onclick="goToStep(2)">
+                    Continue to Shipping
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 2: Shipping -->
+            <div class="qc-content hidden" id="qcStep2">
+                <div class="qc-header">
+                    <h3>📍 Shipping Address</h3>
+                    <p>Where should we deliver?</p>
+                </div>
+                <div class="qc-form">
+                    <div class="qc-input-row">
+                        <input type="text" class="qc-input" id="qcFirstName" placeholder="First name">
+                        <input type="text" class="qc-input" id="qcLastName" placeholder="Last name">
+                    </div>
+                    <div class="qc-input-group">
+                        <input type="text" class="qc-input" id="qcAddress" placeholder="Street address">
+                    </div>
+                    <div class="qc-input-row">
+                        <input type="text" class="qc-input" id="qcCity" placeholder="City">
+                        <input type="text" class="qc-input" id="qcPincode" placeholder="PIN code" maxlength="6">
+                    </div>
+                    <div class="qc-input-group">
+                        <select class="qc-input qc-select" id="qcState">
+                            <option value="">Select State</option>
+                            <option value="DL">Delhi</option>
+                            <option value="MH">Maharashtra</option>
+                            <option value="KA">Karnataka</option>
+                            <option value="TN">Tamil Nadu</option>
+                            <option value="GJ">Gujarat</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="RJ">Rajasthan</option>
+                            <option value="WB">West Bengal</option>
+                            <option value="KL">Kerala</option>
+                            <option value="TG">Telangana</option>
+                            <option value="PB">Punjab</option>
+                            <option value="HR">Haryana</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="qc-shipping-options">
+                    <div class="qc-shipping-option selected" data-price="0">
+                        <div class="qc-shipping-radio"></div>
+                        <div class="qc-shipping-info">
+                            <span class="qc-shipping-name">Standard (5-7 days)</span>
+                            <span class="qc-shipping-price free">FREE</span>
+                        </div>
+                    </div>
+                    <div class="qc-shipping-option" data-price="149">
+                        <div class="qc-shipping-radio"></div>
+                        <div class="qc-shipping-info">
+                            <span class="qc-shipping-name">Express (2-3 days)</span>
+                            <span class="qc-shipping-price">₹149</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="qc-btn-row">
+                    <button class="qc-back-btn" onclick="goToStep(1)">← Back</button>
+                    <button class="qc-continue-btn" onclick="goToStep(3)">
+                        Continue to Payment
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Payment -->
+            <div class="qc-content hidden" id="qcStep3">
+                <div class="qc-header">
+                    <h3>💳 Payment</h3>
+                    <p>Choose your payment method</p>
+                </div>
+                
+                <div class="qc-payment-methods">
+                    <div class="qc-payment-method selected" data-method="card">
+                        <span class="qc-payment-icon">💳</span>
+                        <span>Card</span>
+                    </div>
+                    <div class="qc-payment-method" data-method="upi">
+                        <span class="qc-payment-icon">📱</span>
+                        <span>UPI</span>
+                    </div>
+                    <div class="qc-payment-method" data-method="cod">
+                        <span class="qc-payment-icon">💵</span>
+                        <span>COD</span>
+                    </div>
+                </div>
+
+                <div class="qc-payment-form" id="qcCardForm">
+                    <div class="qc-input-group">
+                        <input type="text" class="qc-input" id="qcCardNumber" placeholder="Card number" maxlength="19">
+                    </div>
+                    <div class="qc-input-row">
+                        <input type="text" class="qc-input" id="qcExpiry" placeholder="MM/YY" maxlength="5">
+                        <input type="password" class="qc-input" id="qcCvv" placeholder="CVV" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="qc-payment-form hidden" id="qcUpiForm">
+                    <div class="qc-input-group">
+                        <input type="text" class="qc-input" id="qcUpiId" placeholder="Enter UPI ID (e.g., name@upi)">
+                    </div>
+                    <div class="qc-upi-apps">
+                        <div class="qc-upi-app">GPay</div>
+                        <div class="qc-upi-app">PhonePe</div>
+                        <div class="qc-upi-app">Paytm</div>
+                    </div>
+                </div>
+
+                <div class="qc-payment-form hidden" id="qcCodForm">
+                    <div class="qc-cod-notice">
+                        <span>ℹ️</span>
+                        <span>₹50 COD fee applies. Keep exact change ready.</span>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="qc-summary">
+                    <div class="qc-summary-row">
+                        <span>Subtotal</span>
+                        <span id="qcSubtotal">₹0</span>
+                    </div>
+                    <div class="qc-summary-row">
+                        <span>Shipping</span>
+                        <span id="qcShippingCost">FREE</span>
+                    </div>
+                    <div class="qc-summary-row qc-total">
+                        <span>Total</span>
+                        <span id="qcTotal">₹0</span>
+                    </div>
+                </div>
+
+                <div class="qc-btn-row">
+                    <button class="qc-back-btn" onclick="goToStep(2)">← Back</button>
+                    <button class="qc-place-order-btn" id="qcPlaceOrder">
+                        <span class="qc-btn-text">Pay Now</span>
+                        <div class="qc-spinner"></div>
+                    </button>
+                </div>
+
+                <div class="qc-secure">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                    Secured by 256-bit SSL encryption
+                </div>
+            </div>
+
+            <!-- Success Step -->
+            <div class="qc-content hidden" id="qcSuccess">
+                <div class="qc-success-content">
+                    <div class="qc-success-icon">✓</div>
+                    <h3>Order Placed!</h3>
+                    <p>Thank you for your order. We've sent a confirmation to your email.</p>
+                    <div class="qc-order-number">
+                        <span>Order #</span>
+                        <strong id="qcOrderNumber">FLOW-XXXXXX</strong>
+                    </div>
+                    <button class="qc-done-btn" onclick="closeQuickCheckout()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="flow-shop-2.html">Subscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Careers</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Rewards</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Flow Hydration. All rights reserved. Pan-India Delivery.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">📸</a>
+                <a href="#" aria-label="Twitter">🐦</a>
+                <a href="#" aria-label="YouTube">▶️</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Products State
+        let products = [];
+        
+        // Filter State
+        let activeCategory = 'all';
+        let activeFlavour = 'all';
+        let activeSort = 'featured';
+        
+        // Cart State - synced with CustomerAuth
+        let cart = [];
+        const FREE_SHIPPING_THRESHOLD = 999;
+        const SHIPPING_COST = 99;
+
+        // DOM Elements
+        const cartToggle = document.getElementById('cartToggle');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartDrawer = document.getElementById('cartDrawer');
+        const cartClose = document.getElementById('cartClose');
+        const cartItems = document.getElementById('cartItems');
+        const cartEmpty = document.getElementById('cartEmpty');
+        const cartFooter = document.getElementById('cartFooter');
+        const cartCount = document.getElementById('cartCount');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartShipping = document.getElementById('cartShipping');
+        const cartTotal = document.getElementById('cartTotal');
+        const shippingText = document.getElementById('shippingText');
+        const shippingBar = document.getElementById('shippingBar');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const continueShopping = document.getElementById('continueShopping');
+
+        // Initialize cart from CustomerAuth
+        async function initializeCart() {
+            if (typeof CustomerAuth !== 'undefined') {
+                cart = await CustomerAuth.fetchCart();
+            } else {
+                // Fallback to localStorage
+                const savedCart = localStorage.getItem('flow_cart');
+                cart = savedCart ? JSON.parse(savedCart) : [];
+            }
+            updateCartUI();
+        }
+
+        // Listen for cart updates from other tabs/components
+        window.addEventListener('cartUpdated', (e) => {
+            cart = e.detail.cart;
+            updateCartUI();
+        });
+
+        // Load products on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            initializeCart();
+        });
+
+        async function loadProducts() {
+            const grid = document.querySelector('.products-grid');
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+                    <div style="width: 50px; height: 50px; border: 3px solid rgba(0, 212, 255, 0.1); border-top-color: var(--flow-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                    <p style="color: var(--flow-gray);">Loading products...</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch('/api/products');
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    products = data.data;
+                    renderFlavourFilters(); // Populate flavour filters dynamically
+                    renderProducts();
+                } else {
+                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem;"><p style="color: var(--flow-gray);">No products found</p></div>`;
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem;"><p style="color: var(--flow-gray);">Failed to load products</p></div>`;
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.querySelector('.products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem;"><p style="color: var(--flow-gray);">No products available</p></div>`;
+                return;
+            }
+            
+            // Separate bundle products (variety packs) from single flavour products
+            const bundleProducts = products.filter(p => p.category === 'bundle');
+            const singleProducts = products.filter(p => p.category !== 'bundle');
+            
+            // Expand single products into all flavour × pack size combinations
+            const expandedProducts = [];
+            
+            // Add bundle products first (they show as single featured cards)
+            bundleProducts.forEach(product => {
+                const pack = product.packSizes[0];
+                expandedProducts.push({
+                    ...product,
+                    displayName: product.name,
+                    selectedFlavour: null, // Bundle has multiple flavours
+                    selectedPack: pack,
+                    uniqueId: product.slug,
+                    isBundle: true
+                });
+            });
+            
+            // Get all unique pack sizes (sorted by size: 10, 20, 30)
+            const allPackSizes = [10, 20, 30];
+            
+            // Expand products grouped by pack size first, then by flavour
+            // This ensures: Original 10, Mango 10, Lemonade 10, Original 20, Mango 20, etc.
+            allPackSizes.forEach(packSize => {
+                singleProducts.forEach(product => {
+                    const flavours = product.flavours && product.flavours.length > 0 ? product.flavours : [{ name: 'Original', slug: 'original', color: '#00D4FF' }];
+                    const pack = product.packSizes.find(p => p.size === packSize);
+                    
+                    if (pack) {
+                        flavours.forEach(flavour => {
+                            expandedProducts.push({
+                                ...product,
+                                displayName: `Flow ${flavour.name} — ${pack.label}`,
+                                selectedFlavour: flavour,
+                                selectedPack: pack,
+                                uniqueId: `${product.slug}-${flavour.slug}-${pack.size}`,
+                                isBundle: false
+                            });
+                        });
+                    }
+                });
+            });
+            
+            // Update filter counts before filtering
+            updateFilterCounts(expandedProducts);
+            
+            // Apply filters
+            let filteredProducts = expandedProducts;
+            
+            // Category filter
+            if (activeCategory === 'single') {
+                filteredProducts = filteredProducts.filter(p => !p.isBundle);
+            } else if (activeCategory === 'bundle') {
+                filteredProducts = filteredProducts.filter(p => p.isBundle);
+            }
+            
+            // Flavour filter
+            if (activeFlavour !== 'all') {
+                filteredProducts = filteredProducts.filter(p => {
+                    // For bundles, check if any of the flavours match
+                    if (p.isBundle && p.flavours) {
+                        return p.flavours.some(f => f.slug === activeFlavour);
+                    }
+                    // For single flavour products
+                    return p.selectedFlavour && p.selectedFlavour.slug === activeFlavour;
+                });
+            }
+            
+            // Apply sorting
+            switch (activeSort) {
+                case 'price-low':
+                    filteredProducts.sort((a, b) => a.selectedPack.price - b.selectedPack.price);
+                    break;
+                case 'price-high':
+                    filteredProducts.sort((a, b) => b.selectedPack.price - a.selectedPack.price);
+                    break;
+                case 'name-az':
+                    filteredProducts.sort((a, b) => a.displayName.localeCompare(b.displayName));
+                    break;
+                case 'name-za':
+                    filteredProducts.sort((a, b) => b.displayName.localeCompare(a.displayName));
+                    break;
+                case 'featured':
+                default:
+                    // Keep original order with bundles first
+                    break;
+            }
+            
+            // Show no results message if empty
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="1" style="margin-bottom: 1rem; opacity: 0.5;">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <h3 style="color: var(--flow-white); margin-bottom: 0.5rem;">No products found</h3>
+                        <p style="color: var(--flow-gray);">Try adjusting your filters</p>
+                        <button onclick="setCategory('all'); setFlavour('all');" style="margin-top: 1rem; background: var(--flow-cyan); color: var(--flow-dark); border: none; padding: 0.75rem 1.5rem; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer;">Clear Filters</button>
+                    </div>
+                `;
+                document.querySelector('.products-count strong').textContent = 0;
+                return;
+            }
+            
+            grid.innerHTML = filteredProducts.map((item, index) => {
+                const { selectedFlavour, selectedPack, displayName, uniqueId, isBundle } = item;
+                const isFeatured = index === 0 || isBundle;
+                const badge = item.badges && item.badges[0];
+                
+                // Determine single badge: Bestseller > Featured > Price (only one badge shown)
+                let badgeHtml = '';
+                if (badge && badge.type === 'bestseller') {
+                    badgeHtml = `<div class="product-badge bestseller">${badge.text}</div>`;
+                } else if (isFeatured && isBundle) {
+                    badgeHtml = `<div class="product-badge new">Featured</div>`;
+                } else if (selectedPack.savings) {
+                    badgeHtml = `<div class="product-badge sale">${selectedPack.savings}</div>`;
+                }
+                
+                // Bundle card with multiple sachets
+                if (isBundle) {
+                    return `
+                        <div class="product-card featured bundle" 
+                             data-slug="${item.slug}" 
+                             data-category="${item.category}"
+                             onclick="goToProduct('${item.slug}', '', ${selectedPack.size})">
+                            ${badgeHtml}
+                            <div class="product-image">
+                                <div style="display: flex; gap: 8px; justify-content: center; align-items: flex-end;">
+                                    ${item.flavours.map(f => `
+                                        <div class="sachet-visual" style="width: 60px; height: 90px; background: linear-gradient(135deg, ${hexToRgba(f.color, 0.3)} 0%, ${hexToRgba(f.color, 0.1)} 100%);">
+                                            <div class="sachet-content">
+                                                <div class="sachet-logo" style="font-size: 0.7rem;">Flow</div>
+                                                <div class="sachet-flavor" style="font-size: 0.5rem;">${f.name}</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">Bundle</div>
+                                <h3 class="product-name">${displayName}</h3>
+                                <p class="product-desc">${item.shortDescription || ''}</p>
+                                <div class="product-meta">
+                                    <div class="meta-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2v20M2 12h20"/>
+                                        </svg>
+                                        ${selectedPack.size} sachets
+                                    </div>
+                                    <div class="meta-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                        </svg>
+                                        ${item.flavours.length} flavours
+                                    </div>
+                                </div>
+                                <div class="product-footer">
+                                    <div class="product-price">
+                                        <span class="price-current">₹${selectedPack.price.toLocaleString()}</span>
+                                        ${selectedPack.comparePrice ? `<span class="price-original">₹${selectedPack.comparePrice.toLocaleString()}</span>` : ''}
+                                    </div>
+                                    <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price});">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                            <line x1="3" y1="6" x2="21" y2="6"/>
+                                            <path d="M16 10a4 4 0 01-8 0"/>
+                                        </svg>
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Single flavour card
+                const sachetStyle = selectedFlavour?.color 
+                    ? `background: linear-gradient(135deg, ${hexToRgba(selectedFlavour.color, 0.3)} 0%, ${hexToRgba(selectedFlavour.color, 0.1)} 100%);`
+                    : '';
+                
+                return `
+                    <div class="product-card" 
+                         data-slug="${item.slug}" 
+                         data-flavour="${selectedFlavour.slug}"
+                         data-pack="${selectedPack.size}"
+                         data-category="${item.category}"
+                         onclick="goToProduct('${item.slug}', '${selectedFlavour.slug}', ${selectedPack.size})">
+                        ${badgeHtml}
+                        <div class="product-image">
+                            <div class="sachet-visual" style="${sachetStyle}">
+                                <div class="sachet-content">
+                                    <div class="sachet-logo">Flow</div>
+                                    <div class="sachet-flavor">${selectedFlavour.name}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</div>
+                            <h3 class="product-name">${displayName}</h3>
+                            <p class="product-desc">${item.shortDescription || item.description?.slice(0, 100) + '...' || ''}</p>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v20M2 12h20"/>
+                                    </svg>
+                                    ${selectedPack.size} sachets
+                                </div>
+                                <div class="meta-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                    </svg>
+                                    ${selectedFlavour.name}
+                                </div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="product-price">
+                                    <span class="price-current">₹${selectedPack.price.toLocaleString()}</span>
+                                    ${selectedPack.comparePrice ? `<span class="price-original">₹${selectedPack.comparePrice.toLocaleString()}</span>` : ''}
+                                </div>
+                                <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price});">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                        <line x1="3" y1="6" x2="21" y2="6"/>
+                                        <path d="M16 10a4 4 0 01-8 0"/>
+                                    </svg>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update product count with filtered total
+            document.querySelector('.products-count strong').textContent = filteredProducts.length;
+            
+            // Re-bind add to cart button animations
+            bindAddToCartButtons();
+        }
+
+        function goToProduct(slug, flavour, packSize) {
+            window.location.href = `product.html?product=${slug}&flavour=${flavour}&pack=${packSize}`;
+        }
+
+        function hexToRgba(hex, alpha) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (result) {
+                return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`;
+            }
+            return `rgba(0, 212, 255, ${alpha})`;
+        }
+
+        function bindAddToCartButtons() {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Button feedback
+                    this.classList.add('added');
+                    this.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Added!
+                    `;
+                    
+                    setTimeout(() => {
+                        this.classList.remove('added');
+                        this.innerHTML = `
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 01-8 0"/>
+                            </svg>
+                            Add to Cart
+                        `;
+                    }, 1500);
+                });
+            });
+        }
+
+        // Filter Functions
+        function setCategory(category) {
+            activeCategory = category;
+            
+            // Update UI
+            document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.category === category);
+            });
+            
+            renderProducts();
+        }
+        
+        function setFlavour(flavour) {
+            activeFlavour = flavour;
+            
+            // Update UI
+            document.querySelectorAll('#flavourFilters .filter-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.flavour === flavour);
+            });
+            
+            renderProducts();
+        }
+        
+        function setSort(sortOption) {
+            activeSort = sortOption;
+            renderProducts();
+        }
+        
+        function renderFlavourFilters() {
+            // Collect all unique flavours from products
+            const flavourMap = new Map();
+            
+            products.forEach(p => {
+                if (p.flavours && p.flavours.length > 0) {
+                    p.flavours.forEach(f => {
+                        if (!flavourMap.has(f.slug)) {
+                            flavourMap.set(f.slug, { name: f.name, slug: f.slug, color: f.color });
+                        }
+                    });
+                }
+            });
+            
+            const flavours = Array.from(flavourMap.values());
+            
+            const container = document.getElementById('flavourFilters');
+            container.innerHTML = `
+                <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Flavour</h3>
+                <div class="filter-option ${activeFlavour === 'all' ? 'active' : ''}" data-flavour="all" onclick="setFlavour('all')">
+                    <div class="filter-checkbox"></div>
+                    <span class="filter-label">All Flavours</span>
+                </div>
+                ${flavours.map(f => `
+                    <div class="filter-option ${activeFlavour === f.slug ? 'active' : ''}" data-flavour="${f.slug}" onclick="setFlavour('${f.slug}')">
+                        <div class="filter-checkbox"></div>
+                        <span class="filter-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="width: 12px; height: 12px; border-radius: 50%; background: ${f.color || 'var(--flow-cyan)'}; flex-shrink: 0;"></span>
+                            ${f.name}
+                        </span>
+                    </div>
+                `).join('')}
+            `;
+        }
+        
+        function updateFilterCounts(expandedProducts) {
+            // Count products by category
+            const singleCount = expandedProducts.filter(p => !p.isBundle).length;
+            const bundleCount = expandedProducts.filter(p => p.isBundle).length;
+            const allCount = expandedProducts.length;
+            
+            document.getElementById('countAll').textContent = allCount;
+            document.getElementById('countSingle').textContent = singleCount;
+            document.getElementById('countBundle').textContent = bundleCount;
+        }
+
+        // Toggle Cart
+        function openCart() {
+            cartOverlay.classList.add('active');
+            cartDrawer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCart() {
+            cartOverlay.classList.remove('active');
+            cartDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        cartToggle.addEventListener('click', openCart);
+        cartOverlay.addEventListener('click', closeCart);
+        cartClose.addEventListener('click', closeCart);
+        continueShopping.addEventListener('click', closeCart);
+
+        // Show Toast
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Update Cart UI
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const total = subtotal + shipping;
+
+            // Update cart count
+            cartCount.textContent = totalItems;
+
+            // Update cart items
+            if (cart.length === 0) {
+                cartEmpty.style.display = 'block';
+                cartFooter.style.display = 'none';
+                cartItems.innerHTML = '';
+                cartItems.appendChild(cartEmpty);
+            } else {
+                cartEmpty.style.display = 'none';
+                cartFooter.style.display = 'block';
+
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item" data-product="${item.id}">
+                        <div class="cart-item-image">
+                            <div class="mini-sachet"></div>
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-variant">Electrolyte Hydration</div>
+                            <div class="cart-item-actions">
+                                <div class="cart-item-qty">
+                                    <button onclick="updateQuantity('${item.id}', -1)">−</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="updateQuantity('${item.id}', 1)">+</button>
+                                </div>
+                                <div class="cart-item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
+                            </div>
+                            <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">Remove</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update totals
+            cartSubtotal.textContent = `₹${subtotal.toLocaleString()}`;
+            cartShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+            cartTotal.textContent = `₹${total.toLocaleString()}`;
+
+            // Update shipping progress
+            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+                shippingText.innerHTML = '🎉 You\'ve unlocked <span>FREE shipping!</span>';
+                shippingBar.style.width = '100%';
+            } else {
+                const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
+                shippingText.innerHTML = `Add <span>₹${remaining}</span> more for free shipping!`;
+                shippingBar.style.width = `${(subtotal / FREE_SHIPPING_THRESHOLD) * 100}%`;
+            }
+        }
+
+        // Add to Cart - integrated with CustomerAuth
+        function addToCart(productId, name, price, flavour = null, image = null) {
+            const existingIndex = cart.findIndex(item => 
+                item.id === productId || (item.productSlug === productId && item.flavour === flavour)
+            );
+            
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    productSlug: productId,
+                    name: name,
+                    price: price,
+                    quantity: 1,
+                    flavour: flavour,
+                    image: image
+                });
+            }
+
+            // Sync with CustomerAuth
+            if (typeof CustomerAuth !== 'undefined') {
+                CustomerAuth.saveLocalCart(cart);
+                if (CustomerAuth.isLoggedIn()) {
+                    CustomerAuth.syncCartToServer(cart);
+                }
+            } else {
+                localStorage.setItem('flow_cart', JSON.stringify(cart));
+            }
+            
+            updateCartUI();
+            showToast(`${name} added to cart!`);
+        }
+
+        // Update Quantity - integrated with CustomerAuth
+        function updateQuantity(productId, change) {
+            const index = cart.findIndex(item => item.id === productId || item.productSlug === productId);
+            if (index > -1) {
+                cart[index].quantity += change;
+                if (cart[index].quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    // Sync with CustomerAuth
+                    if (typeof CustomerAuth !== 'undefined') {
+                        CustomerAuth.saveLocalCart(cart);
+                        if (CustomerAuth.isLoggedIn()) {
+                            CustomerAuth.syncCartToServer(cart);
+                        }
+                    } else {
+                        localStorage.setItem('flow_cart', JSON.stringify(cart));
+                    }
+                    updateCartUI();
+                }
+            }
+        }
+
+        // Remove from Cart - integrated with CustomerAuth
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId && item.productSlug !== productId);
+            
+            // Sync with CustomerAuth
+            if (typeof CustomerAuth !== 'undefined') {
+                CustomerAuth.saveLocalCart(cart);
+                if (CustomerAuth.isLoggedIn()) {
+                    CustomerAuth.syncCartToServer(cart);
+                }
+            } else {
+                localStorage.setItem('flow_cart', JSON.stringify(cart));
+            }
+            
+            updateCartUI();
+            showToast('Item removed from cart');
+        }
+
+        // Initialize
+        updateCartUI();
+
+        // ========== QUICK CHECKOUT FUNCTIONALITY ==========
+        const quickCheckoutOverlay = document.getElementById('quickCheckoutOverlay');
+        const quickCheckoutClose = document.getElementById('quickCheckoutClose');
+        let qcShippingCost = 0;
+        let qcCurrentStep = 1;
+
+        // Open Quick Checkout - requires authentication
+        function openQuickCheckout() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty!');
+                return;
+            }
+            
+            // Check if user is logged in
+            if (!CustomerAuth.isLoggedIn()) {
+                CustomerAuth.showModal(() => {
+                    // After successful login, open checkout
+                    proceedToCheckout();
+                });
+                return;
+            }
+            
+            proceedToCheckout();
+        }
+        
+        function proceedToCheckout() {
+            closeCart();
+            quickCheckoutOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateQCSummary();
+            
+            // Pre-fill customer data if available
+            prefillCustomerData();
+        }
+        
+        async function prefillCustomerData() {
+            const customer = CustomerAuth.getCustomer();
+            if (!customer) return;
+            
+            // Pre-fill name if available
+            const nameInput = document.getElementById('qcName');
+            if (nameInput && customer.name) {
+                nameInput.value = customer.name;
+            }
+            
+            // Pre-fill phone
+            const phoneInput = document.getElementById('qcPhone');
+            if (phoneInput && customer.mobile) {
+                phoneInput.value = customer.mobile;
+            }
+            
+            // Pre-fill default address if available
+            if (customer.addresses && customer.addresses.length > 0) {
+                const defaultAddr = customer.addresses.find(a => a.isDefault) || customer.addresses[0];
+                
+                const addressInput = document.getElementById('qcAddress');
+                const cityInput = document.getElementById('qcCity');
+                const stateInput = document.getElementById('qcState');
+                const pincodeInput = document.getElementById('qcPincode');
+                
+                if (addressInput && defaultAddr.fullAddress) {
+                    addressInput.value = defaultAddr.fullAddress + (defaultAddr.landmark ? ', ' + defaultAddr.landmark : '');
+                }
+                if (cityInput && defaultAddr.city) cityInput.value = defaultAddr.city;
+                if (stateInput && defaultAddr.state) stateInput.value = defaultAddr.state;
+                if (pincodeInput && defaultAddr.pincode) pincodeInput.value = defaultAddr.pincode;
+            }
+        }
+
+        // Close Quick Checkout
+        function closeQuickCheckout() {
+            quickCheckoutOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Reset to step 1
+            goToStep(1);
+            // Reset success state
+            document.getElementById('qcSuccess').classList.add('hidden');
+            document.getElementById('qcStep1').classList.remove('hidden');
+        }
+
+        quickCheckoutClose.addEventListener('click', closeQuickCheckout);
+        quickCheckoutOverlay.addEventListener('click', function(e) {
+            if (e.target === quickCheckoutOverlay) {
+                closeQuickCheckout();
+            }
+        });
+
+        // Navigate to step
+        function goToStep(step) {
+            // Hide all steps
+            document.getElementById('qcStep1').classList.add('hidden');
+            document.getElementById('qcStep2').classList.add('hidden');
+            document.getElementById('qcStep3').classList.add('hidden');
+            document.getElementById('qcSuccess').classList.add('hidden');
+
+            // Show target step
+            document.getElementById(`qcStep${step}`).classList.remove('hidden');
+
+            // Update progress
+            document.querySelectorAll('.qc-step').forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i + 1 < step) {
+                    s.classList.add('completed');
+                } else if (i + 1 === step) {
+                    s.classList.add('active');
+                }
+            });
+
+            qcCurrentStep = step;
+        }
+
+        // Update QC Summary
+        function updateQCSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + qcShippingCost;
+
+            document.getElementById('qcSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
+            document.getElementById('qcShippingCost').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            document.getElementById('qcTotal').textContent = `₹${total.toLocaleString()}`;
+        }
+
+        // Shipping option selection
+        document.querySelectorAll('.qc-shipping-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.qc-shipping-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                qcShippingCost = parseInt(this.dataset.price);
+                updateQCSummary();
+            });
+        });
+
+        // Payment method selection
+        document.querySelectorAll('.qc-payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.qc-payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+
+                const selectedMethod = this.dataset.method;
+
+                // Hide all payment forms
+                document.getElementById('qcCardForm').classList.add('hidden');
+                document.getElementById('qcUpiForm').classList.add('hidden');
+                document.getElementById('qcCodForm').classList.add('hidden');
+
+                // Show selected form
+                if (selectedMethod === 'card') {
+                    document.getElementById('qcCardForm').classList.remove('hidden');
+                } else if (selectedMethod === 'upi') {
+                    document.getElementById('qcUpiForm').classList.remove('hidden');
+                } else if (selectedMethod === 'cod') {
+                    document.getElementById('qcCodForm').classList.remove('hidden');
+                }
+            });
+        });
+
+        // Card number formatting
+        document.getElementById('qcCardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+            let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
+            e.target.value = formatted;
+        });
+
+        // Expiry date formatting
+        document.getElementById('qcExpiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+
+        // Place Order
+        document.getElementById('qcPlaceOrder').addEventListener('click', function() {
+            const btn = this;
+            btn.classList.add('loading');
+
+            setTimeout(() => {
+                btn.classList.remove('loading');
+
+                // Generate order number
+                const orderNum = 'FLOW-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                document.getElementById('qcOrderNumber').textContent = orderNum;
+
+                // Show success
+                document.getElementById('qcStep3').classList.add('hidden');
+                document.getElementById('qcSuccess').classList.remove('hidden');
+
+                // Update progress
+                document.querySelectorAll('.qc-step').forEach(s => s.classList.add('completed'));
+
+                // Clear cart
+                cart = [];
+                updateCartUI();
+            }, 2000);
+        });
+    </script>
+    <script src="assets/js/customerAuth.js"></script>
+</body>
+</html>

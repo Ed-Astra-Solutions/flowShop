@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --gradient-water: linear-gradient(180deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 180, 180, 0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated water background */
+        .water-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--flow-dark);
+        }
+
+        .water-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 180, 180, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+            animation: floatBg 20s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.7);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--flow-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--flow-white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--flow-white);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cart-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+        }
+
+        .cart-btn .cart-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-btn:hover .cart-text {
+            max-width: 50px;
+            opacity: 1;
+        }
+
+        .cart-count {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .profile-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: var(--flow-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover,
+        .profile-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+            width: auto;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            gap: 0.4rem;
+        }
+
+        .profile-btn .profile-text {
+            max-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .profile-btn:hover .profile-text,
+        .profile-btn.active .profile-text {
+            max-width: 60px;
+            opacity: 1;
+        }
+
+        /* Profile Page Layout */
+        .profile-page {
+            padding: 7rem 4% 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .profile-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-header p {
+            color: var(--flow-gray);
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .profile-sidebar {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 6rem;
+        }
+
+        .user-info {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--flow-dark);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--flow-gray);
+            font-weight: 500;
+        }
+
+        .sidebar-nav-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-white);
+        }
+
+        .sidebar-nav-item.active {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+        }
+
+        .sidebar-nav-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item.logout {
+            margin-top: 1rem;
+            color: #ff6b6b;
+        }
+
+        .sidebar-nav-item.logout:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+
+        /* Main Content */
+        .profile-content {
+            min-height: 500px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title svg {
+            color: var(--flow-cyan);
+        }
+
+        /* Orders Section */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .order-info {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .order-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .order-info-label {
+            font-size: 0.75rem;
+            color: var(--flow-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .order-info-value {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .order-status {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .order-status.delivered {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+        }
+
+        .order-status.processing {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .order-status.shipped {
+            background: rgba(0, 180, 180, 0.15);
+            color: var(--flow-teal);
+        }
+
+        .order-status.cancelled {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .order-items {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+        }
+
+        .order-item:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 180, 180, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-item-image svg {
+            color: var(--flow-cyan);
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-item-variant {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .order-item-price {
+            font-weight: 600;
+            color: var(--flow-cyan);
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 212, 255, 0.03);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .order-total {
+            font-weight: 600;
+        }
+
+        .order-total span {
+            color: var(--flow-cyan);
+            font-size: 1.1rem;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .order-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .order-btn.primary {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .order-btn.primary:hover {
+            background: var(--flow-teal);
+        }
+
+        .order-btn.secondary {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-white);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .order-btn.secondary:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Account Details Section */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .detail-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .detail-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .detail-card-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-card-title svg {
+            color: var(--flow-cyan);
+            width: 18px;
+            height: 18px;
+        }
+
+        .edit-btn {
+            padding: 0.4rem 0.8rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--flow-cyan);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .edit-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        /* Addresses Section */
+        .addresses-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .address-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .address-card.default {
+            border-color: var(--flow-cyan);
+        }
+
+        .address-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+        }
+
+        .address-type {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .address-type svg {
+            color: var(--flow-cyan);
+            width: 18px;
+            height: 18px;
+        }
+
+        .address-text {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .address-phone {
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .address-phone svg {
+            width: 16px;
+            height: 16px;
+            color: var(--flow-cyan);
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .address-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-white);
+        }
+
+        .address-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .address-btn.delete {
+            color: #ff6b6b;
+        }
+
+        .address-btn.delete:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .add-address-card {
+            background: rgba(13, 26, 45, 0.3);
+            border: 2px dashed rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 200px;
+        }
+
+        .add-address-card:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            background: rgba(13, 26, 45, 0.5);
+        }
+
+        .add-address-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .add-address-icon svg {
+            color: var(--flow-cyan);
+        }
+
+        .add-address-text {
+            font-weight: 500;
+            color: var(--flow-gray);
+        }
+
+        /* Preferences Section */
+        .preferences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .preference-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preference-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .preference-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preference-icon svg {
+            color: var(--flow-cyan);
+        }
+
+        .preference-details h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .preference-details p {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(148, 163, 184, 0.3);
+            transition: 0.3s;
+            border-radius: 50px;
+        }
+
+        .toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--flow-white);
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--flow-cyan);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+        }
+
+        /* Security Section */
+        .security-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .security-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .security-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .security-icon svg {
+            color: var(--flow-cyan);
+        }
+
+        .security-details h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .security-details p {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .security-btn {
+            padding: 0.6rem 1.25rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: var(--flow-white);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .security-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .empty-state-icon svg {
+            width: 36px;
+            height: 36px;
+            color: var(--flow-cyan);
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--flow-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .empty-state-btn:hover {
+            background: var(--flow-teal);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .footer-contact a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .details-grid,
+            .addresses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-header h1 {
+                font-size: 2rem;
+            }
+
+            .order-info {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .order-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-brand p {
+                margin: 0 auto;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow Hydration" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="flow-shop-2.html">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+        <div class="nav-right">
+            <a href="flow-shop-2.html" class="cart-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <span class="cart-text">Cart</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            <a href="profile.html" class="profile-btn active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="profile-text">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Profile Page -->
+    <div class="profile-page">
+        <div class="profile-header">
+            <h1>My Account</h1>
+            <p>Manage your orders, addresses, and account settings</p>
+        </div>
+
+        <div class="profile-layout">
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-name">Aditya M</div>
+                    <div class="user-email">aditya@example.com</div>
+                </div>
+                <div class="sidebar-nav">
+                    <div class="sidebar-nav-item active" data-section="orders">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                        Order History
+                    </div>
+                    <div class="sidebar-nav-item" data-section="details">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Account Details
+                    </div>
+                    <div class="sidebar-nav-item" data-section="addresses">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Addresses
+                    </div>
+                    <div class="sidebar-nav-item" data-section="preferences">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Preferences
+                    </div>
+                    <div class="sidebar-nav-item logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Logout
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="profile-content">
+                <!-- Orders Section -->
+                <div class="content-section active" id="orders">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                        Order History
+                    </h2>
+                    <div class="orders-list" id="orders-list">
+                        <!-- Orders loaded dynamically -->
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                                </svg>
+                            </div>
+                            <h3>No Orders Yet</h3>
+                            <p>When you place your first order, it will appear here.</p>
+                            <a href="flow-shop-2.html" class="empty-state-btn">Start Shopping</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Details Section -->
+                <div class="content-section" id="details">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Account Details
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card" id="personal-info-card">
+                            <div class="detail-card-header">
+                                <div class="detail-card-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    Personal Information
+                                </div>
+                                <button class="edit-btn" onclick="openEditModal()">Edit</button>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Full Name</span>
+                                <span class="detail-value" id="display-name">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Email</span>
+                                <span class="detail-value" id="display-email">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Phone</span>
+                                <span class="detail-value" id="display-phone">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Date of Birth</span>
+                                <span class="detail-value" id="display-dob">-</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-card-header">
+                                <div class="detail-card-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    Account Status
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value" style="color: var(--flow-cyan);">Active</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Member Since</span>
+                                <span class="detail-value" id="display-member-since">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Last Login</span>
+                                <span class="detail-value" id="display-last-login">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Section -->
+                <div class="content-section" id="addresses">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Saved Addresses
+                    </h2>
+                    <div class="addresses-grid">
+                        <!-- Addresses loaded dynamically -->
+                        <div class="add-address-card" onclick="openAddressModal()">
+                            <div class="add-address-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                            </div>
+                            <span class="add-address-text">Add New Address</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Section -->
+                <div class="content-section" id="preferences">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Preferences
+                    </h2>
+                    <div class="preferences-list">
+                        <div class="preference-card">
+                            <div class="preference-info">
+                                <div class="preference-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                </div>
+                                <div class="preference-details">
+                                    <h4>Email Notifications</h4>
+                                    <p>Receive order updates, promotions, and news via email</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pref-email" checked onchange="updatePreference('emailNotifications', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="preference-card">
+                            <div class="preference-info">
+                                <div class="preference-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                    </svg>
+                                </div>
+                                <div class="preference-details">
+                                    <h4>WhatsApp Notifications</h4>
+                                    <p>Get instant updates about your orders on WhatsApp</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pref-whatsapp" checked onchange="updatePreference('whatsappNotifications', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="preference-card">
+                            <div class="preference-info">
+                                <div class="preference-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                </div>
+                                <div class="preference-details">
+                                    <h4>SMS Notifications</h4>
+                                    <p>Receive shipping and delivery updates via SMS</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pref-sms" onchange="updatePreference('smsNotifications', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="preference-card">
+                            <div class="preference-info">
+                                <div class="preference-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                                    </svg>
+                                </div>
+                                <div class="preference-details">
+                                    <h4>Promotional Offers</h4>
+                                    <p>Get exclusive discounts and early access to sales</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pref-promotional" checked onchange="updatePreference('promotionalOffers', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Edit Personal Information</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editProfileForm" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="edit-name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="edit-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="edit-dob">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Address Modal -->
+    <div class="modal-overlay" id="addressModal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="addressModalTitle">Add New Address</h3>
+                <button class="modal-close" onclick="closeAddressModal()">&times;</button>
+            </div>
+            <form id="addressForm" onsubmit="saveAddress(event)">
+                <input type="hidden" id="address-id">
+                <div class="form-group">
+                    <label>Address Type</label>
+                    <select id="address-type">
+                        <option value="home">Home</option>
+                        <option value="work">Work</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Label (optional)</label>
+                    <input type="text" id="address-label" placeholder="e.g., Mom's Place">
+                </div>
+                <div class="form-group">
+                    <label>Full Address *</label>
+                    <textarea id="address-full" rows="2" placeholder="House/Flat No., Building, Street" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Landmark (optional)</label>
+                    <input type="text" id="address-landmark" placeholder="Near...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="address-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="address-state" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pincode *</label>
+                    <input type="text" id="address-pincode" pattern="[0-9]{6}" maxlength="6" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="address-default">
+                        Set as default address
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddressModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: var(--flow-white);
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--flow-cyan);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-primary {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .btn-primary:hover {
+            background: var(--flow-teal);
+        }
+        .btn-secondary {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--flow-white);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: var(--flow-white);
+            z-index: 3000;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.success {
+            border-color: var(--flow-cyan);
+        }
+        .toast.error {
+            border-color: #ff6b6b;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="flow-shop-2.html">Subscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Careers</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Rewards</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="footer-contact">
+                <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/customerAuth.js"></script>
+    <script>
+        // Global customer data
+        let customerData = null;
+
+        // Update cart count from storage
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountEl = document.getElementById('cartCount');
+            if (cartCountEl) {
+                cartCountEl.textContent = totalItems;
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Format date for display
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        // Format date for input
+        function formatDateForInput(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toISOString().split('T')[0];
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize cart count
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.initCart) {
+                await CustomerAuth.initCart();
+            }
+            updateCartCount();
+
+            // Check if user is logged in
+            if (!CustomerAuth.isLoggedIn()) {
+                CustomerAuth.showModal(() => {
+                    loadProfileData();
+                });
+                return;
+            }
+            
+            // Verify token is still valid
+            const isValid = await CustomerAuth.checkAuth();
+            if (!isValid) {
+                CustomerAuth.showModal(() => {
+                    loadProfileData();
+                });
+                return;
+            }
+            
+            loadProfileData();
+        });
+        
+        async function loadProfileData() {
+            try {
+                const data = await CustomerAuth.getProfile();
+                customerData = data.customer;
+                
+                // Update sidebar user info
+                const userAvatar = document.querySelector('.user-avatar');
+                const userName = document.querySelector('.user-name');
+                const userEmail = document.querySelector('.user-email');
+                
+                if (customerData.name) {
+                    userAvatar.textContent = customerData.name.charAt(0).toUpperCase();
+                    userName.textContent = customerData.name;
+                } else {
+                    userAvatar.textContent = '?';
+                    userName.textContent = 'User';
+                }
+                userEmail.textContent = customerData.mobile ? `+91 ${customerData.mobile}` : '';
+                
+                // Update Account Details section
+                document.getElementById('display-name').textContent = customerData.name || 'Not set';
+                document.getElementById('display-email').textContent = customerData.email || 'Not set';
+                document.getElementById('display-phone').textContent = customerData.mobile ? `+91 ${customerData.mobile}` : 'Not set';
+                document.getElementById('display-dob').textContent = formatDate(customerData.dateOfBirth);
+                document.getElementById('display-member-since').textContent = formatDate(customerData.createdAt);
+                document.getElementById('display-last-login').textContent = formatDate(customerData.lastLogin);
+                
+                // Load addresses
+                renderAddresses(customerData.addresses || []);
+                
+                // Update preferences
+                if (customerData.preferences) {
+                    const emailToggle = document.getElementById('pref-email');
+                    const smsToggle = document.getElementById('pref-sms');
+                    const whatsappToggle = document.getElementById('pref-whatsapp');
+                    const promotionalToggle = document.getElementById('pref-promotional');
+                    
+                    if (emailToggle) emailToggle.checked = customerData.preferences.emailNotifications !== false;
+                    if (smsToggle) smsToggle.checked = customerData.preferences.smsNotifications !== false;
+                    if (whatsappToggle) whatsappToggle.checked = customerData.preferences.whatsappNotifications !== false;
+                    if (promotionalToggle) promotionalToggle.checked = customerData.preferences.promotionalOffers !== false;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('Failed to load profile data', 'error');
+            }
+        }
+        
+        // ==================== Profile Edit Functions ====================
+        
+        function openEditModal() {
+            document.getElementById('edit-name').value = customerData?.name || '';
+            document.getElementById('edit-email').value = customerData?.email || '';
+            document.getElementById('edit-dob').value = formatDateForInput(customerData?.dateOfBirth);
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+        
+        async function saveProfile(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('edit-name').value.trim();
+            const email = document.getElementById('edit-email').value.trim();
+            const dateOfBirth = document.getElementById('edit-dob').value;
+            
+            try {
+                const response = await fetch('/api/customer/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify({ name, email, dateOfBirth: dateOfBirth || null })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Profile updated successfully!');
+                    closeEditModal();
+                    loadProfileData(); // Refresh data
+                } else {
+                    showToast(data.message || 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Failed to update profile', 'error');
+            }
+        }
+        
+        // ==================== Preferences Functions ====================
+        
+        async function updatePreference(key, value) {
+            try {
+                const response = await fetch('/api/customer/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify({ 
+                        preferences: { [key]: value }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Preference updated!');
+                } else {
+                    showToast(data.message || 'Failed to update preference', 'error');
+                    // Revert toggle
+                    const toggle = document.getElementById(`pref-${key.replace('Notifications', '')}`);
+                    if (toggle) toggle.checked = !value;
+                }
+            } catch (error) {
+                console.error('Error updating preference:', error);
+                showToast('Failed to update preference', 'error');
+            }
+        }
+        
+        // ==================== Address Functions ====================
+        
+        function renderAddresses(addresses) {
+            const addressesGrid = document.querySelector('.addresses-grid');
+            if (!addressesGrid) return;
+            
+            addressesGrid.innerHTML = '';
+            
+            if (addresses.length === 0) {
+                // Show empty state
+                addressesGrid.innerHTML = `
+                    <div class="add-address-card" onclick="openAddressModal()" style="grid-column: 1/-1;">
+                        <div class="add-address-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        </div>
+                        <span class="add-address-text">Add Your First Address</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            addresses.forEach(addr => {
+                const card = document.createElement('div');
+                card.className = `address-card${addr.isDefault ? ' default' : ''}`;
+                card.innerHTML = `
+                    ${addr.isDefault ? '<span class="address-badge">Default</span>' : ''}
+                    <div class="address-type">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            ${addr.type === 'work' ? 
+                                '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>' :
+                                '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'}
+                        </svg>
+                        ${addr.label || (addr.type === 'work' ? 'Work' : addr.type === 'other' ? 'Other' : 'Home')}
+                    </div>
+                    <p class="address-text">
+                        ${addr.fullAddress}${addr.landmark ? '<br>' + addr.landmark : ''}<br>
+                        ${addr.city}, ${addr.state} ${addr.pincode}
+                    </p>
+                    <div class="address-actions">
+                        <button class="address-btn" onclick="editAddress('${addr._id}')">Edit</button>
+                        ${!addr.isDefault ? `<button class="address-btn" onclick="setDefaultAddress('${addr._id}')">Set Default</button>` : ''}
+                        <button class="address-btn delete" onclick="deleteAddress('${addr._id}')">Delete</button>
+                    </div>
+                `;
+                addressesGrid.appendChild(card);
+            });
+            
+            // Add the "add new address" card
+            const addCard = document.createElement('div');
+            addCard.className = 'add-address-card';
+            addCard.onclick = () => openAddressModal();
+            addCard.innerHTML = `
+                <div class="add-address-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </div>
+                <span class="add-address-text">Add New Address</span>
+            `;
+            addressesGrid.appendChild(addCard);
+        }
+        
+        function openAddressModal(addressId = null) {
+            const modal = document.getElementById('addressModal');
+            const title = document.getElementById('addressModalTitle');
+            const form = document.getElementById('addressForm');
+            
+            form.reset();
+            document.getElementById('address-id').value = '';
+            
+            if (addressId && customerData?.addresses) {
+                const addr = customerData.addresses.find(a => a._id === addressId);
+                if (addr) {
+                    title.textContent = 'Edit Address';
+                    document.getElementById('address-id').value = addr._id;
+                    document.getElementById('address-type').value = addr.type || 'home';
+                    document.getElementById('address-label').value = addr.label || '';
+                    document.getElementById('address-full').value = addr.fullAddress || '';
+                    document.getElementById('address-landmark').value = addr.landmark || '';
+                    document.getElementById('address-city').value = addr.city || '';
+                    document.getElementById('address-state').value = addr.state || '';
+                    document.getElementById('address-pincode').value = addr.pincode || '';
+                    document.getElementById('address-default').checked = addr.isDefault || false;
+                }
+            } else {
+                title.textContent = 'Add New Address';
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        function closeAddressModal() {
+            document.getElementById('addressModal').style.display = 'none';
+        }
+        
+        function editAddress(addressId) {
+            openAddressModal(addressId);
+        }
+        
+        async function saveAddress(event) {
+            event.preventDefault();
+            
+            const addressId = document.getElementById('address-id').value;
+            const addressData = {
+                type: document.getElementById('address-type').value,
+                label: document.getElementById('address-label').value.trim(),
+                fullAddress: document.getElementById('address-full').value.trim(),
+                landmark: document.getElementById('address-landmark').value.trim(),
+                city: document.getElementById('address-city').value.trim(),
+                state: document.getElementById('address-state').value.trim(),
+                pincode: document.getElementById('address-pincode').value.trim(),
+                isDefault: document.getElementById('address-default').checked
+            };
+            
+            try {
+                const url = addressId 
+                    ? `/api/customer/addresses/${addressId}`
+                    : '/api/customer/addresses';
+                    
+                const response = await fetch(url, {
+                    method: addressId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify(addressData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(addressId ? 'Address updated!' : 'Address added!');
+                    closeAddressModal();
+                    customerData.addresses = data.addresses;
+                    renderAddresses(data.addresses);
+                } else {
+                    showToast(data.message || 'Failed to save address', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving address:', error);
+                showToast('Failed to save address', 'error');
+            }
+        }
+        
+        async function setDefaultAddress(addressId) {
+            try {
+                const response = await fetch(`/api/customer/addresses/${addressId}/default`, {
+                    method: 'PUT',
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showToast('Default address updated!');
+                    customerData.addresses = data.addresses;
+                    renderAddresses(data.addresses);
+                } else {
+                    showToast(data.message || 'Failed to set default address', 'error');
+                }
+            } catch (error) {
+                console.error('Error setting default address:', error);
+                showToast('Failed to set default address', 'error');
+            }
+        }
+        
+        async function deleteAddress(addressId) {
+            if (!confirm('Are you sure you want to delete this address?')) return;
+            
+            try {
+                const response = await fetch(`/api/customer/addresses/${addressId}`, {
+                    method: 'DELETE',
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showToast('Address deleted!');
+                    customerData.addresses = data.addresses;
+                    renderAddresses(data.addresses);
+                } else {
+                    showToast(data.message || 'Failed to delete address', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting address:', error);
+                showToast('Failed to delete address', 'error');
+            }
+        }
+        
+        // ==================== Navigation ====================
+        
+        document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+            if (!item.classList.contains('logout')) {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const section = this.dataset.section;
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(section).classList.add('active');
+                });
+            }
+        });
+
+        // Logout handler
+        document.querySelector('.sidebar-nav-item.logout').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                CustomerAuth.logout();
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
