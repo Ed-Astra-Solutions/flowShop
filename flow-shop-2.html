@@ -2593,6 +2593,11 @@
     </footer>
 
     <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? ''
+            : 'https://api.flowhydration.in';
+        
         // Products State
         let products = [];
         
@@ -2658,7 +2663,7 @@
             `;
             
             try {
-                const response = await fetch('/api/products');
+                const response = await fetch(`${API_BASE}/api/products`);
                 const data = await response.json();
                 
                 if (data.success && data.data) {

@@ -4,7 +4,12 @@
  */
 
 const CustomerAuth = (function() {
-    const API_BASE = '/api/customer';
+    // Production: https://api.flowhydration.in/api/customer
+    // Local: /api/customer (relative path for same-origin)
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? '/api/customer'
+        : 'https://api.flowhydration.in/api/customer';
+    
     const TOKEN_KEY = 'flow_customer_token';
     const CUSTOMER_KEY = 'flow_customer';
     

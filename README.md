@@ -2,8 +2,9 @@
 
 Customer-facing storefront for FLOWW e-commerce platform.
 
-## Production Server
-**API Base URL**: `https://api.flowhydration.in`
+## Production URLs
+- **Shop Frontend**: `https://shop.flowhydration.in`
+- **API Server**: `https://api.flowhydration.in`
 
 ## Project Structure
 
@@ -38,15 +39,17 @@ frontend_user/
 
 ## API Configuration
 
-The frontend connects to the backend API. Update the API base URL in the JavaScript files:
+The frontend automatically detects the environment and uses the appropriate API:
 
 ```javascript
-// For local development
-const API_BASE = 'http://localhost:3000';
-
-// For production
-const API_BASE = 'https://api.flowhydration.in';
+// Automatic detection (built-in)
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? '/api/customer'                              // Local development
+    : 'https://api.flowhydration.in/api/customer'; // Production
 ```
+
+- **Local**: Uses relative path `/api/customer` (same-origin)
+- **Production**: Uses `https://api.flowhydration.in/api/customer` (cross-origin)
 
 ## API Endpoints Used
 

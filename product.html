@@ -1919,6 +1919,11 @@
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
     <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? ''
+            : 'https://api.flowhydration.in';
+        
         // Get product slug from URL params
         const urlParams = new URLSearchParams(window.location.search);
         const productSlug = urlParams.get('product') || 'flow-original';
@@ -1943,13 +1948,13 @@
             
             try {
                 // Load all products for flavour switching
-                const allResponse = await fetch('/api/products');
+                const allResponse = await fetch(`${API_BASE}/api/products`);
                 const allData = await allResponse.json();
                 if (allData.success && allData.data) {
                     allProducts = allData.data; // Keep all products including bundles
                 }
                 
-                const response = await fetch(`/api/products/${productSlug}`);
+                const response = await fetch(`${API_BASE}/api/products/${productSlug}`);
                 const data = await response.json();
                 
                 if (data.success && data.data) {

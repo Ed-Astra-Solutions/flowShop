@@ -1714,6 +1714,11 @@
 
     <script src="assets/js/customerAuth.js"></script>
     <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? '/api/customer'
+            : 'https://api.flowhydration.in/api/customer';
+        
         // Global customer data
         let customerData = null;
 
@@ -1854,7 +1859,7 @@
             const dateOfBirth = document.getElementById('edit-dob').value;
             
             try {
-                const response = await fetch('/api/customer/profile', {
+                const response = await fetch(`${API_BASE}/profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1882,7 +1887,7 @@
         
         async function updatePreference(key, value) {
             try {
-                const response = await fetch('/api/customer/profile', {
+                const response = await fetch(`${API_BASE}/profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2029,8 +2034,8 @@
             
             try {
                 const url = addressId 
-                    ? `/api/customer/addresses/${addressId}`
-                    : '/api/customer/addresses';
+                    ? `${API_BASE}/addresses/${addressId}`
+                    : `${API_BASE}/addresses`;
                     
                 const response = await fetch(url, {
                     method: addressId ? 'PUT' : 'POST',
@@ -2059,7 +2064,7 @@
         
         async function setDefaultAddress(addressId) {
             try {
-                const response = await fetch(`/api/customer/addresses/${addressId}/default`, {
+                const response = await fetch(`${API_BASE}/addresses/${addressId}/default`, {
                     method: 'PUT',
                     headers: CustomerAuth.getAuthHeaders()
                 });
@@ -2081,7 +2086,7 @@
             if (!confirm('Are you sure you want to delete this address?')) return;
             
             try {
-                const response = await fetch(`/api/customer/addresses/${addressId}`, {
+                const response = await fetch(`${API_BASE}/addresses/${addressId}`, {
                     method: 'DELETE',
                     headers: CustomerAuth.getAuthHeaders()
                 });
