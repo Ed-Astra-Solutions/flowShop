@@ -2215,6 +2215,34 @@
             addresses.forEach(addr => {
                 const card = document.createElement('div');
                 card.className = `address-card${addr.isDefault ? ' default' : ''}`;
+                
+                // Build address display - handle both checkout flow (houseFloor + formattedAddress) and profile flow (fullAddress)
+                let addressDisplay = '';
+                if (addr.houseFloor) {
+                    addressDisplay = addr.houseFloor;
+                    if (addr.formattedAddress) {
+                        addressDisplay += '<br>' + addr.formattedAddress;
+                    }
+                } else if (addr.fullAddress) {
+                    addressDisplay = addr.fullAddress;
+                } else if (addr.formattedAddress) {
+                    addressDisplay = addr.formattedAddress;
+                }
+                
+                // Add landmark if present
+                if (addr.landmark) {
+                    addressDisplay += '<br>Near: ' + addr.landmark;
+                }
+                
+                // Add city, state, pincode
+                const locationParts = [];
+                if (addr.city) locationParts.push(addr.city);
+                if (addr.state) locationParts.push(addr.state);
+                if (addr.pincode) locationParts.push(addr.pincode);
+                if (locationParts.length > 0) {
+                    addressDisplay += '<br>' + locationParts.join(', ');
+                }
+                
                 card.innerHTML = `
                     ${addr.isDefault ? '<span class="address-badge">Default</span>' : ''}
                     <div class="address-type">
@@ -2226,8 +2254,7 @@
                         ${addr.label || (addr.type === 'work' ? 'Work' : addr.type === 'other' ? 'Other' : 'Home')}
                     </div>
                     <p class="address-text">
-                        ${addr.fullAddress}${addr.landmark ? '<br>' + addr.landmark : ''}<br>
-                        ${addr.city}, ${addr.state} ${addr.pincode}
+                        ${addressDisplay || 'Address details not available'}
                     </p>
                     <div class="address-actions">
                         <button class="address-btn" onclick="editAddress('${addr._id}')">Edit</button>
@@ -2269,7 +2296,19 @@
                     document.getElementById('address-id').value = addr._id;
                     document.getElementById('address-type').value = addr.type || 'home';
                     document.getElementById('address-label').value = addr.label || '';
-                    document.getElementById('address-full').value = addr.fullAddress || '';
+                    
+                    // Handle both checkout format (houseFloor + formattedAddress) and profile format (fullAddress)
+                    let fullAddressValue = addr.fullAddress || '';
+                    if (!fullAddressValue && addr.houseFloor) {
+                        fullAddressValue = addr.houseFloor;
+                        if (addr.formattedAddress) {
+                            fullAddressValue += ', ' + addr.formattedAddress;
+                        }
+                    } else if (!fullAddressValue && addr.formattedAddress) {
+                        fullAddressValue = addr.formattedAddress;
+                    }
+                    
+                    document.getElementById('address-full').value = fullAddressValue;
                     document.getElementById('address-landmark').value = addr.landmark || '';
                     document.getElementById('address-city').value = addr.city || '';
                     document.getElementById('address-state').value = addr.state || '';
