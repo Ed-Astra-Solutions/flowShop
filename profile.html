@@ -527,9 +527,132 @@
             font-size: 1.1rem;
         }
 
+        .order-total strong {
+            font-size: 1.1rem;
+        }
+
         .order-actions {
             display: flex;
             gap: 0.75rem;
+        }
+
+        .order-action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .order-action-btn.view-btn {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .order-action-btn.view-btn:hover {
+            background: var(--flow-teal);
+        }
+
+        .order-action-btn.cancel-btn {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .order-action-btn.cancel-btn:hover {
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .order-number {
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .order-date {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .order-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .order-item-flavour {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .order-item-qty {
+            font-size: 0.8rem;
+            color: var(--flow-gray);
+        }
+
+        /* Order Status Colors */
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .status-confirmed {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+        }
+
+        .status-processing {
+            background: rgba(0, 180, 180, 0.15);
+            color: var(--flow-teal);
+        }
+
+        .status-shipped {
+            background: rgba(138, 43, 226, 0.15);
+            color: #8a2be2;
+        }
+
+        .status-delivery {
+            background: rgba(0, 180, 180, 0.15);
+            color: var(--flow-teal);
+        }
+
+        .status-delivered {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+
+        .status-cancelled {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .status-returned {
+            background: rgba(255, 159, 67, 0.15);
+            color: #ff9f43;
+        }
+
+        /* Loading State */
+        .loading-orders {
+            text-align: center;
+            padding: 3rem;
+            color: var(--flow-gray);
+        }
+
+        .loading-orders .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 212, 255, 0.2);
+            border-top-color: var(--flow-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .order-btn {
@@ -1820,6 +1943,9 @@
                 // Load addresses
                 renderAddresses(customerData.addresses || []);
                 
+                // Load orders
+                loadOrders();
+                
                 // Update preferences
                 if (customerData.preferences) {
                     const emailToggle = document.getElementById('pref-email');
@@ -1836,6 +1962,154 @@
                 console.error('Error loading profile:', error);
                 showToast('Failed to load profile data', 'error');
             }
+        }
+        
+        // ==================== Orders Functions ====================
+        
+        async function loadOrders() {
+            const ordersList = document.getElementById('orders-list');
+            
+            try {
+                // Show loading state
+                ordersList.innerHTML = '<div class="loading-orders"><div class="spinner"></div><p>Loading orders...</p></div>';
+                
+                const response = await fetch(`${API_BASE.replace('/customer', '/orders')}`, {
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.orders && data.orders.length > 0) {
+                    renderOrders(data.orders);
+                } else {
+                    // Show empty state
+                    ordersList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                                </svg>
+                            </div>
+                            <h3>No Orders Yet</h3>
+                            <p>When you place your first order, it will appear here.</p>
+                            <a href="flow-shop-2.html" class="empty-state-btn">Start Shopping</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                ordersList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <h3>Failed to Load Orders</h3>
+                        <p>Please try again later.</p>
+                        <button class="empty-state-btn" onclick="loadOrders()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderOrders(orders) {
+            const ordersList = document.getElementById('orders-list');
+            
+            ordersList.innerHTML = orders.map(order => `
+                <div class="order-card" data-order-id="${order._id}">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">#${order.orderNumber}</span>
+                            <span class="order-date">${formatOrderDate(order.createdAt)}</span>
+                        </div>
+                        <div class="order-status ${getStatusClass(order.status)}">
+                            ${getStatusIcon(order.status)}
+                            ${formatStatus(order.status)}
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <div class="order-item-image">
+                                    <img src="${item.image || 'assets/images/product-placeholder.png'}" alt="${item.name}">
+                                </div>
+                                <div class="order-item-details">
+                                    <div class="order-item-name">${item.name}</div>
+                                    ${item.flavour ? `<div class="order-item-flavour">${item.flavour}</div>` : ''}
+                                    <div class="order-item-qty">Qty: ${item.quantity}</div>
+                                </div>
+                                <div class="order-item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <strong>₹${order.total.toLocaleString()}</strong>
+                        </div>
+                        <div class="order-actions">
+                            <button class="order-action-btn view-btn" onclick="viewOrderDetails('${order._id}')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function formatOrderDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function formatStatus(status) {
+            const statusLabels = {
+                'pending': 'Pending',
+                'confirmed': 'Confirmed',
+                'processing': 'Processing',
+                'shipped': 'Shipped',
+                'out_for_delivery': 'Out for Delivery',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled',
+                'returned': 'Returned'
+            };
+            return statusLabels[status] || status;
+        }
+        
+        function getStatusClass(status) {
+            const classes = {
+                'pending': 'status-pending',
+                'confirmed': 'status-confirmed',
+                'processing': 'status-processing',
+                'shipped': 'status-shipped',
+                'out_for_delivery': 'status-delivery',
+                'delivered': 'status-delivered',
+                'cancelled': 'status-cancelled',
+                'returned': 'status-returned'
+            };
+            return classes[status] || '';
+        }
+        
+        function getStatusIcon(status) {
+            const icons = {
+                'pending': '⏳',
+                'confirmed': '✓',
+                'processing': '📦',
+                'shipped': '🚚',
+                'out_for_delivery': '🏃',
+                'delivered': '✅',
+                'cancelled': '❌',
+                'returned': '↩️'
+            };
+            return icons[status] || '📋';
+        }
+        
+        function viewOrderDetails(orderId) {
+            // TODO: Implement order details modal
+            window.location.href = `order-details.html?id=${orderId}`;
         }
         
         // ==================== Profile Edit Functions ====================

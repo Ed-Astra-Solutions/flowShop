@@ -153,6 +153,16 @@ const CustomerAuth = (function() {
         }
     }
     
+    async function refreshCustomer() {
+        try {
+            const data = await getProfile();
+            return data.customer;
+        } catch (error) {
+            console.error('Refresh customer error:', error);
+            return null;
+        }
+    }
+    
     async function updateName(name) {
         try {
             const response = await fetch(`${API_BASE}/update-name`, {
@@ -960,6 +970,7 @@ const CustomerAuth = (function() {
         goToMobileStep,
         checkAuth,
         getProfile,
+        refreshCustomer,
         // Cart functions
         initCart,
         getLocalCart,

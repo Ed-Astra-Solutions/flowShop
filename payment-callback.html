@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .payment-status-container {
+            background: var(--flow-blue);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .status-icon.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            animation: successPop 0.5s ease;
+        }
+
+        .status-icon.pending {
+            background: rgba(251, 191, 36, 0.15);
+            color: #FBBF24;
+        }
+
+        .status-icon.failed {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+        }
+
+        .status-icon.loading {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-top-color: var(--flow-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .status-message {
+            color: var(--flow-gray);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .order-details {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px dashed var(--flow-cyan);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-details-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .order-details-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-details-row span {
+            color: var(--flow-gray);
+        }
+
+        .order-details-row strong {
+            color: var(--flow-cyan);
+            font-family: 'Syne', sans-serif;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--flow-cyan);
+            border: 1px solid var(--flow-cyan);
+            margin-left: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        @media (max-width: 480px) {
+            .payment-status-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-status-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Flow Hydration">
+            </a>
+        </div>
+
+        <div id="statusContent">
+            <div class="status-icon loading">
+                <div class="spinner"></div>
+            </div>
+            <h1>Verifying Payment</h1>
+            <p class="status-message">Please wait while we confirm your payment...</p>
+        </div>
+    </div>
+
+    <script src="assets/js/customerAuth.js"></script>
+    <script>
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : 'https://api.flowhydration.in';
+
+        async function checkPaymentStatus() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            const razorpayPaymentId = urlParams.get('razorpay_payment_id');
+            const razorpayPaymentLinkId = urlParams.get('razorpay_payment_link_id');
+            const razorpayPaymentLinkStatus = urlParams.get('razorpay_payment_link_status');
+
+            // Also check localStorage for pending order
+            let pendingOrder = null;
+            try {
+                pendingOrder = JSON.parse(localStorage.getItem('flow_pending_order'));
+            } catch (e) {}
+
+            const orderIdToCheck = orderId || (pendingOrder ? pendingOrder.orderId : null);
+
+            if (!orderIdToCheck) {
+                showError('No order found', 'We could not find your order. Please check your email for order confirmation.');
+                return;
+            }
+
+            // Check if user is logged in
+            if (!CustomerAuth.isLoggedIn()) {
+                showError('Session Expired', 'Please log in to view your order status.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/payment-status/${orderIdToCheck}`, {
+                    headers: {
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showError('Order Not Found', data.message || 'We could not find your order.');
+                    return;
+                }
+
+                const order = data.order;
+
+                if (order.paymentStatus === 'paid' || order.status === 'confirmed') {
+                    showSuccess(order);
+                    // Clear pending order from localStorage
+                    localStorage.removeItem('flow_pending_order');
+                } else if (order.paymentStatus === 'failed') {
+                    showFailed(order);
+                } else {
+                    // Still pending - poll again
+                    showPending(order);
+                    setTimeout(checkPaymentStatus, 3000);
+                }
+
+            } catch (error) {
+                console.error('Error checking payment status:', error);
+                showError('Connection Error', 'Unable to verify payment status. Please check your orders page.');
+            }
+        }
+
+        function showSuccess(order) {
+            document.getElementById('statusContent').innerHTML = `
+                <div class="status-icon success">✓</div>
+                <h1>Payment Successful!</h1>
+                <p class="status-message">Thank you for your order. We've sent a confirmation to your email.</p>
+                <div class="order-details">
+                    <div class="order-details-row">
+                        <span>Order Number</span>
+                        <strong>${order.orderNumber}</strong>
+                    </div>
+                    <div class="order-details-row">
+                        <span>Amount Paid</span>
+                        <strong>₹${order.total.toLocaleString()}</strong>
+                    </div>
+                    <div class="order-details-row">
+                        <span>Estimated Delivery</span>
+                        <strong>${order.estimatedDelivery ? new Date(order.estimatedDelivery).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '5-7 days'}</strong>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <a href="profile.html#orders" class="btn btn-primary">View Orders</a>
+                    <a href="flow-shop-2.html" class="btn btn-secondary">Continue Shopping</a>
+                </div>
+            `;
+        }
+
+        function showFailed(order) {
+            document.getElementById('statusContent').innerHTML = `
+                <div class="status-icon failed">✕</div>
+                <h1>Payment Failed</h1>
+                <p class="status-message">We couldn't process your payment. Please try again or use a different payment method.</p>
+                <div class="order-details">
+                    <div class="order-details-row">
+                        <span>Order Number</span>
+                        <strong>${order.orderNumber}</strong>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <a href="flow-shop-2.html" class="btn btn-primary">Try Again</a>
+                    <a href="mailto:support@flowhydration.in" class="btn btn-secondary">Contact Support</a>
+                </div>
+            `;
+        }
+
+        function showPending(order) {
+            document.getElementById('statusContent').innerHTML = `
+                <div class="status-icon pending">
+                    <div class="spinner"></div>
+                </div>
+                <h1>Payment Processing</h1>
+                <p class="status-message">Your payment is being processed. This page will update automatically.</p>
+                <div class="order-details">
+                    <div class="order-details-row">
+                        <span>Order Number</span>
+                        <strong>${order.orderNumber}</strong>
+                    </div>
+                    <div class="order-details-row">
+                        <span>Status</span>
+                        <strong>Processing...</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showError(title, message) {
+            document.getElementById('statusContent').innerHTML = `
+                <div class="status-icon failed">!</div>
+                <h1>${title}</h1>
+                <p class="status-message">${message}</p>
+                <div class="btn-group">
+                    <a href="flow-shop-2.html" class="btn btn-primary">Go to Shop</a>
+                    <a href="profile.html#orders" class="btn btn-secondary">My Orders</a>
+                </div>
+            `;
+        }
+
+        // Start checking payment status
+        document.addEventListener('DOMContentLoaded', () => {
+            // Small delay to ensure CustomerAuth is loaded
+            setTimeout(checkPaymentStatus, 500);
+        });
+    </script>
+</body>
+</html>

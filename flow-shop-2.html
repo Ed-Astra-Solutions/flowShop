@@ -7,7 +7,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <!-- Google Maps callback must be defined before the script loads -->
+    <script>
+        var googleMapsReady = false;
+        function initGoogleMaps() {
+            googleMapsReady = true;
+            console.log('Google Maps API loaded');
+        }
+    </script>
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb4ve4orTO8kVsMbJhlV6KtYswlE2LZ7s&libraries=places&callback=initGoogleMaps" async defer></script>
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
             --flow-blue: #0A1628;
@@ -1344,85 +1357,6 @@
             color: #10B981;
         }
 
-        /* Payment Methods */
-        .qc-payment-methods {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .qc-payment-method {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.85rem 0.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(0, 212, 255, 0.1);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.8rem;
-        }
-
-        .qc-payment-method:hover {
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .qc-payment-method.selected {
-            border-color: var(--flow-cyan);
-            background: rgba(0, 212, 255, 0.05);
-        }
-
-        .qc-payment-icon {
-            font-size: 1.25rem;
-        }
-
-        .qc-payment-form {
-            margin-bottom: 1rem;
-        }
-
-        .qc-payment-form.hidden {
-            display: none;
-        }
-
-        .qc-upi-apps {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .qc-upi-app {
-            flex: 1;
-            padding: 0.6rem;
-            background: rgba(0, 212, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.1);
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--flow-gray);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .qc-upi-app:hover {
-            background: rgba(0, 212, 255, 0.1);
-            color: var(--flow-white);
-        }
-
-        .qc-cod-notice {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.85rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 10px;
-            font-size: 0.85rem;
-            color: var(--flow-gray);
-        }
-
         /* Order Summary */
         .qc-summary {
             background: rgba(0, 0, 0, 0.2);
@@ -1574,9 +1508,12 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.25rem;
-            font-size: 2rem;
             color: #10B981;
             animation: successPop 0.4s ease;
+        }
+
+        .qc-success-icon .material-icons {
+            font-size: 2.5rem;
         }
 
         @keyframes successPop {
@@ -1618,17 +1555,57 @@
             font-family: 'Syne', sans-serif;
         }
 
+        .qc-success-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .qc-secondary-btn {
+            background: transparent;
+            color: var(--flow-cyan);
+            border: 1px solid var(--flow-cyan);
+            padding: 0.85rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .qc-secondary-btn .material-icons {
+            font-size: 1.1rem;
+        }
+
+        .qc-secondary-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
         .qc-done-btn {
             background: var(--flow-cyan);
             color: var(--flow-dark);
             border: none;
-            padding: 0.85rem 2.5rem;
+            padding: 0.85rem 1.5rem;
             border-radius: 50px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .qc-done-btn .material-icons {
+            font-size: 1.1rem;
         }
 
         .qc-done-btn:hover {
@@ -1834,6 +1811,480 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+        }
+
+        /* Google Maps Address Selection Styles */
+        .qc-map-container {
+            margin-bottom: 1rem;
+        }
+
+        .qc-address-search {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .qc-address-search input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .qc-address-search input:focus {
+            outline: none;
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qc-address-search svg {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--flow-gray);
+            width: 18px;
+            height: 18px;
+        }
+
+        .qc-map-wrapper {
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        #qcMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qc-selected-address {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .qc-selected-address.visible {
+            display: block;
+        }
+
+        .qc-selected-address-label {
+            font-size: 0.75rem;
+            color: var(--flow-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+
+        .qc-selected-address-text {
+            color: var(--flow-white);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .qc-house-input {
+            margin-bottom: 1rem;
+        }
+
+        .qc-house-input label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--flow-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-house-input input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .qc-house-input input:focus {
+            outline: none;
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qc-use-current-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .qc-use-current-location:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .qc-address-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .qc-address-detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.6rem 0.85rem;
+        }
+
+        .qc-address-detail-item span {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--flow-gray);
+            margin-bottom: 0.15rem;
+        }
+
+        .qc-address-detail-item strong {
+            color: var(--flow-white);
+            font-size: 0.85rem;
+        }
+
+        /* Razorpay Payment Option Style */
+        .qc-razorpay-info {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .qc-razorpay-logo {
+            margin-bottom: 0.75rem;
+        }
+
+        .qc-razorpay-info p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-razorpay-info small {
+            color: var(--flow-gray);
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .qc-razorpay-methods {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .qc-razorpay-method {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            color: var(--flow-gray);
+        }
+
+        .qc-razorpay-method .material-icons {
+            font-size: 1rem;
+            color: var(--flow-cyan);
+        }
+
+        /* Google Places Autocomplete Dropdown Styling */
+        .pac-container {
+            background: var(--flow-blue) !important;
+            background-color: #0A1628 !important;
+            border: 1px solid rgba(0, 212, 255, 0.3) !important;
+            border-radius: 10px !important;
+            margin-top: 5px !important;
+            font-family: 'Outfit', sans-serif !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+            z-index: 100000 !important;
+        }
+
+        .pac-item {
+            padding: 10px 15px !important;
+            color: var(--flow-white) !important;
+            color: #FAFCFF !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            cursor: pointer !important;
+            background: transparent !important;
+        }
+
+        .pac-item:hover {
+            background: rgba(0, 212, 255, 0.1) !important;
+        }
+
+        .pac-item-query {
+            color: var(--flow-cyan) !important;
+            color: #00D4FF !important;
+        }
+
+        .pac-matched {
+            font-weight: 600 !important;
+        }
+
+        .pac-icon {
+            display: none !important;
+        }
+        
+        .pac-item span {
+            color: #94A3B8 !important;
+        }
+        
+        .pac-item-query span {
+            color: #00D4FF !important;
+        }
+
+        /* Saved Addresses Styling */
+        .qc-saved-addresses {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-saved-addresses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .qc-saved-address-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qc-saved-address-item:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qc-saved-address-item.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .qc-saved-address-item label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .qc-saved-address-item input[type="radio"] {
+            margin-top: 0.25rem;
+            accent-color: var(--flow-cyan);
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .qc-address-details {
+            flex: 1;
+        }
+
+        .qc-address-type {
+            font-weight: 600;
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            text-transform: capitalize;
+        }
+
+        .qc-address-text {
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+            line-height: 1.4;
+        }
+
+        .qc-add-new-address-btn {
+            background: transparent;
+            border: 1px dashed rgba(0, 212, 255, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--flow-cyan);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-add-new-address-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--flow-cyan);
+        }
+
+        .qc-map-section {
+            display: none;
+        }
+
+        .qc-map-section.visible {
+            display: block;
+        }
+
+        .qc-delivery-estimate {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+            margin-top: 0.25rem;
+        }
+
+        .qc-delivery-estimate svg {
+            color: var(--flow-cyan);
+        }
+
+        .qc-no-addresses-msg {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .qc-back-to-saved {
+            background: transparent;
+            border: none;
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .qc-back-to-saved:hover {
+            text-decoration: underline;
+        }
+
+        .qc-selected-address-preview {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-selected-address-preview .qc-address-type {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .qc-change-address-btn {
+            background: transparent;
+            border: none;
+            color: var(--flow-cyan);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .qc-change-address-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Shipping Info Box */
+        .qc-shipping-info-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .qc-shipping-icon {
+            font-size: 1.5rem;
+        }
+
+        .qc-shipping-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .qc-shipping-title {
+            font-weight: 600;
+            color: var(--flow-white);
+        }
+
+        .qc-shipping-estimate {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+        }
+
+        .qc-shipping-cost {
+            font-weight: 600;
+            color: var(--flow-cyan);
+            font-size: 1.1rem;
+        }
+
+        .qc-free-shipping-note {
+            font-size: 0.85rem;
+            color: var(--flow-cyan);
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .qc-save-address {
+            margin: 1rem 0;
+        }
+
+        .qc-save-address label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+        }
+
+        .qc-save-address input[type="checkbox"] {
+            accent-color: var(--flow-cyan);
+            width: 18px;
+            height: 18px;
         }
     </style>
 </head>
@@ -2325,7 +2776,7 @@
                 <span>Total</span>
                 <span id="cartTotal">₹0</span>
             </div>
-            <button class="checkout-btn" onclick="openQuickCheckout()">
+            <button class="checkout-btn" onclick="goToCheckout()">
                 Proceed to Checkout
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -2384,61 +2835,118 @@
                 </button>
             </div>
 
-            <!-- Step 2: Shipping -->
+            <!-- Step 2: Shipping with Google Maps -->
             <div class="qc-content hidden" id="qcStep2">
                 <div class="qc-header">
-                    <h3>📍 Shipping Address</h3>
-                    <p>Where should we deliver?</p>
+                    <h3>📍 Delivery Address</h3>
+                    <p id="qcAddressHeaderText">Select your delivery address</p>
                 </div>
-                <div class="qc-form">
-                    <div class="qc-input-row">
-                        <input type="text" class="qc-input" id="qcFirstName" placeholder="First name">
-                        <input type="text" class="qc-input" id="qcLastName" placeholder="Last name">
+                
+                <!-- Saved Addresses Section -->
+                <div class="qc-saved-addresses" id="qcSavedAddresses" style="display: none;">
+                    <div class="qc-saved-addresses-list" id="qcSavedAddressesList">
+                        <!-- Saved addresses will be populated here -->
                     </div>
-                    <div class="qc-input-group">
-                        <input type="text" class="qc-input" id="qcAddress" placeholder="Street address">
-                    </div>
-                    <div class="qc-input-row">
-                        <input type="text" class="qc-input" id="qcCity" placeholder="City">
-                        <input type="text" class="qc-input" id="qcPincode" placeholder="PIN code" maxlength="6">
-                    </div>
-                    <div class="qc-input-group">
-                        <select class="qc-input qc-select" id="qcState">
-                            <option value="">Select State</option>
-                            <option value="DL">Delhi</option>
-                            <option value="MH">Maharashtra</option>
-                            <option value="KA">Karnataka</option>
-                            <option value="TN">Tamil Nadu</option>
-                            <option value="GJ">Gujarat</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="RJ">Rajasthan</option>
-                            <option value="WB">West Bengal</option>
-                            <option value="KL">Kerala</option>
-                            <option value="TG">Telangana</option>
-                            <option value="PB">Punjab</option>
-                            <option value="HR">Haryana</option>
-                        </select>
-                    </div>
+                    <button type="button" class="qc-add-new-address-btn" onclick="showNewAddressForm()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add New Address
+                    </button>
                 </div>
-                <div class="qc-shipping-options">
-                    <div class="qc-shipping-option selected" data-price="0">
-                        <div class="qc-shipping-radio"></div>
-                        <div class="qc-shipping-info">
-                            <span class="qc-shipping-name">Standard (5-7 days)</span>
-                            <span class="qc-shipping-price free">FREE</span>
+                
+                <!-- New Address Form (Maps) -->
+                <div class="qc-form" id="qcNewAddressForm">
+                    <!-- Google Maps Search -->
+                    <div class="qc-map-container">
+                        <div class="qc-address-search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            <input type="search" id="qcAddressSearch" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
+                        </div>
+                        
+                        <button type="button" class="qc-use-current-location" onclick="useCurrentLocation()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                            </svg>
+                            Use my current location
+                        </button>
+                        
+                        <div class="qc-map-wrapper">
+                            <div id="qcMap"></div>
+                        </div>
+                        
+                        <!-- Selected Address Display -->
+                        <div class="qc-selected-address" id="qcSelectedAddress">
+                            <div class="qc-selected-address-label">Selected Location</div>
+                            <div class="qc-selected-address-text" id="qcSelectedAddressText"></div>
+                            <div class="qc-address-details">
+                                <div class="qc-address-detail-item">
+                                    <span>City</span>
+                                    <strong id="qcCityDisplay">-</strong>
+                                </div>
+                                <div class="qc-address-detail-item">
+                                    <span>State</span>
+                                    <strong id="qcStateDisplay">-</strong>
+                                </div>
+                                <div class="qc-address-detail-item">
+                                    <span>PIN Code</span>
+                                    <strong id="qcPincodeDisplay">-</strong>
+                                </div>
+                                <div class="qc-address-detail-item">
+                                    <span>Country</span>
+                                    <strong id="qcCountryDisplay">India</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="qc-shipping-option" data-price="149">
-                        <div class="qc-shipping-radio"></div>
-                        <div class="qc-shipping-info">
-                            <span class="qc-shipping-name">Express (2-3 days)</span>
-                            <span class="qc-shipping-price">₹149</span>
-                        </div>
+                    
+                    <!-- House/Floor Number Input -->
+                    <div class="qc-house-input">
+                        <label for="qcHouseFloor">House No. / Floor / Building Name *</label>
+                        <input type="text" class="qc-input" id="qcHouseFloor" placeholder="e.g., Flat 204, 2nd Floor, Sunshine Apartments">
+                    </div>
+                    
+                    <!-- Save Address Checkbox -->
+                    <div class="qc-save-address">
+                        <label>
+                            <input type="checkbox" id="qcSaveAddress" checked>
+                            <span>Save this address for future orders</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Hidden fields to store data -->
+                    <input type="hidden" id="qcCity" value="">
+                    <input type="hidden" id="qcState" value="">
+                    <input type="hidden" id="qcPincode" value="">
+                    <input type="hidden" id="qcAddress" value="">
+                    <input type="hidden" id="qcLatitude" value="">
+                    <input type="hidden" id="qcLongitude" value="">
+                </div>
+                
+                <!-- Shipping Info -->
+                <div class="qc-shipping-info-box" id="qcShippingInfoBox">
+                    <div class="qc-shipping-icon">🚚</div>
+                    <div class="qc-shipping-details">
+                        <span class="qc-shipping-title" id="qcShippingTitle">Standard Delivery</span>
+                        <span class="qc-shipping-estimate" id="qcShippingEstimate">Estimated delivery: 2-4 days</span>
+                    </div>
+                    <div class="qc-shipping-cost" id="qcShippingCostDisplay">
+                        <span id="qcShippingPriceText">₹99</span>
                     </div>
                 </div>
+                <p class="qc-free-shipping-note" id="qcFreeShippingNote" style="display: none;">
+                    🎉 Free shipping on orders above ₹999!
+                </p>
+                
                 <div class="qc-btn-row">
                     <button class="qc-back-btn" onclick="goToStep(1)">← Back</button>
-                    <button class="qc-continue-btn" onclick="goToStep(3)">
+                    <button class="qc-continue-btn" onclick="validateAndContinueToPayment()">
                         Continue to Payment
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -2447,53 +2955,31 @@
                 </div>
             </div>
 
-            <!-- Step 3: Payment -->
+            <!-- Step 3: Payment with Razorpay -->
             <div class="qc-content hidden" id="qcStep3">
                 <div class="qc-header">
-                    <h3>💳 Payment</h3>
-                    <p>Choose your payment method</p>
+                    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem;">payment</span> Payment</h3>
+                    <p>Secure payment via Razorpay</p>
                 </div>
                 
-                <div class="qc-payment-methods">
-                    <div class="qc-payment-method selected" data-method="card">
-                        <span class="qc-payment-icon">💳</span>
-                        <span>Card</span>
+                <!-- Razorpay Info Section -->
+                <div class="qc-razorpay-info">
+                    <div class="qc-razorpay-logo">
+                        <img src="https://razorpay.com/assets/razorpay-logo.svg" alt="Razorpay" style="height: 24px; filter: brightness(0) invert(1);">
                     </div>
-                    <div class="qc-payment-method" data-method="upi">
-                        <span class="qc-payment-icon">📱</span>
-                        <span>UPI</span>
-                    </div>
-                    <div class="qc-payment-method" data-method="cod">
-                        <span class="qc-payment-icon">💵</span>
-                        <span>COD</span>
-                    </div>
-                </div>
-
-                <div class="qc-payment-form" id="qcCardForm">
-                    <div class="qc-input-group">
-                        <input type="text" class="qc-input" id="qcCardNumber" placeholder="Card number" maxlength="19">
-                    </div>
-                    <div class="qc-input-row">
-                        <input type="text" class="qc-input" id="qcExpiry" placeholder="MM/YY" maxlength="5">
-                        <input type="password" class="qc-input" id="qcCvv" placeholder="CVV" maxlength="4">
-                    </div>
-                </div>
-
-                <div class="qc-payment-form hidden" id="qcUpiForm">
-                    <div class="qc-input-group">
-                        <input type="text" class="qc-input" id="qcUpiId" placeholder="Enter UPI ID (e.g., name@upi)">
-                    </div>
-                    <div class="qc-upi-apps">
-                        <div class="qc-upi-app">GPay</div>
-                        <div class="qc-upi-app">PhonePe</div>
-                        <div class="qc-upi-app">Paytm</div>
-                    </div>
-                </div>
-
-                <div class="qc-payment-form hidden" id="qcCodForm">
-                    <div class="qc-cod-notice">
-                        <span>ℹ️</span>
-                        <span>₹50 COD fee applies. Keep exact change ready.</span>
+                    <div class="qc-razorpay-methods">
+                        <div class="qc-razorpay-method">
+                            <span class="material-icons">credit_card</span> Cards
+                        </div>
+                        <div class="qc-razorpay-method">
+                            <span class="material-icons">qr_code_2</span> UPI
+                        </div>
+                        <div class="qc-razorpay-method">
+                            <span class="material-icons">account_balance</span> Net Banking
+                        </div>
+                        <div class="qc-razorpay-method">
+                            <span class="material-icons">account_balance_wallet</span> Wallets
+                        </div>
                     </div>
                 </div>
 
@@ -2526,21 +3012,32 @@
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                         <path d="M7 11V7a5 5 0 0110 0v4"/>
                     </svg>
-                    Secured by 256-bit SSL encryption
+                    Secured by Razorpay • 256-bit SSL encryption
                 </div>
             </div>
 
             <!-- Success Step -->
             <div class="qc-content hidden" id="qcSuccess">
                 <div class="qc-success-content">
-                    <div class="qc-success-icon">✓</div>
+                    <div class="qc-success-icon">
+                        <span class="material-icons">check_circle</span>
+                    </div>
                     <h3>Order Placed!</h3>
-                    <p>Thank you for your order. We've sent a confirmation to your email.</p>
+                    <p>Thank you for your order. We've sent a confirmation to your phone.</p>
                     <div class="qc-order-number">
                         <span>Order #</span>
                         <strong id="qcOrderNumber">FLOW-XXXXXX</strong>
                     </div>
-                    <button class="qc-done-btn" onclick="closeQuickCheckout()">Done</button>
+                    <div class="qc-success-buttons">
+                        <button class="qc-secondary-btn" onclick="goToOrderHistory()">
+                            <span class="material-icons">receipt_long</span>
+                            View Order History
+                        </button>
+                        <button class="qc-done-btn" onclick="continueShopping()">
+                            <span class="material-icons">shopping_bag</span>
+                            Continue Shopping
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3207,11 +3704,35 @@
         // Initialize
         updateCartUI();
 
+        // ========== GO TO CHECKOUT ==========
+        function goToCheckout() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty!');
+                return;
+            }
+            
+            // Close cart drawer and open quick checkout popup instead
+            openQuickCheckout();
+        }
+
         // ========== QUICK CHECKOUT FUNCTIONALITY ==========
         const quickCheckoutOverlay = document.getElementById('quickCheckoutOverlay');
         const quickCheckoutClose = document.getElementById('quickCheckoutClose');
         let qcShippingCost = 0;
         let qcCurrentStep = 1;
+        
+        // Google Maps variables
+        let qcMap = null;
+        let qcMarker = null;
+        let qcAutocomplete = null;
+        let qcSelectedLocation = null;
+        let qcSelectedSavedAddress = null;
+        let qcHasSavedAddresses = false;
+        
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : 'https://api.flowhydration.in';
 
         // Open Quick Checkout - requires authentication
         function openQuickCheckout() {
@@ -3238,42 +3759,246 @@
             document.body.style.overflow = 'hidden';
             updateQCSummary();
             
-            // Pre-fill customer data if available
+            // Pre-fill customer data if available (this also loads saved addresses)
             prefillCustomerData();
+            
+            // Note: Google Maps initialization is now deferred
+            // It will only be initialized when user clicks "Add new address"
+            // or when there are no saved addresses
         }
         
         async function prefillCustomerData() {
-            const customer = CustomerAuth.getCustomer();
-            if (!customer) return;
+            // First use cached customer data for immediate UI
+            let customer = CustomerAuth.getCustomer();
             
             // Pre-fill name if available
             const nameInput = document.getElementById('qcName');
-            if (nameInput && customer.name) {
+            if (nameInput && customer?.name) {
                 nameInput.value = customer.name;
             }
             
             // Pre-fill phone
             const phoneInput = document.getElementById('qcPhone');
-            if (phoneInput && customer.mobile) {
+            if (phoneInput && customer?.mobile) {
                 phoneInput.value = customer.mobile;
             }
             
-            // Pre-fill default address if available
-            if (customer.addresses && customer.addresses.length > 0) {
-                const defaultAddr = customer.addresses.find(a => a.isDefault) || customer.addresses[0];
-                
-                const addressInput = document.getElementById('qcAddress');
-                const cityInput = document.getElementById('qcCity');
-                const stateInput = document.getElementById('qcState');
-                const pincodeInput = document.getElementById('qcPincode');
-                
-                if (addressInput && defaultAddr.fullAddress) {
-                    addressInput.value = defaultAddr.fullAddress + (defaultAddr.landmark ? ', ' + defaultAddr.landmark : '');
-                }
-                if (cityInput && defaultAddr.city) cityInput.value = defaultAddr.city;
-                if (stateInput && defaultAddr.state) stateInput.value = defaultAddr.state;
-                if (pincodeInput && defaultAddr.pincode) pincodeInput.value = defaultAddr.pincode;
+            // Load saved addresses from cache first
+            if (customer) {
+                loadSavedAddresses(customer);
             }
+            
+            // Then refresh from server to get latest addresses
+            try {
+                const freshCustomer = await CustomerAuth.refreshCustomer();
+                if (freshCustomer) {
+                    // Reload addresses if they changed
+                    const cachedAddressCount = customer?.addresses?.length || 0;
+                    const freshAddressCount = freshCustomer.addresses?.length || 0;
+                    
+                    if (freshAddressCount !== cachedAddressCount) {
+                        console.log('Addresses updated from server');
+                        loadSavedAddresses(freshCustomer);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to refresh customer data:', error);
+            }
+        }
+        
+        function loadSavedAddresses(customer) {
+            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+            const savedAddressesList = document.getElementById('qcSavedAddressesList');
+            const newAddressForm = document.getElementById('qcNewAddressForm');
+            
+            if (!savedAddressesList) return;
+            
+            // Clear existing addresses
+            savedAddressesList.innerHTML = '';
+            
+            const addresses = customer.addresses || [];
+            qcHasSavedAddresses = addresses.length > 0;
+            
+            if (qcHasSavedAddresses) {
+                // Show saved addresses, hide new address form initially
+                if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
+                if (newAddressForm) newAddressForm.style.display = 'none';
+                
+                addresses.forEach((addr, index) => {
+                    const isDefault = addr.isDefault || index === 0;
+                    const addressItem = document.createElement('div');
+                    addressItem.className = 'qc-saved-address-item' + (isDefault ? ' selected' : '');
+                    addressItem.innerHTML = `
+                        <label>
+                            <input type="radio" name="savedAddress" value="${index}" ${isDefault ? 'checked' : ''}>
+                            <div class="qc-address-details">
+                                <div class="qc-address-type">${addr.type || 'Home'}</div>
+                                <div class="qc-address-text">
+                                    ${addr.houseFloor ? addr.houseFloor + ', ' : ''}${addr.fullAddress || addr.formattedAddress || ''}
+                                    ${addr.city ? '<br>' + addr.city : ''}${addr.state ? ', ' + addr.state : ''}${addr.pincode ? ' - ' + addr.pincode : ''}
+                                </div>
+                                <div class="qc-delivery-estimate" id="deliveryEstimate${index}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12,6 12,12 16,14"></polyline>
+                                    </svg>
+                                    <span>${getDeliveryEstimate(addr.pincode)}</span>
+                                </div>
+                            </div>
+                        </label>
+                    `;
+                    
+                    // Add click event
+                    addressItem.addEventListener('click', () => selectSavedAddress(index, addresses));
+                    savedAddressesList.appendChild(addressItem);
+                    
+                    // Pre-select default address
+                    if (isDefault) {
+                        selectSavedAddress(index, addresses);
+                    }
+                });
+            } else {
+                // No saved addresses - show new address form directly
+                if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+                if (newAddressForm) newAddressForm.style.display = 'block';
+                
+                // Initialize Google Maps
+                if (typeof google !== 'undefined' && google.maps && !qcMap) {
+                    setTimeout(initCheckoutMap, 100);
+                } else {
+                    // Wait for Google Maps to load
+                    const checkGoogleMaps = setInterval(() => {
+                        if (typeof google !== 'undefined' && google.maps) {
+                            clearInterval(checkGoogleMaps);
+                            initCheckoutMap();
+                        }
+                    }, 200);
+                    setTimeout(() => clearInterval(checkGoogleMaps), 10000);
+                }
+            }
+            
+            // Update shipping cost based on cart total
+            updateShippingCost();
+        }
+        
+        function selectSavedAddress(index, addresses) {
+            const addr = addresses[index];
+            if (!addr) return;
+            
+            // Update UI selection
+            document.querySelectorAll('.qc-saved-address-item').forEach((item, i) => {
+                item.classList.toggle('selected', i === index);
+                const radio = item.querySelector('input[type="radio"]');
+                if (radio) radio.checked = (i === index);
+            });
+            
+            // Store selected address
+            qcSelectedSavedAddress = addr;
+            qcSelectedLocation = {
+                formattedAddress: addr.formattedAddress || addr.fullAddress,
+                fullAddress: addr.fullAddress || (addr.houseFloor ? addr.houseFloor + ', ' + addr.formattedAddress : addr.formattedAddress),
+                houseFloor: addr.houseFloor || '',
+                city: addr.city || '',
+                state: addr.state || '',
+                pincode: addr.pincode || '',
+                country: addr.country || 'India',
+                lat: addr.lat || addr.coordinates?.lat,
+                lng: addr.lng || addr.coordinates?.lng
+            };
+            
+            // Update hidden fields
+            document.getElementById('qcAddress').value = qcSelectedLocation.formattedAddress || '';
+            document.getElementById('qcCity').value = qcSelectedLocation.city;
+            document.getElementById('qcState').value = qcSelectedLocation.state;
+            document.getElementById('qcPincode').value = qcSelectedLocation.pincode;
+            document.getElementById('qcLatitude').value = qcSelectedLocation.lat || '';
+            document.getElementById('qcLongitude').value = qcSelectedLocation.lng || '';
+            document.getElementById('qcHouseFloor').value = qcSelectedLocation.houseFloor;
+            
+            // Update delivery time display in shipping option
+            updateShippingDeliveryTime(qcSelectedLocation.pincode);
+        }
+        
+        function showNewAddressForm() {
+            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+            const newAddressForm = document.getElementById('qcNewAddressForm');
+            
+            // Hide saved addresses, show map form
+            if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+            if (newAddressForm) newAddressForm.style.display = 'block';
+            
+            // Reset selected location for new entry
+            qcSelectedLocation = null;
+            qcSelectedSavedAddress = null;
+            document.getElementById('qcSelectedAddress').classList.remove('visible');
+            document.getElementById('qcHouseFloor').value = '';
+            
+            // Initialize map if not already
+            if (!qcMap && typeof google !== 'undefined' && google.maps) {
+                initCheckoutMap();
+            }
+        }
+        
+        function showSavedAddresses() {
+            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+            const newAddressForm = document.getElementById('qcNewAddressForm');
+            
+            // Show saved addresses, hide map form
+            if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
+            if (newAddressForm) newAddressForm.style.display = 'none';
+            
+            // Restore previously selected saved address if any
+            const customer = CustomerAuth.getCustomer();
+            if (customer && customer.addresses && customer.addresses.length > 0) {
+                const checkedRadio = document.querySelector('input[name="savedAddress"]:checked');
+                if (checkedRadio) {
+                    selectSavedAddress(parseInt(checkedRadio.value), customer.addresses);
+                }
+            }
+        }
+        
+        function getDeliveryEstimate(pincode) {
+            if (!pincode) return 'Select address for delivery estimate';
+            const pin = String(pincode).trim();
+            if (pin.startsWith('560')) {
+                return 'Delivery in 1-2 business days';
+            }
+            return 'Delivery in 2-4 business days';
+        }
+        
+        function updateShippingDeliveryTime(pincode) {
+            const shippingEstimate = document.getElementById('qcShippingEstimate');
+            if (shippingEstimate) {
+                shippingEstimate.textContent = getDeliveryEstimate(pincode);
+            }
+        }
+        
+        function updateShippingCost() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const freeShippingNote = document.getElementById('qcFreeShippingNote');
+            const shippingPriceText = document.getElementById('qcShippingPriceText');
+            
+            if (subtotal >= 999) {
+                qcShippingCost = 0;
+                if (freeShippingNote) {
+                    freeShippingNote.style.display = 'block';
+                    freeShippingNote.textContent = '🎉 You qualify for FREE shipping!';
+                }
+            } else {
+                qcShippingCost = 99;
+                const remaining = 999 - subtotal;
+                if (freeShippingNote) {
+                    freeShippingNote.style.display = 'block';
+                    freeShippingNote.textContent = `Add ₹${remaining} more to get FREE shipping!`;
+                }
+            }
+            
+            // Update the shipping price display
+            if (shippingPriceText) {
+                shippingPriceText.textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            }
+            
+            updateQCSummary();
         }
 
         // Close Quick Checkout
@@ -3285,6 +4010,32 @@
             // Reset success state
             document.getElementById('qcSuccess').classList.add('hidden');
             document.getElementById('qcStep1').classList.remove('hidden');
+            // Reset selected location and saved address
+            qcSelectedLocation = null;
+            qcSelectedSavedAddress = null;
+            qcHasSavedAddresses = false;
+            document.getElementById('qcSelectedAddress').classList.remove('visible');
+            // Reset saved addresses display
+            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+            const newAddressForm = document.getElementById('qcNewAddressForm');
+            if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+            if (newAddressForm) newAddressForm.style.display = 'block';
+        }
+        
+        // Go to Order History (profile page)
+        function goToOrderHistory() {
+            closeQuickCheckout();
+            window.location.href = 'profile.html#orders';
+        }
+        
+        // Continue Shopping
+        function continueShopping() {
+            closeQuickCheckout();
+            // Scroll to products section
+            const productsSection = document.querySelector('.products-grid');
+            if (productsSection) {
+                productsSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         quickCheckoutClose.addEventListener('click', closeQuickCheckout);
@@ -3316,6 +4067,271 @@
             });
 
             qcCurrentStep = step;
+            
+            // When going to step 2, update shipping info
+            if (step === 2) {
+                setTimeout(() => {
+                    // Update shipping cost and delivery time
+                    updateShippingCost();
+                    if (qcSelectedLocation && qcSelectedLocation.pincode) {
+                        updateShippingDeliveryTime(qcSelectedLocation.pincode);
+                    }
+                    
+                    // If map is visible but not initialized, initialize it
+                    const newAddressForm = document.getElementById('qcNewAddressForm');
+                    const isMapVisible = newAddressForm && newAddressForm.style.display !== 'none';
+                    
+                    if (isMapVisible && typeof google !== 'undefined' && google.maps && !qcMap) {
+                        initCheckoutMap();
+                    } else if (qcMap) {
+                        // Trigger resize to fix any display issues
+                        google.maps.event.trigger(qcMap, 'resize');
+                    }
+                }, 150);
+            }
+        }
+
+        // ========== GOOGLE MAPS INTEGRATION ==========
+        function initCheckoutMap() {
+            const mapContainer = document.getElementById('qcMap');
+            if (!mapContainer || qcMap) return;
+            
+            // Default center (India)
+            const defaultCenter = { lat: 20.5937, lng: 78.9629 };
+            
+            qcMap = new google.maps.Map(mapContainer, {
+                center: defaultCenter,
+                zoom: 5,
+                styles: [
+                    { elementType: 'geometry', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.stroke', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
+                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2b47' }] },
+                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#00D4FF', lightness: -70 }] },
+                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }
+                ],
+                disableDefaultUI: true,
+                zoomControl: true,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            });
+            
+            // Initialize marker
+            qcMarker = new google.maps.Marker({
+                map: qcMap,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Marker drag event
+            qcMarker.addListener('dragend', function() {
+                const position = qcMarker.getPosition();
+                reverseGeocode(position.lat(), position.lng());
+            });
+            
+            // Map click event
+            qcMap.addListener('click', function(e) {
+                qcMarker.setPosition(e.latLng);
+                qcMarker.setVisible(true);
+                qcMap.panTo(e.latLng);
+                reverseGeocode(e.latLng.lat(), e.latLng.lng());
+            });
+            
+            // Initialize Places Autocomplete
+            const searchInput = document.getElementById('qcAddressSearch');
+            console.log('Search input found:', searchInput);
+            
+            if (searchInput && google.maps.places) {
+                console.log('Initializing Places Autocomplete...');
+                
+                // STRICT: Block Chrome autofill completely
+                searchInput.addEventListener('focus', function() {
+                    this.setAttribute('autocomplete', 'chrome-off');
+                    this.setAttribute('readonly', 'readonly');
+                    setTimeout(() => {
+                        this.removeAttribute('readonly');
+                    }, 50);
+                });
+                
+                // Prevent form submission on enter
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                });
+                
+                qcAutocomplete = new google.maps.places.Autocomplete(searchInput, {
+                    componentRestrictions: { country: 'in' },
+                    fields: ['address_components', 'geometry', 'formatted_address', 'name']
+                });
+                
+                // Bind autocomplete to the map bounds for better suggestions
+                qcAutocomplete.bindTo('bounds', qcMap);
+                
+                console.log('Autocomplete initialized:', qcAutocomplete);
+                
+                qcAutocomplete.addListener('place_changed', function() {
+                    const place = qcAutocomplete.getPlace();
+                    console.log('Place selected:', place);
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        showToast('Please select a location from the suggestions');
+                        return;
+                    }
+                    
+                    const location = place.geometry.location;
+                    qcMap.setCenter(location);
+                    qcMap.setZoom(16);
+                    qcMarker.setPosition(location);
+                    qcMarker.setVisible(true);
+                    
+                    // Extract address components
+                    extractAddressComponents(place);
+                });
+            }
+        }
+        
+        function extractAddressComponents(place) {
+            let city = '';
+            let state = '';
+            let pincode = '';
+            let country = 'India';
+            
+            if (place.address_components) {
+                for (const component of place.address_components) {
+                    const types = component.types;
+                    
+                    if (types.includes('locality')) {
+                        city = component.long_name;
+                    } else if (types.includes('administrative_area_level_1')) {
+                        state = component.long_name;
+                    } else if (types.includes('postal_code')) {
+                        pincode = component.long_name;
+                    } else if (types.includes('country')) {
+                        country = component.long_name;
+                    }
+                    
+                    // Fallback for city
+                    if (!city && types.includes('administrative_area_level_2')) {
+                        city = component.long_name;
+                    }
+                }
+            }
+            
+            // Store selected location
+            qcSelectedLocation = {
+                formattedAddress: place.formatted_address || place.name,
+                city: city,
+                state: state,
+                pincode: pincode,
+                country: country,
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+            
+            // Update UI
+            updateSelectedAddressUI();
+        }
+        
+        function reverseGeocode(lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat, lng } }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    extractAddressComponents(results[0]);
+                    qcSelectedLocation.lat = lat;
+                    qcSelectedLocation.lng = lng;
+                }
+            });
+        }
+        
+        function updateSelectedAddressUI() {
+            if (!qcSelectedLocation) return;
+            
+            // Show selected address section
+            const selectedAddressDiv = document.getElementById('qcSelectedAddress');
+            selectedAddressDiv.classList.add('visible');
+            
+            // Update text
+            document.getElementById('qcSelectedAddressText').textContent = qcSelectedLocation.formattedAddress;
+            document.getElementById('qcCityDisplay').textContent = qcSelectedLocation.city || '-';
+            document.getElementById('qcStateDisplay').textContent = qcSelectedLocation.state || '-';
+            document.getElementById('qcPincodeDisplay').textContent = qcSelectedLocation.pincode || '-';
+            document.getElementById('qcCountryDisplay').textContent = qcSelectedLocation.country || 'India';
+            
+            // Update hidden fields
+            document.getElementById('qcAddress').value = qcSelectedLocation.formattedAddress;
+            document.getElementById('qcCity').value = qcSelectedLocation.city;
+            document.getElementById('qcState').value = qcSelectedLocation.state;
+            document.getElementById('qcPincode').value = qcSelectedLocation.pincode;
+            document.getElementById('qcLatitude').value = qcSelectedLocation.lat;
+            document.getElementById('qcLongitude').value = qcSelectedLocation.lng;
+            
+            // Update shipping delivery time based on pincode
+            updateShippingDeliveryTime(qcSelectedLocation.pincode);
+        }
+        
+        function useCurrentLocation() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation is not supported by your browser');
+                return;
+            }
+            
+            showToast('Getting your location...');
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (qcMap) {
+                        const location = new google.maps.LatLng(lat, lng);
+                        qcMap.setCenter(location);
+                        qcMap.setZoom(16);
+                        qcMarker.setPosition(location);
+                        qcMarker.setVisible(true);
+                        reverseGeocode(lat, lng);
+                    }
+                },
+                function(error) {
+                    let message = 'Unable to get your location';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        message = 'Location permission denied. Please enable it in your browser settings.';
+                    }
+                    showToast(message);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+        
+        // Validate and continue to payment
+        function validateAndContinueToPayment() {
+            // Check if using saved address
+            if (qcSelectedSavedAddress) {
+                // Already have a valid address selected
+                goToStep(3);
+                return;
+            }
+            
+            // New address flow - validate map selection
+            const houseFloor = document.getElementById('qcHouseFloor').value.trim();
+            
+            if (!qcSelectedLocation || !qcSelectedLocation.formattedAddress) {
+                showToast('Please select a delivery location on the map');
+                return;
+            }
+            
+            if (!houseFloor) {
+                showToast('Please enter your house/floor number');
+                document.getElementById('qcHouseFloor').focus();
+                return;
+            }
+            
+            // Add house/floor to the address
+            qcSelectedLocation.houseFloor = houseFloor;
+            qcSelectedLocation.fullAddress = houseFloor + ', ' + qcSelectedLocation.formattedAddress;
+            
+            goToStep(3);
         }
 
         // Update QC Summary
@@ -3338,70 +4354,251 @@
             });
         });
 
-        // Payment method selection
-        document.querySelectorAll('.qc-payment-method').forEach(method => {
-            method.addEventListener('click', function() {
-                document.querySelectorAll('.qc-payment-method').forEach(m => m.classList.remove('selected'));
-                this.classList.add('selected');
-
-                const selectedMethod = this.dataset.method;
-
-                // Hide all payment forms
-                document.getElementById('qcCardForm').classList.add('hidden');
-                document.getElementById('qcUpiForm').classList.add('hidden');
-                document.getElementById('qcCodForm').classList.add('hidden');
-
-                // Show selected form
-                if (selectedMethod === 'card') {
-                    document.getElementById('qcCardForm').classList.remove('hidden');
-                } else if (selectedMethod === 'upi') {
-                    document.getElementById('qcUpiForm').classList.remove('hidden');
-                } else if (selectedMethod === 'cod') {
-                    document.getElementById('qcCodForm').classList.remove('hidden');
-                }
-            });
-        });
-
-        // Card number formatting
-        document.getElementById('qcCardNumber').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-            let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
-            e.target.value = formatted;
-        });
-
-        // Expiry date formatting
-        document.getElementById('qcExpiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2);
-            }
-            e.target.value = value;
-        });
-
-        // Place Order
-        document.getElementById('qcPlaceOrder').addEventListener('click', function() {
+        // ========== RAZORPAY INTEGRATION ==========
+        document.getElementById('qcPlaceOrder').addEventListener('click', async function() {
             const btn = this;
             btn.classList.add('loading');
-
-            setTimeout(() => {
+            
+            try {
+                // Get customer info
+                const customer = CustomerAuth.getCustomer();
+                const phone = document.getElementById('qcPhone')?.value || customer?.mobile || '';
+                const email = document.getElementById('qcEmail')?.value || customer?.email || '';
+                const name = document.getElementById('qcName')?.value || customer?.name || '';
+                
+                // Determine shipping method (only standard now)
+                const shippingMethod = 'standard';
+                
+                // Prepare shipping address for backend (matching backend schema)
+                const shippingAddress = {
+                    fullName: name,
+                    mobile: phone,
+                    houseFloor: qcSelectedLocation?.houseFloor || document.getElementById('qcHouseFloor')?.value || '',
+                    fullAddress: qcSelectedLocation?.fullAddress || qcSelectedLocation?.formattedAddress || '',
+                    landmark: '',
+                    city: qcSelectedLocation?.city || '',
+                    state: qcSelectedLocation?.state || '',
+                    pincode: qcSelectedLocation?.pincode || '',
+                    location: {
+                        type: 'Point',
+                        coordinates: [qcSelectedLocation?.lng || 0, qcSelectedLocation?.lat || 0]
+                    },
+                    addressType: qcSelectedSavedAddress?.type || 'home'
+                };
+                
+                // Prepare items for backend
+                const items = cart.map(item => ({
+                    productId: item.id || item.productSlug,
+                    productSlug: item.productSlug || item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    flavour: item.flavour || null,
+                    image: item.image || null
+                }));
+                
+                // Build order data for backend (always Razorpay)
+                const orderData = {
+                    items,
+                    shippingAddress,
+                    shippingMethod,
+                    paymentMethod: 'razorpay'
+                };
+                
+                // Initiate Razorpay payment
+                await initiateRazorpayPayment(orderData);
+            } catch (error) {
+                console.error('Checkout error:', error);
+                showToast(error.message || 'Something went wrong. Please try again.');
                 btn.classList.remove('loading');
-
-                // Generate order number
-                const orderNum = 'FLOW-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-                document.getElementById('qcOrderNumber').textContent = orderNum;
-
-                // Show success
-                document.getElementById('qcStep3').classList.add('hidden');
-                document.getElementById('qcSuccess').classList.remove('hidden');
-
-                // Update progress
-                document.querySelectorAll('.qc-step').forEach(s => s.classList.add('completed'));
-
-                // Clear cart
-                cart = [];
-                updateCartUI();
-            }, 2000);
+            }
         });
+        
+        async function initiateRazorpayPayment(orderData) {
+            const btn = document.getElementById('qcPlaceOrder');
+            
+            try {
+                // First, get the Razorpay key from server
+                const keyResponse = await fetch(`${API_BASE_URL}/api/orders/config/razorpay-key`);
+                const keyData = await keyResponse.json();
+                
+                if (!keyData.success || !keyData.key) {
+                    throw new Error('Failed to initialize payment');
+                }
+                
+                // Create order on server
+                const response = await fetch(`${API_BASE_URL}/api/orders/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to create order');
+                }
+                
+                if (!data.payment || !data.payment.razorpayOrderId) {
+                    throw new Error('Payment initialization failed');
+                }
+                
+                // Store order info for verification
+                const pendingOrder = {
+                    orderId: data.order.id,
+                    orderNumber: data.order.orderNumber,
+                    razorpayOrderId: data.payment.razorpayOrderId
+                };
+                localStorage.setItem('flow_pending_order', JSON.stringify(pendingOrder));
+                
+                // Configure Razorpay Checkout options
+                const options = {
+                    key: keyData.key,
+                    amount: data.payment.amount,
+                    currency: data.payment.currency,
+                    name: data.payment.name,
+                    description: data.payment.description,
+                    order_id: data.payment.razorpayOrderId,
+                    prefill: data.payment.prefill,
+                    notes: data.payment.notes,
+                    theme: {
+                        color: '#00D4FF',
+                        backdrop_color: 'rgba(10, 22, 40, 0.9)'
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            btn.classList.remove('loading');
+                            showToast('Payment cancelled');
+                        }
+                    },
+                    handler: async function(response) {
+                        // Payment successful - verify on server
+                        try {
+                            const verifyResponse = await fetch(`${API_BASE_URL}/api/orders/verify-payment`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                                },
+                                body: JSON.stringify({
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpaySignature: response.razorpay_signature,
+                                    orderId: pendingOrder.orderId
+                                })
+                            });
+                            
+                            const verifyData = await verifyResponse.json();
+                            
+                            btn.classList.remove('loading');
+                            
+                            if (verifyData.success) {
+                                // Save address if it's a new one
+                                const saveAddressCheckbox = document.getElementById('qcSaveAddress');
+                                const shouldSaveAddress = saveAddressCheckbox ? saveAddressCheckbox.checked : true;
+                                
+                                if (!qcSelectedSavedAddress && qcSelectedLocation && shouldSaveAddress) {
+                                    await saveNewAddress();
+                                }
+                                
+                                // Show success
+                                document.getElementById('qcOrderNumber').textContent = pendingOrder.orderNumber;
+                                document.getElementById('qcStep3').classList.add('hidden');
+                                document.getElementById('qcSuccess').classList.remove('hidden');
+                                document.querySelectorAll('.qc-step').forEach(s => s.classList.add('completed'));
+                                
+                                // Clear cart
+                                cart = [];
+                                CustomerAuth.saveLocalCart(cart);
+                                updateCartUI();
+                                
+                                // Clear pending order
+                                localStorage.removeItem('flow_pending_order');
+                                
+                                showToast('Payment successful! Order placed.');
+                            } else {
+                                showToast(verifyData.message || 'Payment verification failed', 'error');
+                            }
+                        } catch (verifyError) {
+                            console.error('Payment verification error:', verifyError);
+                            btn.classList.remove('loading');
+                            showToast('Payment received but verification failed. Please contact support.');
+                        }
+                    }
+                };
+                
+                // Open Razorpay Checkout popup
+                const rzp = new Razorpay(options);
+                
+                rzp.on('payment.failed', function(response) {
+                    btn.classList.remove('loading');
+                    console.error('Payment failed:', response.error);
+                    showToast(`Payment failed: ${response.error.description || 'Please try again'}`);
+                });
+                
+                rzp.open();
+                
+            } catch (error) {
+                btn.classList.remove('loading');
+                throw error;
+            }
+        }
+        
+        // Save new address to customer profile
+        async function saveNewAddress() {
+            if (!qcSelectedLocation) {
+                console.log('No location selected, skipping address save');
+                return false;
+            }
+            
+            try {
+                const addressData = {
+                    type: 'home',
+                    houseFloor: qcSelectedLocation.houseFloor || '',
+                    formattedAddress: qcSelectedLocation.formattedAddress || '',
+                    fullAddress: qcSelectedLocation.fullAddress || qcSelectedLocation.formattedAddress || '',
+                    city: qcSelectedLocation.city || '',
+                    state: qcSelectedLocation.state || '',
+                    pincode: qcSelectedLocation.pincode || '',
+                    country: qcSelectedLocation.country || 'India',
+                    coordinates: {
+                        lat: qcSelectedLocation.lat || 0,
+                        lng: qcSelectedLocation.lng || 0
+                    },
+                    isDefault: !qcHasSavedAddresses // Make default if no existing addresses
+                };
+                
+                console.log('Saving address:', addressData);
+                
+                const response = await fetch(`${API_BASE_URL}/api/customer/addresses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    },
+                    body: JSON.stringify(addressData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Refresh customer data to include new address
+                    await CustomerAuth.refreshCustomer();
+                    console.log('Address saved successfully:', data);
+                    return true;
+                } else {
+                    console.error('Failed to save address:', data.message || 'Unknown error');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Failed to save address:', error);
+                // Don't throw - address save failure shouldn't fail the order
+                return false;
+            }
+        }
     </script>
     <script src="assets/js/customerAuth.js"></script>
 </body>
