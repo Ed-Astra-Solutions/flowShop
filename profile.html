@@ -8,6 +8,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/customerAuth.css">
+    
+    <!-- Google Maps callback must be defined before the script loads -->
+    <script>
+        var googleMapsReady = false;
+        function initGoogleMaps() {
+            googleMapsReady = true;
+            console.log('Google Maps API loaded');
+        }
+    </script>
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb4ve4orTO8kVsMbJhlV6KtYswlE2LZ7s&libraries=places&callback=initGoogleMaps" async defer></script>
     <style>
         :root {
             --flow-blue: #0A1628;
@@ -1567,55 +1578,106 @@
         </div>
     </div>
 
-    <!-- Add/Edit Address Modal -->
+    <!-- Add/Edit Address Modal with Google Maps -->
     <div class="modal-overlay" id="addressModal" style="display: none;">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h3 id="addressModalTitle">Add New Address</h3>
                 <button class="modal-close" onclick="closeAddressModal()">&times;</button>
             </div>
             <form id="addressForm" onsubmit="saveAddress(event)">
                 <input type="hidden" id="address-id">
-                <div class="form-group">
-                    <label>Address Type</label>
-                    <select id="address-type">
-                        <option value="home">Home</option>
-                        <option value="work">Work</option>
-                        <option value="other">Other</option>
-                    </select>
+                
+                <!-- Google Maps Search -->
+                <div class="address-map-container">
+                    <div class="address-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="search" id="addressSearchInput" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
+                    </div>
+                    
+                    <button type="button" class="use-current-location-btn" onclick="useCurrentLocationProfile()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                        </svg>
+                        Use my current location
+                    </button>
+                    
+                    <div class="map-wrapper">
+                        <div id="profileMap"></div>
+                    </div>
+                    
+                    <!-- Selected Address Display -->
+                    <div class="selected-address-display" id="selectedAddressDisplay">
+                        <div class="selected-address-label">Selected Location</div>
+                        <div class="selected-address-text" id="selectedAddressText"></div>
+                        <div class="address-details-grid">
+                            <div class="address-detail-item">
+                                <span>City</span>
+                                <strong id="addressCityDisplay">-</strong>
+                            </div>
+                            <div class="address-detail-item">
+                                <span>State</span>
+                                <strong id="addressStateDisplay">-</strong>
+                            </div>
+                            <div class="address-detail-item">
+                                <span>PIN Code</span>
+                                <strong id="addressPincodeDisplay">-</strong>
+                            </div>
+                            <div class="address-detail-item">
+                                <span>Country</span>
+                                <strong id="addressCountryDisplay">India</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- House/Floor Number Input -->
                 <div class="form-group">
-                    <label>Label (optional)</label>
-                    <input type="text" id="address-label" placeholder="e.g., Mom's Place">
+                    <label>House No. / Floor / Building Name *</label>
+                    <input type="text" id="address-house" placeholder="e.g., Flat 204, 2nd Floor, Sunshine Apartments" required>
                 </div>
-                <div class="form-group">
-                    <label>Full Address *</label>
-                    <textarea id="address-full" rows="2" placeholder="House/Flat No., Building, Street" required></textarea>
-                </div>
+                
+                <!-- Landmark -->
                 <div class="form-group">
                     <label>Landmark (optional)</label>
                     <input type="text" id="address-landmark" placeholder="Near...">
                 </div>
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label>City *</label>
-                        <input type="text" id="address-city" required>
+                        <label>Address Type</label>
+                        <select id="address-type">
+                            <option value="home">Home</option>
+                            <option value="work">Work</option>
+                            <option value="other">Other</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>State *</label>
-                        <input type="text" id="address-state" required>
+                        <label>Label (optional)</label>
+                        <input type="text" id="address-label" placeholder="e.g., Mom's Place">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Pincode *</label>
-                    <input type="text" id="address-pincode" pattern="[0-9]{6}" maxlength="6" required>
-                </div>
+                
                 <div class="form-group checkbox-group">
                     <label>
                         <input type="checkbox" id="address-default">
                         Set as default address
                     </label>
                 </div>
+                
+                <!-- Hidden fields to store data -->
+                <input type="hidden" id="address-city" value="">
+                <input type="hidden" id="address-state" value="">
+                <input type="hidden" id="address-pincode" value="">
+                <input type="hidden" id="address-formatted" value="">
+                <input type="hidden" id="address-lat" value="">
+                <input type="hidden" id="address-lng" value="">
+                
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="closeAddressModal()">Cancel</button>
                     <button type="submit" class="btn-primary">Save Address</button>
@@ -1769,6 +1831,175 @@
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
+        
+        /* Google Maps Address Selection Styles */
+        .address-map-container {
+            margin-bottom: 1rem;
+        }
+
+        .address-search {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .address-search input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.5rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(0, 212, 255, 0.05);
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .address-search input:focus {
+            outline: none;
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .address-search svg {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--flow-gray);
+            width: 18px;
+            height: 18px;
+        }
+
+        .map-wrapper {
+            height: 220px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        #profileMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .selected-address-display {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .selected-address-display.visible {
+            display: block;
+        }
+
+        .selected-address-label {
+            font-size: 0.75rem;
+            color: var(--flow-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+
+        .selected-address-text {
+            color: var(--flow-white);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .address-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .address-detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.6rem 0.85rem;
+        }
+
+        .address-detail-item span {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--flow-gray);
+            margin-bottom: 0.15rem;
+        }
+
+        .address-detail-item strong {
+            color: var(--flow-white);
+            font-size: 0.85rem;
+        }
+
+        .use-current-location-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--flow-cyan);
+            font-size: 0.85rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .use-current-location-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Google Places Autocomplete Dropdown Styling */
+        .pac-container {
+            background: var(--flow-blue) !important;
+            background-color: #0A1628 !important;
+            border: 1px solid rgba(0, 212, 255, 0.3) !important;
+            border-radius: 10px !important;
+            margin-top: 5px !important;
+            font-family: 'Outfit', sans-serif !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            z-index: 3000 !important;
+        }
+
+        .pac-item {
+            padding: 10px 15px !important;
+            color: var(--flow-white) !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            background: transparent !important;
+        }
+
+        .pac-item:hover, .pac-item-selected {
+            background: rgba(0, 212, 255, 0.1) !important;
+        }
+
+        .pac-icon {
+            display: none !important;
+        }
+
+        .pac-item-query {
+            color: var(--flow-white) !important;
+            font-size: 0.9rem !important;
+        }
+
+        .pac-matched {
+            color: var(--flow-cyan) !important;
+            font-weight: 600 !important;
+        }
+
+        .pac-item span:last-child {
+            color: var(--flow-gray) !important;
+            font-size: 0.8rem !important;
+        }
     </style>
 
     <!-- Footer -->
@@ -1918,6 +2149,10 @@
                 const data = await CustomerAuth.getProfile();
                 customerData = data.customer;
                 
+                // Debug log to see what we're getting from server
+                console.log('Profile data received:', data);
+                console.log('Customer addresses:', customerData.addresses);
+                
                 // Update sidebar user info
                 const userAvatar = document.querySelector('.user-avatar');
                 const userName = document.querySelector('.user-name');
@@ -1940,8 +2175,8 @@
                 document.getElementById('display-member-since').textContent = formatDate(customerData.createdAt);
                 document.getElementById('display-last-login').textContent = formatDate(customerData.lastLogin);
                 
-                // Load addresses
-                renderAddresses(customerData.addresses || []);
+                // Load addresses - make explicit API call
+                await loadAddresses();
                 
                 // Load orders
                 loadOrders();
@@ -2190,13 +2425,40 @@
         
         // ==================== Address Functions ====================
         
+        async function loadAddresses() {
+            try {
+                console.log('Fetching addresses from API...');
+                const response = await fetch(`${API_BASE}/addresses`, {
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                
+                const data = await response.json();
+                console.log('Addresses API response:', data);
+                
+                if (data.success && data.addresses) {
+                    customerData.addresses = data.addresses;
+                    renderAddresses(data.addresses);
+                } else {
+                    console.log('No addresses found or API error');
+                    renderAddresses([]);
+                }
+            } catch (error) {
+                console.error('Error loading addresses:', error);
+                renderAddresses([]);
+            }
+        }
+        
         function renderAddresses(addresses) {
             const addressesGrid = document.querySelector('.addresses-grid');
             if (!addressesGrid) return;
             
             addressesGrid.innerHTML = '';
             
-            if (addresses.length === 0) {
+            // Debug log to check what's being received
+            console.log('Rendering addresses:', addresses);
+            
+            // Ensure addresses is an array
+            if (!addresses || !Array.isArray(addresses) || addresses.length === 0) {
                 // Show empty state
                 addressesGrid.innerHTML = `
                     <div class="add-address-card" onclick="openAddressModal()" style="grid-column: 1/-1;">
@@ -2281,6 +2543,12 @@
             addressesGrid.appendChild(addCard);
         }
         
+        // Google Maps variables for address modal
+        let profileMap = null;
+        let profileMarker = null;
+        let profileAutocomplete = null;
+        let selectedProfileLocation = null;
+        
         function openAddressModal(addressId = null) {
             const modal = document.getElementById('addressModal');
             const title = document.getElementById('addressModalTitle');
@@ -2288,6 +2556,16 @@
             
             form.reset();
             document.getElementById('address-id').value = '';
+            selectedProfileLocation = null;
+            document.getElementById('selectedAddressDisplay').classList.remove('visible');
+            
+            // Reset hidden fields
+            document.getElementById('address-city').value = '';
+            document.getElementById('address-state').value = '';
+            document.getElementById('address-pincode').value = '';
+            document.getElementById('address-formatted').value = '';
+            document.getElementById('address-lat').value = '';
+            document.getElementById('address-lng').value = '';
             
             if (addressId && customerData?.addresses) {
                 const addr = customerData.addresses.find(a => a._id === addressId);
@@ -2296,52 +2574,325 @@
                     document.getElementById('address-id').value = addr._id;
                     document.getElementById('address-type').value = addr.type || 'home';
                     document.getElementById('address-label').value = addr.label || '';
-                    
-                    // Handle both checkout format (houseFloor + formattedAddress) and profile format (fullAddress)
-                    let fullAddressValue = addr.fullAddress || '';
-                    if (!fullAddressValue && addr.houseFloor) {
-                        fullAddressValue = addr.houseFloor;
-                        if (addr.formattedAddress) {
-                            fullAddressValue += ', ' + addr.formattedAddress;
-                        }
-                    } else if (!fullAddressValue && addr.formattedAddress) {
-                        fullAddressValue = addr.formattedAddress;
-                    }
-                    
-                    document.getElementById('address-full').value = fullAddressValue;
+                    document.getElementById('address-house').value = addr.houseFloor || '';
                     document.getElementById('address-landmark').value = addr.landmark || '';
+                    document.getElementById('address-default').checked = addr.isDefault || false;
+                    
+                    // Set hidden fields and display
                     document.getElementById('address-city').value = addr.city || '';
                     document.getElementById('address-state').value = addr.state || '';
                     document.getElementById('address-pincode').value = addr.pincode || '';
-                    document.getElementById('address-default').checked = addr.isDefault || false;
+                    document.getElementById('address-formatted').value = addr.formattedAddress || addr.fullAddress || '';
+                    document.getElementById('address-lat').value = addr.coordinates?.lat || addr.location?.lat || '';
+                    document.getElementById('address-lng').value = addr.coordinates?.lng || addr.location?.lng || '';
+                    
+                    // Store selected location
+                    selectedProfileLocation = {
+                        formattedAddress: addr.formattedAddress || addr.fullAddress,
+                        city: addr.city,
+                        state: addr.state,
+                        pincode: addr.pincode,
+                        country: addr.country || 'India',
+                        lat: addr.coordinates?.lat || addr.location?.lat,
+                        lng: addr.coordinates?.lng || addr.location?.lng
+                    };
+                    
+                    // Update display
+                    if (selectedProfileLocation.formattedAddress) {
+                        updateProfileAddressUI();
+                    }
                 }
             } else {
                 title.textContent = 'Add New Address';
             }
             
             modal.style.display = 'flex';
+            
+            // Initialize map after modal is visible
+            setTimeout(() => {
+                initProfileMap();
+                
+                // If editing with coordinates, center map on location
+                if (selectedProfileLocation && selectedProfileLocation.lat && selectedProfileLocation.lng) {
+                    const position = { lat: selectedProfileLocation.lat, lng: selectedProfileLocation.lng };
+                    if (profileMap) {
+                        profileMap.setCenter(position);
+                        profileMap.setZoom(16);
+                        if (profileMarker) {
+                            profileMarker.setPosition(position);
+                            profileMarker.setVisible(true);
+                        }
+                    }
+                }
+            }, 150);
         }
         
         function closeAddressModal() {
             document.getElementById('addressModal').style.display = 'none';
+            selectedProfileLocation = null;
         }
         
         function editAddress(addressId) {
             openAddressModal(addressId);
         }
         
+        // Initialize Google Maps for profile address modal
+        function initProfileMap() {
+            const mapContainer = document.getElementById('profileMap');
+            if (!mapContainer) return;
+            
+            // Only initialize once
+            if (profileMap) {
+                google.maps.event.trigger(profileMap, 'resize');
+                return;
+            }
+            
+            // Wait for Google Maps to load
+            if (typeof google === 'undefined' || !google.maps) {
+                const checkGoogleMaps = setInterval(() => {
+                    if (typeof google !== 'undefined' && google.maps) {
+                        clearInterval(checkGoogleMaps);
+                        initProfileMap();
+                    }
+                }, 200);
+                setTimeout(() => clearInterval(checkGoogleMaps), 10000);
+                return;
+            }
+            
+            // Default center (India)
+            const defaultCenter = { lat: 20.5937, lng: 78.9629 };
+            
+            profileMap = new google.maps.Map(mapContainer, {
+                center: defaultCenter,
+                zoom: 5,
+                styles: [
+                    { elementType: 'geometry', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.stroke', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
+                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2b47' }] },
+                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#00D4FF', lightness: -70 }] },
+                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }
+                ],
+                disableDefaultUI: true,
+                zoomControl: true,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            });
+            
+            // Initialize marker
+            profileMarker = new google.maps.Marker({
+                map: profileMap,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Marker drag event
+            profileMarker.addListener('dragend', function() {
+                const position = profileMarker.getPosition();
+                reverseGeocodeProfile(position.lat(), position.lng());
+            });
+            
+            // Map click event
+            profileMap.addListener('click', function(e) {
+                profileMarker.setPosition(e.latLng);
+                profileMarker.setVisible(true);
+                profileMap.panTo(e.latLng);
+                reverseGeocodeProfile(e.latLng.lat(), e.latLng.lng());
+            });
+            
+            // Initialize Places Autocomplete
+            const searchInput = document.getElementById('addressSearchInput');
+            
+            if (searchInput && google.maps.places) {
+                // Block Chrome autofill
+                searchInput.addEventListener('focus', function() {
+                    this.setAttribute('autocomplete', 'chrome-off');
+                    this.setAttribute('readonly', 'readonly');
+                    setTimeout(() => {
+                        this.removeAttribute('readonly');
+                    }, 50);
+                });
+                
+                // Prevent form submission on enter
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                });
+                
+                profileAutocomplete = new google.maps.places.Autocomplete(searchInput, {
+                    componentRestrictions: { country: 'in' },
+                    fields: ['address_components', 'geometry', 'formatted_address', 'name']
+                });
+                
+                profileAutocomplete.bindTo('bounds', profileMap);
+                
+                profileAutocomplete.addListener('place_changed', function() {
+                    const place = profileAutocomplete.getPlace();
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        showToast('Please select a location from the suggestions');
+                        return;
+                    }
+                    
+                    const location = place.geometry.location;
+                    profileMap.setCenter(location);
+                    profileMap.setZoom(16);
+                    profileMarker.setPosition(location);
+                    profileMarker.setVisible(true);
+                    
+                    extractProfileAddressComponents(place);
+                });
+            }
+        }
+        
+        function extractProfileAddressComponents(place) {
+            let city = '';
+            let state = '';
+            let pincode = '';
+            let country = 'India';
+            
+            if (place.address_components) {
+                for (const component of place.address_components) {
+                    const types = component.types;
+                    
+                    if (types.includes('locality')) {
+                        city = component.long_name;
+                    } else if (types.includes('administrative_area_level_1')) {
+                        state = component.long_name;
+                    } else if (types.includes('postal_code')) {
+                        pincode = component.long_name;
+                    } else if (types.includes('country')) {
+                        country = component.long_name;
+                    }
+                    
+                    // Fallback for city
+                    if (!city && types.includes('administrative_area_level_2')) {
+                        city = component.long_name;
+                    }
+                }
+            }
+            
+            // Store selected location
+            selectedProfileLocation = {
+                formattedAddress: place.formatted_address || place.name,
+                city: city,
+                state: state,
+                pincode: pincode,
+                country: country,
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+            
+            // Update UI
+            updateProfileAddressUI();
+        }
+        
+        function reverseGeocodeProfile(lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat, lng } }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    extractProfileAddressComponents(results[0]);
+                    selectedProfileLocation.lat = lat;
+                    selectedProfileLocation.lng = lng;
+                }
+            });
+        }
+        
+        function updateProfileAddressUI() {
+            if (!selectedProfileLocation) return;
+            
+            // Show selected address section
+            const selectedAddressDiv = document.getElementById('selectedAddressDisplay');
+            selectedAddressDiv.classList.add('visible');
+            
+            // Update text
+            document.getElementById('selectedAddressText').textContent = selectedProfileLocation.formattedAddress;
+            document.getElementById('addressCityDisplay').textContent = selectedProfileLocation.city || '-';
+            document.getElementById('addressStateDisplay').textContent = selectedProfileLocation.state || '-';
+            document.getElementById('addressPincodeDisplay').textContent = selectedProfileLocation.pincode || '-';
+            document.getElementById('addressCountryDisplay').textContent = selectedProfileLocation.country || 'India';
+            
+            // Update hidden fields
+            document.getElementById('address-formatted').value = selectedProfileLocation.formattedAddress;
+            document.getElementById('address-city').value = selectedProfileLocation.city;
+            document.getElementById('address-state').value = selectedProfileLocation.state;
+            document.getElementById('address-pincode').value = selectedProfileLocation.pincode;
+            document.getElementById('address-lat').value = selectedProfileLocation.lat || '';
+            document.getElementById('address-lng').value = selectedProfileLocation.lng || '';
+        }
+        
+        function useCurrentLocationProfile() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation is not supported by your browser', 'error');
+                return;
+            }
+            
+            showToast('Getting your location...', 'success');
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (profileMap && profileMarker) {
+                        const pos = { lat, lng };
+                        profileMap.setCenter(pos);
+                        profileMap.setZoom(16);
+                        profileMarker.setPosition(pos);
+                        profileMarker.setVisible(true);
+                        reverseGeocodeProfile(lat, lng);
+                    }
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    let message = 'Unable to get your location';
+                    if (error.code === 1) {
+                        message = 'Please allow location access to use this feature';
+                    }
+                    showToast(message, 'error');
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+        
         async function saveAddress(event) {
             event.preventDefault();
+            
+            // Validate location is selected
+            const formattedAddress = document.getElementById('address-formatted').value.trim();
+            const city = document.getElementById('address-city').value.trim();
+            const state = document.getElementById('address-state').value.trim();
+            const pincode = document.getElementById('address-pincode').value.trim();
+            const houseFloor = document.getElementById('address-house').value.trim();
+            
+            if (!formattedAddress || !city || !state || !pincode) {
+                showToast('Please select a location from the map', 'error');
+                return;
+            }
+            
+            if (!houseFloor) {
+                showToast('Please enter house/flat number', 'error');
+                return;
+            }
             
             const addressId = document.getElementById('address-id').value;
             const addressData = {
                 type: document.getElementById('address-type').value,
                 label: document.getElementById('address-label').value.trim(),
-                fullAddress: document.getElementById('address-full').value.trim(),
+                houseFloor: houseFloor,
+                formattedAddress: formattedAddress,
+                fullAddress: houseFloor + ', ' + formattedAddress,
                 landmark: document.getElementById('address-landmark').value.trim(),
-                city: document.getElementById('address-city').value.trim(),
-                state: document.getElementById('address-state').value.trim(),
-                pincode: document.getElementById('address-pincode').value.trim(),
+                city: city,
+                state: state,
+                pincode: pincode,
+                country: 'India',
+                coordinates: {
+                    lat: parseFloat(document.getElementById('address-lat').value) || null,
+                    lng: parseFloat(document.getElementById('address-lng').value) || null
+                },
                 isDefault: document.getElementById('address-default').checked
             };
             
