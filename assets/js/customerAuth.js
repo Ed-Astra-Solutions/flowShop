@@ -190,6 +190,33 @@ const CustomerAuth = (function() {
         }
     }
     
+    async function updateProfile(profileData) {
+        try {
+            const response = await fetch(`${API_BASE}/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
+                body: JSON.stringify(profileData)
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update profile');
+            }
+            
+            if (data.customer) {
+                setCustomer(data.customer);
+            }
+            return data;
+        } catch (error) {
+            console.error('Update profile error:', error);
+            throw error;
+        }
+    }
+    
     // ==================== UI Functions ====================
     
     function createLoginModal() {
@@ -982,7 +1009,8 @@ const CustomerAuth = (function() {
         removeFromCart,
         clearCart,
         getCartTotal,
-        getCartCount
+        getCartCount,
+        updateProfile
     };
 })();
 

@@ -1076,6 +1076,163 @@
             font-size: 0.8rem;
         }
 
+        /* Cart Toast Notification - appears below app bar */
+        .cart-toast {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            max-width: 320px;
+        }
+
+        .cart-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .cart-toast-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2d4a 50%, #0a1628 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .cart-toast-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-toast-image .sachet-mini {
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-purple));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+            color: var(--flow-dark);
+        }
+
+        .cart-toast-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--flow-white);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-toast-message {
+            font-size: 12px;
+            color: var(--flow-cyan);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cart-toast-message svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .cart-toast-close {
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 0;
+            transition: color 0.2s;
+        }
+
+        .cart-toast-close:hover {
+            color: var(--flow-white);
+        }
+
+        /* Add to Cart button quantity state */
+        .add-to-cart.has-quantity {
+            background: transparent;
+            border: 1px solid var(--flow-cyan);
+            color: var(--flow-cyan);
+        }
+
+        .add-to-cart.has-quantity:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .add-to-cart .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-to-cart .qty-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.2);
+            border: none;
+            color: var(--flow-cyan);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .add-to-cart .qty-btn:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .add-to-cart .qty-count {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .cart-toast {
+                top: 70px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                transform: translateY(-100%);
+            }
+            
+            .cart-toast.show {
+                transform: translateY(0);
+            }
+        }
+
         /* ========== QUICK CHECKOUT MODAL ========== */
         .quick-checkout-overlay {
             position: fixed;
@@ -2020,8 +2177,21 @@
         .qc-saved-addresses {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .qc-saved-addresses-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-saved-addresses-title {
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+            font-weight: 500;
         }
 
         .qc-saved-addresses-list {
@@ -2031,38 +2201,203 @@
         }
 
         .qc-saved-address-item {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 0;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .qc-saved-address-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: transparent;
+            transition: background 0.25s ease;
         }
 
         .qc-saved-address-item:hover {
-            border-color: rgba(0, 212, 255, 0.3);
-            background: rgba(0, 212, 255, 0.05);
+            border-color: rgba(0, 212, 255, 0.25);
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateY(-1px);
         }
 
         .qc-saved-address-item.selected {
-            border-color: var(--flow-cyan);
-            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .qc-saved-address-item.selected::before {
+            background: var(--flow-cyan);
         }
 
         .qc-saved-address-item label {
             display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
+            align-items: stretch;
+            gap: 0;
             cursor: pointer;
             width: 100%;
+            padding: 1rem 1.25rem;
         }
 
         .qc-saved-address-item input[type="radio"] {
-            margin-top: 0.25rem;
-            accent-color: var(--flow-cyan);
+            display: none;
+        }
+
+        .qc-address-radio-indicator {
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+            margin-top: 2px;
+        }
+
+        .qc-saved-address-item.selected .qc-address-radio-indicator {
+            border-color: var(--flow-cyan);
+            background: var(--flow-cyan);
+        }
+
+        .qc-address-radio-indicator::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--flow-dark);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.25s ease;
+        }
+
+        .qc-saved-address-item.selected .qc-address-radio-indicator::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .qc-address-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .qc-address-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-address-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.6rem;
+            background: rgba(0, 212, 255, 0.15);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--flow-cyan);
+            text-transform: capitalize;
+        }
+
+        .qc-address-type-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .qc-address-default-tag {
+            font-size: 0.7rem;
+            color: var(--flow-purple);
+            background: rgba(139, 92, 246, 0.15);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .qc-address-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc-address-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .qc-address-pincode {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            color: var(--flow-gray);
+        }
+
+        .qc-address-pincode svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0.7;
+        }
+
+        .qc-delivery-estimate {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            color: #22c55e;
+        }
+
+        .qc-delivery-estimate svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .qc-add-new-address-btn {
+            background: transparent;
+            border: 1px dashed rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            color: var(--flow-cyan);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .qc-add-new-address-btn:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: var(--flow-cyan);
+            border-style: solid;
+        }
+
+        .qc-add-new-address-btn svg {
             width: 18px;
             height: 18px;
-            flex-shrink: 0;
+        }
+
+        .qc-map-section {
+            display: none;
+        }
+
+        .qc-map-section.visible {
+            display: block;
         }
 
         .qc-address-details {
@@ -2075,50 +2410,6 @@
             font-size: 0.85rem;
             margin-bottom: 0.25rem;
             text-transform: capitalize;
-        }
-
-        .qc-address-text {
-            font-size: 0.9rem;
-            color: var(--flow-gray);
-            line-height: 1.4;
-        }
-
-        .qc-add-new-address-btn {
-            background: transparent;
-            border: 1px dashed rgba(0, 212, 255, 0.4);
-            border-radius: 12px;
-            padding: 1rem;
-            color: var(--flow-cyan);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .qc-add-new-address-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: var(--flow-cyan);
-        }
-
-        .qc-map-section {
-            display: none;
-        }
-
-        .qc-map-section.visible {
-            display: block;
-        }
-
-        .qc-delivery-estimate {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--flow-gray);
-            margin-top: 0.25rem;
         }
 
         .qc-delivery-estimate svg {
@@ -2242,6 +2533,29 @@
             accent-color: var(--flow-cyan);
             width: 18px;
             height: 18px;
+        }
+
+        /* Address Error Styling */
+        .qc-address-error {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            border-radius: 8px;
+            margin: 12px 0;
+            color: #ff5252;
+            font-size: 0.9rem;
+        }
+
+        .qc-address-error svg {
+            flex-shrink: 0;
+        }
+
+        .qc-input.error {
+            border-color: #ff5252 !important;
+            background: rgba(255, 82, 82, 0.05);
         }
     </style>
 </head>
@@ -2371,7 +2685,7 @@
                                 <span class="price-current">₹1,499</span>
                                 <span class="price-original">₹1,799</span>
                             </div>
-                            <button class="add-to-cart" data-product="flow-original-30" data-name="Flow Original — 30 Pack" data-price="1499">
+                            <button class="add-to-cart" data-product="flow-original-30" data-name="Flow Original — 30 Pack" data-price="1499" onclick="event.stopPropagation(); addToCart('flow-original-30', 'Flow Original — 30 Pack', 1499)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2416,7 +2730,7 @@
                             <div class="product-price">
                                 <span class="price-current">₹999</span>
                             </div>
-                            <button class="add-to-cart" data-product="citrus-burst-20" data-name="Citrus Burst — 20 Pack" data-price="999">
+                            <button class="add-to-cart" data-product="citrus-burst-20" data-name="Citrus Burst — 20 Pack" data-price="999" onclick="event.stopPropagation(); addToCart('citrus-burst-20', 'Citrus Burst — 20 Pack', 999)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2460,7 +2774,7 @@
                             <div class="product-price">
                                 <span class="price-current">₹999</span>
                             </div>
-                            <button class="add-to-cart" data-product="berry-blast-20" data-name="Berry Blast — 20 Pack" data-price="999">
+                            <button class="add-to-cart" data-product="berry-blast-20" data-name="Berry Blast — 20 Pack" data-price="999" onclick="event.stopPropagation(); addToCart('berry-blast-20', 'Berry Blast — 20 Pack', 999)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2498,7 +2812,7 @@
                             <div class="product-price">
                                 <span class="price-current">₹299</span>
                             </div>
-                            <button class="add-to-cart" data-product="flow-original-5" data-name="Flow Original — 5 Pack" data-price="299">
+                            <button class="add-to-cart" data-product="flow-original-5" data-name="Flow Original — 5 Pack" data-price="299" onclick="event.stopPropagation(); addToCart('flow-original-5', 'Flow Original — 5 Pack', 299)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2553,7 +2867,7 @@
                                 <span class="price-current">₹1,299</span>
                                 <span class="price-original">₹1,599</span>
                             </div>
-                            <button class="add-to-cart" data-product="variety-pack" data-name="Flavor Discovery Pack" data-price="1299">
+                            <button class="add-to-cart" data-product="variety-pack" data-name="Flavor Discovery Pack" data-price="1299" onclick="event.stopPropagation(); addToCart('variety-pack', 'Flavor Discovery Pack', 1299)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2598,7 +2912,7 @@
                             <div class="product-price">
                                 <span class="price-current">₹999</span>
                             </div>
-                            <button class="add-to-cart" data-product="tropical-surge-20" data-name="Tropical Surge — 20 Pack" data-price="999">
+                            <button class="add-to-cart" data-product="tropical-surge-20" data-name="Tropical Surge — 20 Pack" data-price="999" onclick="event.stopPropagation(); addToCart('tropical-surge-20', 'Tropical Surge — 20 Pack', 999)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2644,7 +2958,7 @@
                                 <span class="price-current">₹2,499</span>
                                 <span class="price-original">₹3,299</span>
                             </div>
-                            <button class="add-to-cart" data-product="flow-original-60" data-name="Flow Original — 60 Pack" data-price="2499">
+                            <button class="add-to-cart" data-product="flow-original-60" data-name="Flow Original — 60 Pack" data-price="2499" onclick="event.stopPropagation(); addToCart('flow-original-60', 'Flow Original — 60 Pack', 2499)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2682,7 +2996,7 @@
                             <div class="product-price">
                                 <span class="price-current">₹69</span>
                             </div>
-                            <button class="add-to-cart" data-product="single-sachet" data-name="Single Sachet" data-price="69">
+                            <button class="add-to-cart" data-product="single-sachet" data-name="Single Sachet" data-price="69" onclick="event.stopPropagation(); addToCart('single-sachet', 'Single Sachet', 69)">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -2747,6 +3061,28 @@
     <div class="toast" id="toast">
         <div class="toast-icon">✓</div>
         <span id="toastMessage">Added to cart!</span>
+    </div>
+
+    <!-- Cart Toast Notification (below app bar with image) -->
+    <div class="cart-toast" id="cartToast">
+        <div class="cart-toast-image" id="cartToastImage">
+            <div class="sachet-mini">Flow</div>
+        </div>
+        <div class="cart-toast-content">
+            <div class="cart-toast-title" id="cartToastTitle">Product Name</div>
+            <div class="cart-toast-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span id="cartToastText">Added to cart!</span>
+            </div>
+        </div>
+        <button class="cart-toast-close" onclick="hideCartToast()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
     </div>
 
     <!-- Quick Checkout Modal -->
@@ -2867,6 +3203,16 @@
                     <div class="qc-house-input">
                         <label for="qcHouseFloor">House No. / Floor / Building Name *</label>
                         <input type="text" class="qc-input" id="qcHouseFloor" placeholder="e.g., Flat 204, 2nd Floor, Sunshine Apartments">
+                    </div>
+                    
+                    <!-- Address Error Message -->
+                    <div class="qc-address-error" id="qcAddressError" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span id="qcAddressErrorText"></span>
                     </div>
                     
                     <!-- Save Address Checkbox -->
@@ -3082,12 +3428,15 @@
                 cart = savedCart ? JSON.parse(savedCart) : [];
             }
             updateCartUI();
+            // Update buttons after cart is loaded
+            setTimeout(() => updateAddToCartButtons(), 100);
         }
 
         // Listen for cart updates from other tabs/components
         window.addEventListener('cartUpdated', (e) => {
             cart = e.detail.cart;
             updateCartUI();
+            updateAddToCartButtons();
         });
 
         // Load products on page load
@@ -3369,8 +3718,9 @@
             // Update product count with filtered total
             document.querySelector('.products-count strong').textContent = filteredProducts.length;
             
-            // Re-bind add to cart button animations
+            // Re-bind add to cart button animations and update with quantities
             bindAddToCartButtons();
+            updateAddToCartButtons();
         }
 
         function goToProduct(slug, flavour, packSize) {
@@ -3387,30 +3737,15 @@
 
         function bindAddToCartButtons() {
             document.querySelectorAll('.add-to-cart').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Button feedback
-                    this.classList.add('added');
-                    this.innerHTML = `
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        Added!
-                    `;
-                    
-                    setTimeout(() => {
-                        this.classList.remove('added');
-                        this.innerHTML = `
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                                <line x1="3" y1="6" x2="21" y2="6"/>
-                                <path d="M16 10a4 4 0 01-8 0"/>
-                            </svg>
-                            Add to Cart
-                        `;
-                    }, 1500);
-                });
+                // Skip if button already has quantity controls (item in cart)
+                if (button.classList.contains('has-quantity')) return;
+                
+                // Remove existing listeners to prevent duplicates
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                // Button click handled by onclick attribute in HTML
+                // This function is just for initialization
             });
         }
 
@@ -3506,13 +3841,57 @@
         cartClose.addEventListener('click', closeCart);
         continueShopping.addEventListener('click', closeCart);
 
-        // Show Toast
+        // Show Toast (generic)
         function showToast(message) {
             toastMessage.textContent = message;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 2500);
+        }
+
+        // Cart Toast elements
+        const cartToast = document.getElementById('cartToast');
+        const cartToastImage = document.getElementById('cartToastImage');
+        const cartToastTitle = document.getElementById('cartToastTitle');
+        const cartToastText = document.getElementById('cartToastText');
+        let cartToastTimeout = null;
+
+        // Show Cart Toast with product image
+        function showCartToast(productName, quantity, image = null) {
+            // Clear any existing timeout
+            if (cartToastTimeout) {
+                clearTimeout(cartToastTimeout);
+            }
+            
+            // Update toast content
+            cartToastTitle.textContent = productName;
+            cartToastText.textContent = quantity > 1 ? `Quantity: ${quantity} in cart` : 'Added to cart!';
+            
+            // Update image
+            if (image) {
+                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}">`;
+            } else {
+                // Use sachet visual as fallback
+                cartToastImage.innerHTML = '<div class="sachet-mini">Flow</div>';
+            }
+            
+            // Show toast
+            cartToast.classList.add('show');
+            
+            // Auto-hide after 3 seconds
+            cartToastTimeout = setTimeout(() => {
+                hideCartToast();
+            }, 3000);
+        }
+
+        // Hide Cart Toast
+        function hideCartToast() {
+            cartToast.classList.remove('show');
+            if (cartToastTimeout) {
+                clearTimeout(cartToastTimeout);
+                cartToastTimeout = null;
+            }
         }
 
         // Update Cart UI
@@ -3535,8 +3914,10 @@
                 cartEmpty.style.display = 'none';
                 cartFooter.style.display = 'block';
 
-                cartItems.innerHTML = cart.map(item => `
-                    <div class="cart-item" data-product="${item.id}">
+                cartItems.innerHTML = cart.map(item => {
+                    const itemId = item.id || item.productSlug;
+                    return `
+                    <div class="cart-item" data-product="${itemId}">
                         <div class="cart-item-image">
                             <div class="mini-sachet"></div>
                         </div>
@@ -3545,16 +3926,16 @@
                             <div class="cart-item-variant">Electrolyte Hydration</div>
                             <div class="cart-item-actions">
                                 <div class="cart-item-qty">
-                                    <button onclick="updateQuantity('${item.id}', -1)">−</button>
+                                    <button onclick="updateQuantity('${itemId}', -1)">−</button>
                                     <span>${item.quantity}</span>
-                                    <button onclick="updateQuantity('${item.id}', 1)">+</button>
+                                    <button onclick="updateQuantity('${itemId}', 1)">+</button>
                                 </div>
                                 <div class="cart-item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
                             </div>
-                            <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">Remove</button>
+                            <button class="cart-item-remove" onclick="removeFromCart('${itemId}')">Remove</button>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             }
 
             // Update totals
@@ -3604,7 +3985,15 @@
             }
             
             updateCartUI();
-            showToast(`${name} added to cart!`);
+            updateAddToCartButtons();
+            
+            // Show cart toast with image
+            const cartItem = cart.find(item => item.id === productId || item.productSlug === productId);
+            const quantity = cartItem ? cartItem.quantity : 1;
+            showCartToast(name, quantity, image);
+            
+            // Open cart drawer
+            openCart();
         }
 
         // Update Quantity - integrated with CustomerAuth
@@ -3625,6 +4014,7 @@
                         localStorage.setItem('flow_cart', JSON.stringify(cart));
                     }
                     updateCartUI();
+                    updateAddToCartButtons();
                 }
             }
         }
@@ -3644,11 +4034,76 @@
             }
             
             updateCartUI();
+            updateAddToCartButtons();
             showToast('Item removed from cart');
+        }
+
+        // Update Add to Cart buttons to show quantity
+        function updateAddToCartButtons() {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                const productId = button.dataset.product;
+                const productName = button.dataset.name;
+                const productPrice = button.dataset.price;
+                
+                if (!productId) return;
+                
+                const cartItem = cart.find(item => item.id === productId || item.productSlug === productId);
+                
+                if (cartItem && cartItem.quantity > 0) {
+                    button.classList.add('has-quantity');
+                    button.onclick = (e) => e.stopPropagation();
+                    button.innerHTML = `
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="event.stopPropagation(); updateQuantityFromButton('${productId}', -1)">−</button>
+                            <span class="qty-count">${cartItem.quantity}</span>
+                            <button class="qty-btn" onclick="event.stopPropagation(); updateQuantityFromButton('${productId}', 1)">+</button>
+                        </div>
+                    `;
+                } else {
+                    button.classList.remove('has-quantity');
+                    // Restore the Add to Cart functionality
+                    button.onclick = (e) => {
+                        e.stopPropagation();
+                        addToCart(productId, productName, parseFloat(productPrice));
+                    };
+                    button.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                        Add to Cart
+                    `;
+                }
+            });
+        }
+
+        // Update quantity from button (product card)
+        function updateQuantityFromButton(productId, change) {
+            const index = cart.findIndex(item => item.id === productId || item.productSlug === productId);
+            if (index > -1) {
+                cart[index].quantity += change;
+                if (cart[index].quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    // Sync with CustomerAuth
+                    if (typeof CustomerAuth !== 'undefined') {
+                        CustomerAuth.saveLocalCart(cart);
+                        if (CustomerAuth.isLoggedIn()) {
+                            CustomerAuth.syncCartToServer(cart);
+                        }
+                    } else {
+                        localStorage.setItem('flow_cart', JSON.stringify(cart));
+                    }
+                    updateCartUI();
+                    updateAddToCartButtons();
+                }
+            }
         }
 
         // Initialize
         updateCartUI();
+        updateAddToCartButtons();
 
         // ========== GO TO CHECKOUT ==========
         function goToCheckout() {
@@ -3705,6 +4160,10 @@
             document.body.style.overflow = 'hidden';
             updateQCSummary();
             
+            // Clear any previous errors
+            const errorEl = document.getElementById('qcAddressError');
+            if (errorEl) errorEl.style.display = 'none';
+            
             // Pre-fill customer data if available (this also loads saved addresses)
             prefillCustomerData();
             
@@ -3712,6 +4171,13 @@
             // It will only be initialized when user clicks "Add new address"
             // or when there are no saved addresses
         }
+        
+        // Clear error when user types in house floor field
+        document.getElementById('qcHouseFloor')?.addEventListener('input', function() {
+            this.classList.remove('error');
+            const errorEl = document.getElementById('qcAddressError');
+            if (errorEl) errorEl.style.display = 'none';
+        });
         
         async function prefillCustomerData() {
             // First use cached customer data for immediate UI
@@ -3729,26 +4195,38 @@
                 phoneInput.value = customer.mobile;
             }
             
-            // Load saved addresses from cache first
-            if (customer) {
+            // Pre-fill email if available
+            const emailInput = document.getElementById('qcEmail');
+            if (emailInput && customer?.email) {
+                emailInput.value = customer.email;
+            }
+            
+            // Load saved addresses from cache first (if available)
+            if (customer && customer.addresses && customer.addresses.length > 0) {
                 loadSavedAddresses(customer);
             }
             
-            // Then refresh from server to get latest addresses
+            // Always refresh from server to get latest addresses
             try {
                 const freshCustomer = await CustomerAuth.refreshCustomer();
                 if (freshCustomer) {
-                    // Reload addresses if they changed
-                    const cachedAddressCount = customer?.addresses?.length || 0;
-                    const freshAddressCount = freshCustomer.addresses?.length || 0;
+                    console.log('Loaded customer from server, addresses:', freshCustomer.addresses?.length || 0);
+                    loadSavedAddresses(freshCustomer);
                     
-                    if (freshAddressCount !== cachedAddressCount) {
-                        console.log('Addresses updated from server');
-                        loadSavedAddresses(freshCustomer);
+                    // Also update name/email if not filled
+                    if (nameInput && !nameInput.value && freshCustomer.name) {
+                        nameInput.value = freshCustomer.name;
+                    }
+                    if (emailInput && !emailInput.value && freshCustomer.email) {
+                        emailInput.value = freshCustomer.email;
                     }
                 }
             } catch (error) {
                 console.error('Failed to refresh customer data:', error);
+                // If refresh fails but we have cached data, use it
+                if (customer) {
+                    loadSavedAddresses(customer);
+                }
             }
         }
         
@@ -3757,12 +4235,16 @@
             const savedAddressesList = document.getElementById('qcSavedAddressesList');
             const newAddressForm = document.getElementById('qcNewAddressForm');
             
-            if (!savedAddressesList) return;
+            if (!savedAddressesList) {
+                console.error('qcSavedAddressesList element not found');
+                return;
+            }
             
             // Clear existing addresses
             savedAddressesList.innerHTML = '';
             
-            const addresses = customer.addresses || [];
+            const addresses = customer?.addresses || [];
+            console.log('Loading saved addresses:', addresses.length, addresses);
             qcHasSavedAddresses = addresses.length > 0;
             
             if (qcHasSavedAddresses) {
@@ -3774,21 +4256,43 @@
                     const isDefault = addr.isDefault || index === 0;
                     const addressItem = document.createElement('div');
                     addressItem.className = 'qc-saved-address-item' + (isDefault ? ' selected' : '');
+                    
+                    // Get icon based on address type
+                    const typeIcon = getAddressTypeIcon(addr.type || 'home');
+                    
                     addressItem.innerHTML = `
                         <label>
                             <input type="radio" name="savedAddress" value="${index}" ${isDefault ? 'checked' : ''}>
-                            <div class="qc-address-details">
-                                <div class="qc-address-type">${addr.type || 'Home'}</div>
+                            <div class="qc-address-radio-indicator"></div>
+                            <div class="qc-address-content">
+                                <div class="qc-address-header">
+                                    <span class="qc-address-type-badge">
+                                        ${typeIcon}
+                                        ${addr.type || 'Home'}
+                                    </span>
+                                    ${isDefault ? '<span class="qc-address-default-tag">Default</span>' : ''}
+                                </div>
                                 <div class="qc-address-text">
                                     ${addr.houseFloor ? addr.houseFloor + ', ' : ''}${addr.fullAddress || addr.formattedAddress || ''}
-                                    ${addr.city ? '<br>' + addr.city : ''}${addr.state ? ', ' + addr.state : ''}${addr.pincode ? ' - ' + addr.pincode : ''}
                                 </div>
-                                <div class="qc-delivery-estimate" id="deliveryEstimate${index}">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12,6 12,12 16,14"></polyline>
-                                    </svg>
-                                    <span>${getDeliveryEstimate(addr.pincode)}</span>
+                                <div class="qc-address-meta">
+                                    ${addr.pincode ? `
+                                    <span class="qc-address-pincode">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        ${addr.pincode}
+                                    </span>` : ''}
+                                    <span class="qc-delivery-estimate" id="deliveryEstimate${index}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="1" y="3" width="15" height="13" rx="2"/>
+                                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                            <circle cx="5.5" cy="18.5" r="2.5"/>
+                                            <circle cx="18.5" cy="18.5" r="2.5"/>
+                                        </svg>
+                                        ${getDeliveryEstimate(addr.pincode)}
+                                    </span>
                                 </div>
                             </div>
                         </label>
@@ -3900,6 +4404,29 @@
                 if (checkedRadio) {
                     selectSavedAddress(parseInt(checkedRadio.value), customer.addresses);
                 }
+            }
+        }
+        
+        function getAddressTypeIcon(type) {
+            const iconType = (type || 'home').toLowerCase();
+            switch(iconType) {
+                case 'home':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>`;
+                case 'work':
+                case 'office':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>`;
+                case 'other':
+                default:
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>`;
             }
         }
         
@@ -4178,6 +4705,10 @@
         function updateSelectedAddressUI() {
             if (!qcSelectedLocation) return;
             
+            // Clear any address errors when location is selected
+            const errorEl = document.getElementById('qcAddressError');
+            if (errorEl) errorEl.style.display = 'none';
+            
             // Show selected address section
             const selectedAddressDiv = document.getElementById('qcSelectedAddress');
             selectedAddressDiv.classList.add('visible');
@@ -4236,6 +4767,21 @@
         
         // Validate and continue to payment
         function validateAndContinueToPayment() {
+            const errorEl = document.getElementById('qcAddressError');
+            const errorTextEl = document.getElementById('qcAddressErrorText');
+            const houseFloorInput = document.getElementById('qcHouseFloor');
+            
+            // Clear previous errors
+            errorEl.style.display = 'none';
+            houseFloorInput.classList.remove('error');
+            
+            // Helper to show error
+            function showAddressError(message) {
+                errorTextEl.textContent = message;
+                errorEl.style.display = 'flex';
+                errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
             // Check if using saved address
             if (qcSelectedSavedAddress) {
                 // Already have a valid address selected
@@ -4244,16 +4790,17 @@
             }
             
             // New address flow - validate map selection
-            const houseFloor = document.getElementById('qcHouseFloor').value.trim();
+            const houseFloor = houseFloorInput.value.trim();
             
             if (!qcSelectedLocation || !qcSelectedLocation.formattedAddress) {
-                showToast('Please select a delivery location on the map');
+                showAddressError('Please select a delivery location on the map');
                 return;
             }
             
             if (!houseFloor) {
-                showToast('Please enter your house/floor number');
-                document.getElementById('qcHouseFloor').focus();
+                showAddressError('Please enter your house/floor number');
+                houseFloorInput.classList.add('error');
+                houseFloorInput.focus();
                 return;
             }
             
@@ -4295,6 +4842,15 @@
                 const phone = document.getElementById('qcPhone')?.value || customer?.mobile || '';
                 const email = document.getElementById('qcEmail')?.value || customer?.email || '';
                 const name = document.getElementById('qcName')?.value || customer?.name || '';
+                
+                // Update customer email if it's new or changed
+                if (email && email !== customer?.email) {
+                    try {
+                        await CustomerAuth.updateProfile({ email: email });
+                    } catch (e) {
+                        console.log('Could not update email:', e);
+                    }
+                }
                 
                 // Determine shipping method (only standard now)
                 const shippingMethod = 'standard';
