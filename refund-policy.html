@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-green: #22C55E;
+            --flow-red: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            line-height: 1.7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.9);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--flow-white);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--flow-cyan);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            gap: 0.75rem;
+        }
+
+        /* Content */
+        .policy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .policy-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .policy-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00D4FF 0%, #00B4B4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .policy-header p {
+            color: var(--flow-gray);
+            font-size: 0.95rem;
+        }
+
+        .intro-text {
+            color: var(--flow-gray);
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .policy-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .policy-section h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--flow-cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .policy-section h2.eligible::before {
+            content: '✅';
+        }
+
+        .policy-section h2.ineligible::before {
+            content: '❌';
+        }
+
+        .policy-section h2.how-to::before {
+            content: '🛠️';
+        }
+
+        .policy-section h2.note::before {
+            content: '📌';
+        }
+
+        .policy-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--flow-white);
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .policy-section p {
+            color: var(--flow-gray);
+            margin-bottom: 1rem;
+        }
+
+        .policy-section ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .policy-section li {
+            color: var(--flow-gray);
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .policy-section li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            background: var(--flow-cyan);
+            border-radius: 50%;
+        }
+
+        .highlight {
+            color: var(--flow-white);
+            font-weight: 500;
+        }
+
+        .email-link {
+            color: var(--flow-cyan);
+            text-decoration: none;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-box p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .eligible-box {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ineligible-box {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4%;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .policy-header h1 {
+                font-size: 2rem;
+            }
+
+            .policy-container {
+                padding: 7rem 1.5rem 3rem;
+            }
+        }
+
+        /* Site Footer */
+        .site-footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand .logo-img {
+            height: 70px;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .footer-contact a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .footer-brand {
+                grid-column: span 2;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-brand {
+                grid-column: span 1;
+            }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            font-size: 0.95rem;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="flow-shop-2.html">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#benefits">Benefits</a></li>
+        </ul>
+        <a href="index.html" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+        </a>
+    </nav>
+
+    <div class="policy-container">
+        <div class="policy-header">
+            <h1>Refund Policy</h1>
+            <p>Last updated: January 2026</p>
+        </div>
+
+        <p class="intro-text">We strive to ensure a high-quality experience for every customer. Due to the perishable and consumable nature of our products, we do not accept returns or cancellations under normal circumstances. Refunds or returns are processed only under specific conditions outlined below.</p>
+
+        <div class="policy-section">
+            <h2 class="eligible">Eligible Cases for Refund or Return</h2>
+            
+            <div class="eligible-box">
+                <h3>1. Defective or Damaged Product Delivery</h3>
+                <p>You are eligible for a refund or replacement only if:</p>
+                <ul>
+                    <li>The product delivered is physically damaged, defective, leaking, or spoiled at the time of delivery.</li>
+                    <li>Clear photographic proof is submitted to our customer support team within 24 hours of delivery.</li>
+                </ul>
+                <p>Upon verification, we will offer:</p>
+                <ul>
+                    <li>A full refund to the original payment method, or</li>
+                    <li>A replacement of the same product at no extra cost.</li>
+                </ul>
+
+                <h3>2. Technical or Payment Errors</h3>
+                <p>If you are charged for a payment and:</p>
+                <ul>
+                    <li>The order is not confirmed or not reflected in your order history, or</li>
+                    <li>A technical error (e.g., payment gateway glitch, duplicate charge) occurs,</li>
+                </ul>
+                <p>You may request a refund within 48 hours of the transaction by contacting our support team with:</p>
+                <ul>
+                    <li>Transaction ID / UTR</li>
+                    <li>Screenshot of the deduction</li>
+                    <li>Email ID / Phone number used for the transaction</li>
+                </ul>
+                <p>Upon internal verification with our payment partners, valid claims will be refunded within 7–10 working days.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2 class="ineligible">Ineligible Scenarios</h2>
+            <div class="ineligible-box">
+                <p>Refunds/returns are <span class="highlight">not applicable</span> in the following cases:</p>
+                <ul>
+                    <li>If you change your mind after ordering.</li>
+                    <li>If you provide an incorrect delivery address.</li>
+                    <li>If the product taste, texture, or colour does not meet personal expectations.</li>
+                    <li>If a claim is made after the stipulated timelines (24 hours for product issues, 48 hours for payment issues).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2 class="how-to">How to Raise a Refund Request</h2>
+            <p>Please email us at <a href="mailto:support@flowhydration.in" class="email-link">support@flowhydration.in</a> with:</p>
+            <ul>
+                <li>Your order number</li>
+                <li>Date of purchase</li>
+                <li>Issue description</li>
+                <li>Supporting photographs/screenshots (if applicable)</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2 class="note">Additional Notes</h2>
+            <div class="info-box">
+                <p>• Refunds will only be issued to the original payment method.</p>
+                <p>• We reserve the right to approve or reject refund claims at our sole discretion based on evidence and internal investigation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="#" onclick="showComingSoonToast(event)">Subscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="shipping-policy.html">Shipping</a></li>
+                    <li><a href="refund-policy.html">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="footer-contact">
+                <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function showComingSoonToast(event) {
+            event.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.textContent = 'Coming Soon!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>

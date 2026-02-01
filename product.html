@@ -296,6 +296,22 @@
             z-index: 2;
         }
 
+        .best-value-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
         .sachet-visual-large {
             width: 180px;
             height: 260px;
@@ -394,6 +410,247 @@
             color: var(--flow-cyan);
         }
 
+        /* Product Image Styles */
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-image .product-image-display {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 2;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .main-image video.product-video-display {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 2;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .thumbnail-video-indicator {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumbnail-video-indicator svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--flow-cyan);
+        }
+
+        .thumbnail.image-thumb {
+            position: relative;
+        }
+
+        /* Video thumbnail with play overlay */
+        .thumbnail.video-thumb {
+            position: relative;
+        }
+
+        .thumbnail-video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail-video-overlay svg {
+            width: 24px;
+            height: 24px;
+            color: var(--flow-white);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail.video-thumb:hover .thumbnail-video-overlay {
+            background: linear-gradient(to top, rgba(0, 212, 255, 0.6) 0%, rgba(0, 212, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .thumbnail.video-thumb:hover .thumbnail-video-overlay svg {
+            transform: scale(1.2);
+            color: var(--flow-cyan);
+        }
+
+        /* Mini Nutrition Chart Preview for Thumbnail */
+        .mini-nutrition-preview {
+            width: 90%;
+            max-width: 80px;
+            padding: 4px;
+        }
+
+        .mini-nutrition-header {
+            text-align: center;
+            margin-bottom: 3px;
+        }
+
+        .mini-nutrition-header h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 6px;
+            font-weight: 700;
+            color: var(--flow-cyan);
+            margin: 0;
+        }
+
+        .mini-nutrition-grid {
+            background: rgba(13, 26, 45, 0.9);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .mini-nutrition-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 2px 4px;
+            font-size: 5px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+            align-items: center;
+        }
+
+        .mini-nutrition-row:last-child {
+            border-bottom: none;
+        }
+
+        .mini-nutrition-row.header {
+            font-weight: 600;
+            font-size: 4.5px;
+            text-transform: uppercase;
+            padding: 3px 4px;
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .mini-nutrition-row.header span {
+            color: var(--flow-white);
+        }
+
+        .mini-nutrition-row span:first-child {
+            color: var(--flow-white);
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .mini-nutrition-row span {
+            text-align: right;
+            color: var(--flow-gray);
+        }
+
+        .thumbnail:hover .mini-nutrition-header h4,
+        .thumbnail.active .mini-nutrition-header h4 {
+            color: var(--flow-cyan);
+        }
+
+        /* Nutrition Chart in Main Image */
+        .nutrition-chart-display {
+            width: 100%;
+            max-width: 380px;
+            padding: 0.75rem;
+            z-index: 2;
+        }
+
+        .nutrition-chart-header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .nutrition-chart-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.15rem;
+        }
+
+        .nutrition-chart-header p {
+            color: var(--flow-gray);
+            font-size: 0.6rem;
+        }
+
+        .nutrition-chart-grid {
+            background: rgba(13, 26, 45, 0.9);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .nutrition-chart-row {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 0.7fr;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.6rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+            align-items: center;
+        }
+
+        .nutrition-chart-row:last-child {
+            border-bottom: none;
+        }
+
+        .nutrition-chart-row.header {
+            font-weight: 600;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.4rem 0.6rem;
+        }
+
+        .nutrition-chart-row span:first-child {
+            color: var(--flow-gray);
+            text-align: left;
+        }
+
+        .nutrition-chart-row span {
+            text-align: right;
+        }
+
+        .nutrition-chart-row.header span {
+            color: var(--flow-white);
+        }
+
+        .nutrition-chart-row .nutrient-name {
+            font-weight: 500;
+            color: var(--flow-white);
+        }
+
+        .nutrition-chart-row .nutrient-sub {
+            padding-left: 0.5rem;
+            color: var(--flow-gray);
+        }
+
+        .nutrition-chart-row .rda-value {
+            opacity: 0.8;
+        }
+
+        .nutrition-section-divider {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
         /* Product Info */
         .product-info {
             padding-top: 1rem;
@@ -476,8 +733,8 @@
         }
 
         .price-discount {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10B981;
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
             padding: 0.35rem 0.75rem;
             border-radius: 50px;
             font-size: 0.85rem;
@@ -569,6 +826,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            position: relative;
+            min-width: 120px;
         }
 
         .variant-option:hover {
@@ -578,6 +837,62 @@
         .variant-option.selected {
             border-color: var(--flow-cyan);
             background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Popular/Best Value Badge */
+        .variant-option.popular {
+            border-color: rgba(139, 92, 246, 0.6);
+            background: rgba(139, 92, 246, 0.08);
+            transform: scale(1.02);
+        }
+
+        .variant-option.popular.selected {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .variant-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+        }
+
+        .variant-badge.best-value {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .variant-savings {
+            font-size: 0.7rem;
+            color: #10b981;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+
+        .variant-per-unit {
+            font-size: 0.65rem;
+            color: var(--flow-gray);
+            margin-top: 0.15rem;
+            opacity: 0.8;
+        }
+
+        .variant-original-price {
+            font-size: 0.7rem;
+            color: var(--flow-gray);
+            text-decoration: line-through;
+            opacity: 0.6;
         }
 
         .variant-option .variant-name {
@@ -593,6 +908,15 @@
 
         .variant-option.selected .variant-price {
             color: var(--flow-cyan);
+        }
+
+        .variant-option.popular .variant-price {
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        .variant-option.popular.selected .variant-price {
+            color: #c084fc;
         }
 
         /* Flavour Selector */
@@ -1087,8 +1411,9 @@
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.4s ease;
-            text-decoration: none;
             color: inherit;
+            display: flex;
+            flex-direction: column;
         }
 
         .related-card:hover {
@@ -1103,6 +1428,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
+            color: inherit;
         }
 
         .related-image .mini-sachet {
@@ -1115,6 +1442,9 @@
 
         .related-info {
             padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .related-info h4 {
@@ -1139,15 +1469,19 @@
 
         .footer-content {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem;
-            max-width: 1200px;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2.5rem;
+            max-width: 1400px;
             margin: 0 auto 3rem;
         }
 
         .footer-brand .logo {
             margin-bottom: 1rem;
             display: inline-block;
+        }
+
+        .footer-brand .logo-img {
+            height: 70px;
         }
 
         .footer-brand p {
@@ -1188,11 +1522,24 @@
             align-items: center;
             padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .footer-bottom p {
             color: var(--flow-gray);
             font-size: 0.85rem;
+        }
+
+        .footer-contact a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--flow-cyan);
         }
 
         .social-links {
@@ -1252,6 +1599,82 @@
             justify-content: center;
             color: var(--flow-dark);
             font-size: 0.8rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 4rem 8%;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .faq-item.active {
+            border-color: var(--flow-cyan);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--flow-white);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--flow-cyan);
+        }
+
+        .faq-icon {
+            color: var(--flow-cyan);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.5rem 1.25rem;
+            color: var(--flow-gray);
+            line-height: 1.7;
+            font-size: 0.95rem;
         }
 
         /* Responsive */
@@ -1352,6 +1775,248 @@
                 text-align: center;
             }
         }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--flow-white);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100%;
+            background: var(--flow-blue);
+            z-index: 999;
+            padding: 5rem 1.5rem 2rem;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--flow-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: 1rem;
+            color: var(--flow-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-cyan);
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 0.5rem 0;
+            padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+            z-index: 1000;
+            justify-content: space-around;
+        }
+
+        .mobile-bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-bottom-nav .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .mobile-bottom-nav .nav-item.active,
+        .mobile-bottom-nav .nav-item:hover {
+            color: var(--flow-cyan);
+        }
+
+        .mobile-bottom-nav .cart-nav-item {
+            position: relative;
+        }
+
+        .mobile-cart-count {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        /* Sticky Add to Cart for Mobile */
+        .mobile-sticky-cart {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-sticky-cart .sticky-cart-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mobile-sticky-cart .sticky-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--flow-white);
+        }
+
+        .mobile-sticky-cart .sticky-add-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 0.875rem 1.5rem;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 50px;
+            color: var(--flow-white);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .mobile-sticky-cart .sticky-add-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .mobile-bottom-nav {
+                display: flex;
+            }
+
+            .mobile-sticky-cart {
+                display: block;
+            }
+
+            .nav-right .profile-btn {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 140px;
+            }
+
+            .product-container {
+                padding-bottom: 2rem;
+            }
+
+            .add-to-cart-section {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1386,8 +2051,29 @@
                 </svg>
                 <span class="profile-text">Profile</span>
             </a>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="flow-shop-2.html" class="active">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#benefits">Benefits</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+        </ul>
+    </div>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
@@ -1412,23 +2098,32 @@
                 </div>
             </div>
             <div class="thumbnail-row">
-                <div class="thumbnail active">
+                <div class="thumbnail active" data-view="product" onclick="switchMainView('product')">
                     <div class="mini-sachet"></div>
                 </div>
-                <div class="thumbnail">
+                <div class="thumbnail" data-view="ingredients" onclick="switchMainView('ingredients')">
                     <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                     </svg>
                 </div>
-                <div class="thumbnail">
+                <div class="thumbnail" data-view="benefits" onclick="switchMainView('benefits')">
                     <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                     </svg>
                 </div>
-                <div class="thumbnail">
-                    <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                    </svg>
+                <div class="thumbnail" data-view="nutrition" onclick="switchMainView('nutrition')">
+                    <div class="mini-nutrition-preview">
+                        <div class="mini-nutrition-header">
+                            <h4>Nutrition Facts</h4>
+                        </div>
+                        <div class="mini-nutrition-grid">
+                            <div class="mini-nutrition-row header"><span>Nutrient</span><span>Amt</span></div>
+                            <div class="mini-nutrition-row"><span>Energy</span><span>37kcal</span></div>
+                            <div class="mini-nutrition-row"><span>Sodium</span><span>430mg</span></div>
+                            <div class="mini-nutrition-row"><span>Potassium</span><span>150mg</span></div>
+                            <div class="mini-nutrition-row"><span>Vitamins</span><span>A-K</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1460,42 +2155,28 @@
                 <span class="price-discount">Save 17%</span>
             </div>
 
-            <p class="product-description">
-                Our signature electrolyte blend with the perfect balance of sodium, potassium, and magnesium. 
-                Zero sugar, zero calories, maximum hydration. Each sachet mixes instantly with 500ml of water 
-                for clean, refreshing hydration that powers your day.
-            </p>
-
-            <!-- Product Highlights -->
-            <div class="product-highlights">
-                <div class="highlight-item">
-                    <div class="highlight-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                        </svg>
-                    </div>
-                    <h4>Zero Sugar</h4>
-                    <p>Clean hydration</p>
+            <!-- Quantity & Add to Cart -->
+            <div class="purchase-section">
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="updateQty(-1)">−</button>
+                    <span class="qty-value" id="qtyValue">1</span>
+                    <button class="qty-btn" onclick="updateQty(1)">+</button>
                 </div>
-                <div class="highlight-item">
-                    <div class="highlight-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                    </div>
-                    <h4>Instant Energy</h4>
-                    <p>Fast absorption</p>
-                </div>
-                <div class="highlight-item">
-                    <div class="highlight-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
-                    </div>
-                    <h4>Lab Tested</h4>
-                    <p>Quality assured</p>
-                </div>
+                <button class="add-to-cart-btn" onclick="addToCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    Add to Cart — ₹1,499
+                </button>
             </div>
+
+            <button class="buy-now-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                Buy Now
+            </button>
 
             <!-- Flavour Selector -->
             <div class="flavour-section">
@@ -1539,28 +2220,42 @@
                 </div>
             </div>
 
-            <!-- Quantity & Add to Cart -->
-            <div class="purchase-section">
-                <div class="quantity-selector">
-                    <button class="qty-btn" onclick="updateQty(-1)">−</button>
-                    <span class="qty-value" id="qtyValue">1</span>
-                    <button class="qty-btn" onclick="updateQty(1)">+</button>
-                </div>
-                <button class="add-to-cart-btn" onclick="addToCart()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    Add to Cart — ₹1,499
-                </button>
-            </div>
+            <p class="product-description">
+                Our signature electrolyte blend with the perfect balance of sodium, potassium, and magnesium. 
+                Zero sugar, zero calories, maximum hydration. Each sachet mixes instantly with 500ml of water 
+                for clean, refreshing hydration that powers your day.
+            </p>
 
-            <button class="buy-now-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-                Buy Now
-            </button>
+            <!-- Product Highlights -->
+            <div class="product-highlights">
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
+                    <h4>Low Sugar</h4>
+                    <p>Clean hydration</p>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h4>Instant Energy</h4>
+                    <p>Fast absorption</p>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h4>Lab Tested</h4>
+                    <p>Quality assured</p>
+                </div>
+            </div>
 
             <!-- Trust Badges -->
             <div class="trust-badges">
@@ -1590,7 +2285,6 @@
     <div class="product-details-section">
         <div class="tabs-header">
             <button class="tab-btn active" data-tab="ingredients">Ingredients</button>
-            <button class="tab-btn" data-tab="nutrition">Nutrition</button>
             <button class="tab-btn" data-tab="how-to-use">How to Use</button>
             <button class="tab-btn" data-tab="reviews">Reviews</button>
         </div>
@@ -1641,41 +2335,6 @@
                         <h4>Zinc</h4>
                     </div>
                     <p>Supports immune function and protein synthesis. Essential for athletic recovery and overall wellness.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Nutrition Tab -->
-        <div class="tab-content" id="nutrition">
-            <div class="nutrition-table">
-                <div class="nutrition-header">Nutrition Facts (per sachet)</div>
-                <div class="nutrition-row">
-                    <span>Calories</span>
-                    <span>0</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Total Carbohydrates</span>
-                    <span>0g</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Sugars</span>
-                    <span>0g</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Sodium</span>
-                    <span>1000mg</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Potassium</span>
-                    <span>200mg</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Magnesium</span>
-                    <span>60mg</span>
-                </div>
-                <div class="nutrition-row">
-                    <span>Zinc</span>
-                    <span>3mg</span>
                 </div>
             </div>
         </div>
@@ -1842,6 +2501,82 @@
         </div>
     </section>
 
+    <!-- FAQs Section -->
+    <section class="faq-section">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about Flow Hydration</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I use Flow Hydration sachets?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Simply tear open the sachet and pour the contents into 500ml of water. Stir or shake well until fully dissolved. Enjoy chilled for the best taste!</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>When is the best time to drink Flow?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Flow is perfect before, during, or after physical activity. You can also use it first thing in the morning to kickstart your hydration, during long work sessions, or any time you need to replenish electrolytes.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Flow Hydration sugar-free?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! Flow contains zero sugar and zero artificial sweeteners. We use natural flavoring to create a refreshing taste without any added sugars or calories.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>How many sachets can I consume per day?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>We recommend 1-3 sachets per day depending on your activity level and hydration needs. Athletes and those with high physical demands may benefit from more frequent use.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>What electrolytes are in Flow?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Flow contains a precision-engineered blend of sodium, potassium, magnesium, and calcium in optimal ratios to support hydration, muscle function, and recovery.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Flow suitable for vegans?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes, Flow Hydration is 100% vegan, gluten-free, and made with clean ingredients. It's suitable for all dietary preferences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1849,54 +2584,63 @@
                 <a href="index.html" class="logo">
                     <img src="logo.png" alt="Flow" class="logo-img">
                 </a>
-                <p>Premium electrolyte hydration engineered for optimal performance. Zero sugar, maximum results.</p>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>
             <div class="footer-column">
                 <h4>Shop</h4>
                 <ul>
-                    <li><a href="flow-shop-2.html">All Products</a></li>
-                    <li><a href="#">Bundles</a></li>
-                    <li><a href="#">Subscribe & Save</a></li>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="#" onclick="showComingSoonToast(event)">Subscription</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Science</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">contact@flowhydration.in</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Shipping</a></li>
-                    <li><a href="#">Returns</a></li>
-                    <li><a href="#">Track Order</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="shipping-policy.html">Shipping</a></li>
+                    <li><a href="refund-policy.html">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
             <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="footer-contact">
+                <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
+            </div>
             <div class="social-links">
                 <a href="#" aria-label="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
                     </svg>
                 </a>
                 <a href="#" aria-label="Twitter">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
                 <a href="#" aria-label="YouTube">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
                     </svg>
                 </a>
             </div>
@@ -1988,6 +2732,212 @@
             `;
         }
 
+        // Product media/image state
+        let productMedia = []; // Array of media from S3
+        let currentMediaIndex = 0;
+
+        // Render the product gallery with images from S3
+        function renderGallery() {
+            const thumbnailRow = document.querySelector('.thumbnail-row');
+            const mainImage = document.querySelector('.main-image');
+            
+            // Get product media (images/videos from S3)
+            productMedia = product.media || [];
+            
+            // Build thumbnails - first 3 are for images/videos, then info views
+            let thumbnailsHtml = '';
+            
+            // If we have media, show image thumbnails
+            if (productMedia.length > 0) {
+                // Find first image for video poster fallback
+                const firstImage = productMedia.find(m => m.type === 'image');
+                
+                // Show up to 3 media thumbnails
+                productMedia.slice(0, 3).forEach((media, index) => {
+                    const isVideo = media.type === 'video';
+                    if (isVideo) {
+                        // For video thumbnails, use poster image or first product image as background
+                        const posterUrl = media.poster || (firstImage ? firstImage.url : null);
+                        
+                        if (posterUrl) {
+                            // Use image as thumbnail with play overlay
+                            thumbnailsHtml += `
+                                <div class="thumbnail image-thumb video-thumb ${index === 0 ? 'active' : ''}" data-view="media-${index}" onclick="switchMainView('media-${index}')">
+                                    <img src="${posterUrl}" alt="Video" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div class="thumbnail-video-overlay">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // Fallback: use video with poster frame
+                            thumbnailsHtml += `
+                                <div class="thumbnail image-thumb video-thumb ${index === 0 ? 'active' : ''}" data-view="media-${index}" onclick="switchMainView('media-${index}')">
+                                    <video src="${media.url}#t=0.5" muted preload="metadata" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                                    <div class="thumbnail-video-overlay">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        thumbnailsHtml += `
+                            <div class="thumbnail image-thumb ${index === 0 ? 'active' : ''}" data-view="media-${index}" onclick="switchMainView('media-${index}')">
+                                <img src="${media.url}" alt="${media.alt || product.name}">
+                            </div>
+                        `;
+                    }
+                });
+                
+                // Fill remaining slots (up to 3 total) with info views if less than 3 media
+                const mediaCount = Math.min(productMedia.length, 3);
+                const remainingSlots = 3 - mediaCount;
+                const infoViews = ['ingredients', 'benefits']; // Nutrition is always 4th
+                
+                for (let i = 0; i < remainingSlots && i < infoViews.length; i++) {
+                    const view = infoViews[i];
+                    if (view === 'ingredients') {
+                        thumbnailsHtml += `
+                            <div class="thumbnail" data-view="ingredients" onclick="switchMainView('ingredients')">
+                                <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                </svg>
+                            </div>
+                        `;
+                    } else if (view === 'benefits') {
+                        thumbnailsHtml += `
+                            <div class="thumbnail" data-view="benefits" onclick="switchMainView('benefits')">
+                                <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Always add nutrition as 4th thumbnail
+                thumbnailsHtml += `
+                    <div class="thumbnail" data-view="nutrition" onclick="switchMainView('nutrition')">
+                        <div class="mini-nutrition-preview">
+                            <div class="mini-nutrition-header">
+                                <h4>Nutrition Facts</h4>
+                            </div>
+                            <div class="mini-nutrition-grid">
+                                <div class="mini-nutrition-row header"><span>Nutrient</span><span>Amt</span></div>
+                                <div class="mini-nutrition-row"><span>Energy</span><span>37kcal</span></div>
+                                <div class="mini-nutrition-row"><span>Sodium</span><span>430mg</span></div>
+                                <div class="mini-nutrition-row"><span>Potassium</span><span>150mg</span></div>
+                                <div class="mini-nutrition-row"><span>Vitamins</span><span>A-K</span></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // No media - use default sachet visual + info views
+                thumbnailsHtml = `
+                    <div class="thumbnail active" data-view="product" onclick="switchMainView('product')">
+                        <div class="mini-sachet"></div>
+                    </div>
+                    <div class="thumbnail" data-view="ingredients" onclick="switchMainView('ingredients')">
+                        <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
+                    <div class="thumbnail" data-view="benefits" onclick="switchMainView('benefits')">
+                        <svg class="thumbnail-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <div class="thumbnail" data-view="nutrition" onclick="switchMainView('nutrition')">
+                        <div class="mini-nutrition-preview">
+                            <div class="mini-nutrition-header">
+                                <h4>Nutrition Facts</h4>
+                            </div>
+                            <div class="mini-nutrition-grid">
+                                <div class="mini-nutrition-row header"><span>Nutrient</span><span>Amt</span></div>
+                                <div class="mini-nutrition-row"><span>Energy</span><span>37kcal</span></div>
+                                <div class="mini-nutrition-row"><span>Sodium</span><span>430mg</span></div>
+                                <div class="mini-nutrition-row"><span>Potassium</span><span>150mg</span></div>
+                                <div class="mini-nutrition-row"><span>Vitamins</span><span>A-K</span></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            thumbnailRow.innerHTML = thumbnailsHtml;
+            
+            // Set initial main view
+            if (productMedia.length > 0) {
+                currentMainView = 'media-0';
+                showMediaInMain(0);
+            } else {
+                currentMainView = 'product';
+            }
+        }
+        
+        // Show media (image/video) in main view
+        function showMediaInMain(index) {
+            const mainImage = document.querySelector('.main-image');
+            const media = productMedia[index];
+            
+            if (!media) return;
+            
+            const badge = product.badges && product.badges.length > 0 
+                ? `<span class="product-badge">${product.badges[0].text}</span>` 
+                : '<span class="product-badge" style="display:none;"></span>';
+            
+            // Check if current pack size is the best value
+            const bestValueBadge = getBestValueBadge();
+            
+            if (media.type === 'video') {
+                mainImage.innerHTML = `
+                    ${badge}
+                    ${bestValueBadge}
+                    <video class="product-video-display" src="${media.url}" autoplay loop muted playsinline></video>
+                `;
+            } else {
+                mainImage.innerHTML = `
+                    ${badge}
+                    ${bestValueBadge}
+                    <img class="product-image-display" src="${media.url}" alt="${media.alt || product.name}">
+                `;
+            }
+            
+            currentMediaIndex = index;
+        }
+
+        function getBestValueBadge() {
+            if (!selectedPackSize || !product.packSizes || product.packSizes.length < 2) {
+                return '';
+            }
+            
+            // Find the pack with highest savings percentage
+            let bestValuePack = null;
+            let highestSavings = 0;
+            
+            product.packSizes.forEach(pack => {
+                if (pack.comparePrice && pack.price < pack.comparePrice) {
+                    const savings = Math.round((pack.comparePrice - pack.price) / pack.comparePrice * 100);
+                    if (savings > highestSavings) {
+                        highestSavings = savings;
+                        bestValuePack = pack;
+                    }
+                }
+            });
+            
+            // Show badge if current selection is the best value pack
+            if (bestValuePack && selectedPackSize.size === bestValuePack.size && highestSavings >= 20) {
+                return `<div class="best-value-badge">Best Value</div>`;
+            }
+            
+            return '';
+        }
+
         function renderProduct() {
             // Update page title
             document.title = `${product.name} — Flow Hydration`;
@@ -2032,15 +2982,19 @@
             // Render pack size selector
             renderPackSizeSelector();
             
-            // Update visual elements
-            updateVisuals();
+            // Render product gallery (images from S3)
+            renderGallery();
+
+            // Update visual elements (fallback sachet if no images)
+            if (!product.media || product.media.length === 0) {
+                updateVisuals();
+            }
             
             // Update add to cart button
             updateAddToCartPrice();
             
             // Render tabs content
             renderIngredients();
-            renderNutrition();
             renderHowToUse();
             renderReviews();
             
@@ -2057,8 +3011,9 @@
         }
 
         function renderRating() {
-            const rating = product.rating?.average || 0;
-            const count = product.rating?.count || 0;
+            const hasReviews = product.reviews && product.reviews.length > 0;
+            const rating = hasReviews ? (product.rating?.average || 4.5) : 4.5;
+            const count = hasReviews ? (product.rating?.count || product.reviews.length) : getDummyReviews().length;
             const starsHtml = Array(5).fill(0).map((_, i) => {
                 const filled = i < Math.round(rating);
                 return `<svg class="star${filled ? '' : ' empty'}" width="18" height="18" viewBox="0 0 24 24" fill="${filled ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
@@ -2263,12 +3218,58 @@
             
             document.querySelector('.variant-section').style.display = 'block';
             
-            const sizesHtml = packSizesToShow.map((p, i) => `
-                <div class="variant-option${p.size === selectedPackSize?.size ? ' selected' : ''}" data-size="${p.size}" onclick="selectPackSize(${p.size})">
-                    <div class="variant-name">${p.label}</div>
-                    <div class="variant-price">₹${p.price.toLocaleString()}</div>
-                </div>
-            `).join('');
+            // Calculate per-unit price and savings for psychological pricing
+            const sortedPacks = [...packSizesToShow].sort((a, b) => a.size - b.size);
+            const smallestPack = sortedPacks[0];
+            const basePerUnit = smallestPack.price / smallestPack.size; // Price per sachet for smallest pack
+            
+            // Find the "popular" pack - typically the middle option or 20-pack
+            const popularPackIndex = packSizesToShow.length === 3 ? 1 : 
+                                     packSizesToShow.findIndex(p => p.size === 20) !== -1 ? 
+                                     packSizesToShow.findIndex(p => p.size === 20) : 
+                                     Math.floor(packSizesToShow.length / 2);
+            
+            const sizesHtml = packSizesToShow.map((p, i) => {
+                const perUnit = p.price / p.size;
+                const savingsPercent = Math.round((1 - perUnit / basePerUnit) * 100);
+                const isPopular = i === popularPackIndex && packSizesToShow.length > 1;
+                const isBestValue = i === packSizesToShow.length - 1 && packSizesToShow.length > 2;
+                const originalPrice = Math.round(basePerUnit * p.size);
+                const savedAmount = originalPrice - p.price;
+                
+                let badge = '';
+                let savingsHtml = '';
+                let perUnitHtml = `<div class="variant-per-unit">₹${perUnit.toFixed(0)}/sachet</div>`;
+                
+                if (isPopular) {
+                    badge = '<span class="variant-badge">Most Popular</span>';
+                    if (savingsPercent > 0) {
+                        savingsHtml = `<div class="variant-savings">Save ₹${savedAmount}</div>`;
+                    }
+                } else if (isBestValue && savingsPercent > 0) {
+                    badge = '<span class="variant-badge best-value">Best Value</span>';
+                    savingsHtml = `<div class="variant-savings">Save ${savingsPercent}%</div>`;
+                }
+                
+                // Show original price strike-through for packs with savings
+                let priceHtml = `<div class="variant-price">₹${p.price.toLocaleString()}</div>`;
+                if (savingsPercent > 5 && i > 0) {
+                    priceHtml = `
+                        <div class="variant-original-price">₹${originalPrice.toLocaleString()}</div>
+                        <div class="variant-price">₹${p.price.toLocaleString()}</div>
+                    `;
+                }
+                
+                return `
+                    <div class="variant-option${p.size === selectedPackSize?.size ? ' selected' : ''}${isPopular ? ' popular' : ''}" data-size="${p.size}" onclick="selectPackSize(${p.size})">
+                        ${badge}
+                        <div class="variant-name">${p.label}</div>
+                        ${priceHtml}
+                        ${perUnitHtml}
+                        ${savingsHtml}
+                    </div>
+                `;
+            }).join('');
             
             document.querySelector('.variant-section').innerHTML = `
                 <div class="variant-label">Pack Size: <span>${selectedPackSize?.size || packSizesToShow[0].size} Sachets</span></div>
@@ -2332,11 +3333,31 @@
             
             updatePriceDisplay();
             updateAddToCartPrice();
+            
+            // Refresh image display to show/hide best value badge
+            if (productMedia.length > 0 && currentMainView.startsWith('media-')) {
+                const mediaIndex = parseInt(currentMainView.split('-')[1]);
+                showMediaInMain(mediaIndex);
+            }
         }
 
         function updateVisuals() {
             const mainImage = document.querySelector('.main-image');
             const isBundle = product.category === 'bundle';
+            const displayFlavour = selectedFlavour || (product?.flavours && product.flavours[0]);
+            const flavourColor = displayFlavour?.color || '#00D4FF';
+            
+            // If viewing non-product views, re-render with updated color
+            if (currentMainView === 'nutrition') {
+                renderNutritionChart(mainImage, flavourColor);
+                return;
+            } else if (currentMainView === 'ingredients') {
+                renderIngredientsView(mainImage, flavourColor);
+                return;
+            } else if (currentMainView === 'benefits') {
+                renderBenefitsView(mainImage, flavourColor);
+                return;
+            }
             
             // For bundles in 'all' mode, show all 3 sachets
             if (isBundle && product.flavours && product.flavours.length > 1 && bundleViewMode === 'all') {
@@ -2410,6 +3431,142 @@
             return `rgba(0, 212, 255, ${alpha})`;
         }
 
+        // Current main view state
+        let currentMainView = 'product';
+
+        function switchMainView(view) {
+            currentMainView = view;
+            
+            // Update thumbnail active states
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.thumbnail[data-view="${view}"]`)?.classList.add('active');
+            
+            const mainImage = document.querySelector('.main-image');
+            const displayFlavour = selectedFlavour || (product?.flavours && product.flavours[0]);
+            const flavourColor = displayFlavour?.color || '#00D4FF';
+            
+            // Handle media views (media-0, media-1, media-2)
+            if (view.startsWith('media-')) {
+                const mediaIndex = parseInt(view.split('-')[1]);
+                showMediaInMain(mediaIndex);
+            } else if (view === 'nutrition') {
+                renderNutritionChart(mainImage, flavourColor);
+            } else if (view === 'product') {
+                updateVisuals();
+            } else if (view === 'ingredients') {
+                renderIngredientsView(mainImage, flavourColor);
+            } else if (view === 'benefits') {
+                renderBenefitsView(mainImage, flavourColor);
+            }
+        }
+
+        function renderNutritionChart(container, accentColor) {
+            const badge = container.querySelector('.product-badge');
+            const badgeHtml = badge ? badge.outerHTML : '';
+            
+            container.innerHTML = `
+                ${badgeHtml}
+                <div class="nutrition-chart-display">
+                    <div class="nutrition-chart-header">
+                        <h3 style="color: ${accentColor};">Nutrition Facts</h3>
+                        <p>Per Serving (12.5g)</p>
+                    </div>
+                    <div class="nutrition-chart-grid" style="border-color: ${hexToRgba(accentColor, 0.2)};">
+                        <div class="nutrition-chart-row header" style="background: ${hexToRgba(accentColor, 0.15)};">
+                            <span style="text-align: left;">Nutrient</span>
+                            <span>Amount</span>
+                            <span>% RDA</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Energy</span>
+                            <span>37 kcal</span>
+                            <span>1.9%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Carbs</span>
+                            <span>9.2g</span>
+                            <span>7.1%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Protein / Fats</span>
+                            <span>0g</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="nutrition-section-divider" style="background: ${hexToRgba(accentColor, 0.1)}; color: ${accentColor};">Electrolytes</div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Sodium</span>
+                            <span>430mg</span>
+                            <span>21.6%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Potassium</span>
+                            <span>150mg</span>
+                            <span>4.3%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Calcium / Magnesium</span>
+                            <span>4.7 / 30mg</span>
+                            <span>0.5%</span>
+                        </div>
+                        <div class="nutrition-section-divider" style="background: ${hexToRgba(accentColor, 0.1)}; color: ${accentColor};">Vitamins</div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Vitamin C</span>
+                            <span>5mg</span>
+                            <span>6.3%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Vitamin E</span>
+                            <span>1mg</span>
+                            <span>13.3%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">Vitamin A / D3 / K1</span>
+                            <span>62.5mcg / 52IU / 5mcg</span>
+                            <span>6-9%</span>
+                        </div>
+                        <div class="nutrition-chart-row">
+                            <span class="nutrient-name">B-Complex (B1-B12)</span>
+                            <span>0.1-18.8mg/mcg</span>
+                            <span>5-10%</span>
+                        </div>
+                    </div>
+                    <p style="color: var(--flow-gray); font-size: 0.5rem; margin-top: 0.4rem; text-align: center;">*% Daily Values based on 2000 kcal diet</p>
+                </div>
+            `;
+        }
+
+        function renderIngredientsView(container, accentColor) {
+            const badge = container.querySelector('.product-badge');
+            const badgeHtml = badge ? badge.outerHTML : '';
+            
+            container.innerHTML = `
+                ${badgeHtml}
+                <div style="text-align: center; padding: 2rem;">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="${accentColor}" stroke-width="1.5" style="margin-bottom: 1rem;">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                    <h3 style="font-family: 'Syne', sans-serif; font-size: 1.25rem; margin-bottom: 0.5rem; color: ${accentColor};">Premium Electrolytes</h3>
+                    <p style="color: var(--flow-gray); font-size: 0.9rem; max-width: 300px; margin: 0 auto;">Sodium, Potassium, Magnesium & Calcium in optimal ratios for rapid hydration</p>
+                </div>
+            `;
+        }
+
+        function renderBenefitsView(container, accentColor) {
+            const badge = container.querySelector('.product-badge');
+            const badgeHtml = badge ? badge.outerHTML : '';
+            
+            container.innerHTML = `
+                ${badgeHtml}
+                <div style="text-align: center; padding: 2rem;">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="${accentColor}" stroke-width="1.5" style="margin-bottom: 1rem;">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    <h3 style="font-family: 'Syne', sans-serif; font-size: 1.25rem; margin-bottom: 0.5rem; color: ${accentColor};">Instant Energy</h3>
+                    <p style="color: var(--flow-gray); font-size: 0.9rem; max-width: 300px; margin: 0 auto;">Quick absorption formula for sustained energy without the crash</p>
+                </div>
+            `;
+        }
+
         function updateQty(change) {
             quantity = Math.max(1, quantity + change);
             qtyValue.textContent = quantity;
@@ -2458,21 +3615,6 @@
             document.querySelector('#ingredients .ingredients-grid').innerHTML = ingredientsHtml;
         }
 
-        function renderNutrition() {
-            if (!product.nutrition) return;
-            
-            const n = product.nutrition;
-            document.querySelector('#nutrition .nutrition-table').innerHTML = `
-                <div class="nutrition-header">Nutrition Facts (${n.servingSize || 'per sachet'})</div>
-                <div class="nutrition-row"><span>Calories</span><span>${n.calories || 0}</span></div>
-                <div class="nutrition-row"><span>Total Carbohydrates</span><span>0g</span></div>
-                <div class="nutrition-row"><span>Sugars</span><span>${n.sugar || '0g'}</span></div>
-                <div class="nutrition-row"><span>Sodium</span><span>${n.sodium || '0mg'}</span></div>
-                <div class="nutrition-row"><span>Potassium</span><span>${n.potassium || '0mg'}</span></div>
-                <div class="nutrition-row"><span>Magnesium</span><span>${n.magnesium || '0mg'}</span></div>
-            `;
-        }
-
         function renderHowToUse() {
             if (!product.howToUse || product.howToUse.length === 0) return;
             
@@ -2491,31 +3633,70 @@
             document.querySelector('#how-to-use .ingredients-grid').innerHTML = stepsHtml;
         }
 
+        function getDummyReviews() {
+            return [
+                {
+                    author: 'Raj Kumar',
+                    rating: 5,
+                    title: 'Amazing taste and great for workouts',
+                    content: 'This electrolyte drink is exactly what I needed. Great taste, mixes well with water, and keeps me hydrated during intense workouts. Highly recommend!',
+                    date: new Date(Date.now() - 7*24*60*60*1000).toISOString(),
+                    helpful: 42,
+                    verified: true
+                },
+                {
+                    author: 'Priya Singh',
+                    rating: 5,
+                    title: 'Perfect for daily hydration',
+                    content: 'I use this every morning and evening. The variety pack is amazing because you get different flavors. No artificial taste, just pure refreshment.',
+                    date: new Date(Date.now() - 14*24*60*60*1000).toISOString(),
+                    helpful: 38,
+                    verified: true
+                },
+                {
+                    author: 'Arjun Patel',
+                    rating: 4,
+                    title: 'Good quality, wish there were more sachets',
+                    content: 'The product quality is excellent and my body feels more hydrated. Would love if the pack had a few more sachets, but overall very satisfied.',
+                    date: new Date(Date.now() - 21*24*60*60*1000).toISOString(),
+                    helpful: 28,
+                    verified: true
+                },
+                {
+                    author: 'Neha Desai',
+                    rating: 5,
+                    title: 'Best electrolyte drink in the market',
+                    content: 'I have tried many brands, but Flow is definitely the best. The ingredients are natural, taste is great, and it actually works. Ordering again!',
+                    date: new Date(Date.now() - 28*24*60*60*1000).toISOString(),
+                    helpful: 65,
+                    verified: true
+                },
+                {
+                    rating: 4,
+                    author: 'Vikas Sharma',
+                    title: 'Great recovery drink',
+                    content: 'Using this post-workout and my recovery has improved significantly. The lemonade flavor is my favorite. Would definitely recommend to anyone serious about fitness.',
+                    date: new Date(Date.now() - 35*24*60*60*1000).toISOString(),
+                    helpful: 31,
+                    verified: true
+                }
+            ];
+        }
+
         function renderReviews() {
-            if (!product.reviews || product.reviews.length === 0) {
-                document.querySelector('#reviews').innerHTML = `
-                    <div style="text-align: center; padding: 3rem;">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="1.5" style="margin-bottom: 1rem;">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                        </svg>
-                        <h3>No reviews yet</h3>
-                        <p style="color: var(--flow-gray);">Be the first to review this product!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const avgRating = product.rating?.average || 0;
-            const reviewCount = product.reviews.length;
+            // Use dummy reviews if no reviews from server
+            let reviews = product.reviews && product.reviews.length > 0 ? product.reviews : getDummyReviews();
+            let avgRating = product.rating?.average || 4.5;
+            let reviewCount = reviews.length;
             
             // Calculate rating distribution
             const distribution = [5, 4, 3, 2, 1].map(star => ({
                 star,
-                count: product.reviews.filter(r => r.rating === star).length,
-                percent: (product.reviews.filter(r => r.rating === star).length / reviewCount * 100).toFixed(0)
+                count: reviews.filter(r => r.rating === star).length,
+                percent: (reviews.filter(r => r.rating === star).length / reviewCount * 100).toFixed(0)
             }));
             
-            const reviewsHtml = product.reviews.slice(0, 5).map(review => `
+            const reviewsHtml = reviews.slice(0, 5).map(review => `
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-avatar">${review.author.charAt(0).toUpperCase()}</div>
@@ -2609,33 +3790,133 @@
                 const productUrl = `product.html?product=${p.slug}${flavour ? `&flavour=${flavour.slug}` : ''}&pack=${packSize.size}`;
                 const glowColor = flavour?.color || '#00D4FF';
                 
-                // For bundles, show multiple small sachets
-                let sachetHtml;
-                if (isBundle && p.flavours && p.flavours.length > 1) {
-                    sachetHtml = `
-                        <div style="display: flex; gap: 6px;">
-                            ${p.flavours.slice(0, 3).map(f => `
-                                <div class="mini-sachet" style="width: 40px; height: 55px; box-shadow: 0 10px 25px ${hexToRgba(f.color, 0.25)};"></div>
-                            `).join('')}
-                        </div>
-                    `;
+                // Use product image if available, otherwise show sachets
+                let imageHtml;
+                if (p.media && p.media.length > 0) {
+                    const firstImage = p.media.find(m => m.type === 'image') || p.media[0];
+                    imageHtml = `<img src="${firstImage.url}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">`;
                 } else {
-                    sachetHtml = `<div class="mini-sachet" style="box-shadow: 0 15px 40px ${hexToRgba(glowColor, 0.3)};"></div>`;
+                    // For bundles, show multiple small sachets
+                    if (isBundle && p.flavours && p.flavours.length > 1) {
+                        imageHtml = `
+                            <div style="display: flex; gap: 6px;">
+                                ${p.flavours.slice(0, 3).map(f => `
+                                    <div class="mini-sachet" style="width: 40px; height: 55px; box-shadow: 0 10px 25px ${hexToRgba(f.color, 0.25)};"></div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else {
+                        imageHtml = `<div class="mini-sachet" style="box-shadow: 0 15px 40px ${hexToRgba(glowColor, 0.3)};"></div>`;
+                    }
                 }
                 
                 return `
-                    <a href="${productUrl}" class="related-card">
-                        <div class="related-image">
-                            ${sachetHtml}
-                        </div>
+                    <div class="related-card">
+                        <a href="${productUrl}" class="related-image">
+                            ${imageHtml}
+                        </a>
                         <div class="related-info">
-                            <h4>${p.name} ${packSize.label}</h4>
-                            <span class="price">₹${packSize.price.toLocaleString()}</span>
-                            ${packSize.comparePrice ? `<span style="color: var(--flow-gray); text-decoration: line-through; font-size: 0.85rem; margin-left: 0.5rem;">₹${packSize.comparePrice.toLocaleString()}</span>` : ''}
+                            <a href="${productUrl}" style="text-decoration: none; color: inherit;">
+                                <h4>${p.name} ${packSize.label}</h4>
+                            </a>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
+                                <div>
+                                    <span class="price">₹${packSize.price.toLocaleString()}</span>
+                                    ${packSize.comparePrice ? `<span style="color: var(--flow-gray); text-decoration: line-through; font-size: 0.85rem; margin-left: 0.5rem;">₹${packSize.comparePrice.toLocaleString()}</span>` : ''}
+                                </div>
+                                <button class="related-add-to-cart" onclick="addRelatedToCart('${p.slug}', ${packSize.size}, '${flavour?.slug || ''}', event)" style="
+                                    background: var(--flow-cyan);
+                                    color: var(--flow-dark);
+                                    border: none;
+                                    padding: 0.5rem 0.75rem;
+                                    border-radius: 20px;
+                                    font-size: 0.8rem;
+                                    font-weight: 600;
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+                                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    Add to Cart
+                                </button>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 `;
             }).join('');
+        }
+
+        function addRelatedToCart(productSlug, packSize, flavourSlug, event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Find the product from allProducts
+            const targetProduct = allProducts.find(p => p.slug === productSlug);
+            if (!targetProduct) {
+                showToast('Product not found');
+                return;
+            }
+            
+            const targetPackSize = targetProduct.packSizes.find(p => p.size === packSize);
+            const targetFlavour = flavourSlug ? targetProduct.flavours?.find(f => f.slug === flavourSlug) : null;
+            
+            if (!targetPackSize) {
+                showToast('Pack size not found');
+                return;
+            }
+            
+            // Get the primary image from the related product
+            const primaryImage = targetProduct.media?.find(m => m.isPrimary && m.type === 'image') 
+                              || targetProduct.media?.find(m => m.type === 'image');
+            const imageUrl = primaryImage ? primaryImage.url : null;
+            
+            // Build display name and unique ID
+            const flavourName = targetFlavour ? targetFlavour.name : (targetProduct.category === 'bundle' ? 'Variety' : 'Original');
+            const displayName = `Flow ${flavourName} — ${targetPackSize.label}`;
+            const uniqueId = targetFlavour 
+                ? `${targetProduct.slug}-${targetFlavour.slug}-${targetPackSize.size}`
+                : `${targetProduct.slug}-${targetPackSize.size}`;
+            
+            // Create cart item in the correct format
+            const cartItem = {
+                productId: targetProduct._id,
+                productSlug: uniqueId,
+                name: displayName,
+                flavour: targetFlavour ? targetFlavour.name : null,
+                quantity: 1,
+                price: targetPackSize.price,
+                image: imageUrl
+            };
+            
+            // Use CustomerAuth if available
+            if (typeof CustomerAuth !== 'undefined') {
+                CustomerAuth.addToCart(cartItem).then(() => {
+                    CustomerAuth.updateCartCount();
+                    showToast(`Added ${displayName} to cart!`);
+                });
+            } else {
+                // Fallback to localStorage
+                let cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+                
+                const existingIndex = cart.findIndex(item => 
+                    item.productSlug === uniqueId && item.flavour === cartItem.flavour
+                );
+                
+                if (existingIndex >= 0) {
+                    cart[existingIndex].quantity += 1;
+                } else {
+                    cart.push(cartItem);
+                }
+                
+                localStorage.setItem('flow_cart', JSON.stringify(cart));
+                
+                // Update cart count
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = totalItems;
+                }
+                
+                showToast(`Added ${displayName} to cart!`);
+            }
         }
 
         function markHelpful(btn) {
@@ -2665,13 +3946,7 @@
             });
         });
 
-        // Thumbnails
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        // Thumbnails - handled by switchMainView function
 
         // Toast
         function showToast(message) {
@@ -2681,12 +3956,174 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
+        // Show Coming Soon toast
+        function showComingSoonToast(event) {
+            event.preventDefault();
+            showToast('Coming Soon!');
+        }
+
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const faqItem = btn.closest('.faq-item');
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked FAQ if it wasn't already open
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
         // Add to Cart
         function addToCart() {
-            showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
-            const cartCount = document.getElementById('cartCount');
-            cartCount.textContent = parseInt(cartCount.textContent) + quantity;
+            if (!selectedPackSize) {
+                showToast('Please select a pack size');
+                return;
+            }
+            
+            // Get the primary image or first image from product media
+            const primaryImage = productMedia.find(m => m.isPrimary && m.type === 'image') 
+                              || productMedia.find(m => m.type === 'image');
+            const imageUrl = primaryImage ? primaryImage.url : null;
+            
+            // Build display name
+            const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
+            const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
+            const uniqueId = selectedFlavour 
+                ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
+                : `${product.slug}-${selectedPackSize.size}`;
+            
+            // Create cart item
+            const cartItem = {
+                productId: product._id,
+                productSlug: uniqueId,
+                name: displayName,
+                flavour: selectedFlavour ? selectedFlavour.name : null,
+                quantity: quantity,
+                price: selectedPackSize.price,
+                image: imageUrl
+            };
+            
+            // Use CustomerAuth if available
+            if (typeof CustomerAuth !== 'undefined') {
+                CustomerAuth.addToCart(cartItem).then(() => {
+                    CustomerAuth.updateCartCount();
+                    showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+                });
+            } else {
+                // Fallback to localStorage
+                let cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+                
+                const existingIndex = cart.findIndex(item => 
+                    item.productSlug === uniqueId && item.flavour === cartItem.flavour
+                );
+                
+                if (existingIndex >= 0) {
+                    cart[existingIndex].quantity += quantity;
+                } else {
+                    cart.push(cartItem);
+                }
+                
+                localStorage.setItem('flow_cart', JSON.stringify(cart));
+                
+                // Update cart count
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = totalItems;
+                }
+                
+                // Update mobile cart count
+                const mobileCartCount = document.getElementById('mobileCartCount');
+                if (mobileCartCount) {
+                    mobileCartCount.textContent = totalItems;
+                    mobileCartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+                }
+                
+                showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+            }
         }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            if (mobileMenu) {
+                mobileMenu.classList.toggle('active');
+            }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.toggle('active');
+            }
+            document.body.style.overflow = mobileMenu?.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            if (mobileMenu) {
+                mobileMenu.classList.remove('active');
+            }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        // Update sticky cart price
+        function updateStickyCart() {
+            const stickyPrice = document.querySelector('.sticky-price');
+            const priceDisplay = document.getElementById('priceDisplay');
+            if (stickyPrice && priceDisplay) {
+                stickyPrice.textContent = priceDisplay.textContent;
+            }
+        }
+
+        // Initialize sticky cart on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStickyCart();
+            
+            // Update mobile cart count on page load
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const mobileCartCount = document.getElementById('mobileCartCount');
+            if (mobileCartCount) {
+                mobileCartCount.textContent = totalItems;
+                mobileCartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        });
     </script>
+
+    <!-- Mobile Sticky Add to Cart -->
+    <div class="mobile-sticky-cart">
+        <div class="sticky-cart-content">
+            <span class="sticky-price" id="stickyPrice">₹899</span>
+            <button class="sticky-add-btn" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="flow-shop-2.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span>Shop</span>
+        </a>
+        <button class="nav-item cart-nav-item" onclick="document.getElementById('cartToggle').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            <span class="mobile-cart-count" id="mobileCartCount">0</span>
+            <span>Cart</span>
+        </button>
+        <a href="profile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profile</span>
+        </a>
+    </nav>
 </body>
 </html>

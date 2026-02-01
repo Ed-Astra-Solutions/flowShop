@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Policy — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.75rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(2, 8, 23, 0.95);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .back-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Main Content */
+        .policy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .policy-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .policy-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .policy-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: var(--flow-cyan);
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .policy-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--flow-white) 0%, var(--flow-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .policy-header p {
+            color: var(--flow-gray);
+            font-size: 1rem;
+        }
+
+        .policy-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .policy-section h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--flow-cyan);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .policy-section h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--flow-cyan);
+            border-radius: 2px;
+        }
+
+        .policy-section p {
+            color: var(--flow-gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .policy-section ul {
+            color: var(--flow-gray);
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-section li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Delivery Timeline Card */
+        .delivery-timeline {
+            background: linear-gradient(145deg, rgba(10, 22, 40, 0.8) 0%, rgba(10, 22, 40, 0.4) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .timeline-item:first-child {
+            padding-top: 0;
+        }
+
+        .timeline-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-content h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--flow-white);
+        }
+
+        .timeline-content p {
+            font-size: 0.85rem;
+            color: var(--flow-gray);
+            margin: 0;
+        }
+
+        .timeline-badge {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Partner Box */
+        .partner-box {
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 180, 180, 0.04) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .partner-icon {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            background: rgba(0, 212, 255, 0.15);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+
+        .partner-content h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--flow-white);
+        }
+
+        .partner-content p {
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+            margin: 0;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(255, 193, 7, 0.08);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .info-box.warning {
+            background: rgba(255, 152, 0, 0.08);
+            border-color: rgba(255, 152, 0, 0.2);
+        }
+
+        .info-box-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .info-box p {
+            font-size: 0.9rem;
+            color: var(--flow-gray);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--flow-white);
+        }
+
+        /* Tracking Section */
+        .tracking-info {
+            background: linear-gradient(145deg, rgba(10, 22, 40, 0.8) 0%, rgba(10, 22, 40, 0.4) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tracking-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tracking-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step-text {
+            font-size: 0.95rem;
+            color: var(--flow-gray);
+        }
+
+        /* Footer */
+        .policy-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            text-align: center;
+        }
+
+        .policy-footer p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-footer a {
+            color: var(--flow-cyan);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .policy-footer a:hover {
+            opacity: 0.8;
+        }
+
+        .back-to-shop {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--flow-cyan);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .back-to-shop:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--flow-cyan);
+        }
+
+        .back-to-shop svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .policy-container {
+                padding: 6rem 1.25rem 3rem;
+            }
+
+            .policy-header h1 {
+                font-size: 2rem;
+            }
+
+            nav {
+                padding: 0.75rem 3%;
+            }
+
+            .logo-img {
+                height: 38px;
+            }
+
+            .timeline-item {
+                flex-wrap: wrap;
+            }
+
+            .timeline-badge {
+                margin-left: calc(48px + 1rem);
+                margin-top: 0.5rem;
+            }
+
+            .partner-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Site Footer */
+        .site-footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand .logo-img {
+            height: 70px;
+        }
+
+        .footer-brand p {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--flow-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom p {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+        }
+
+        .footer-contact a {
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--flow-cyan);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .footer-brand {
+                grid-column: span 2;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-brand {
+                grid-column: span 1;
+            }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: var(--flow-white);
+            font-size: 0.95rem;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-left">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </a>
+        </div>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Flow" class="logo-img">
+        </a>
+        <div style="width: 80px;"></div>
+    </nav>
+
+    <!-- Policy Content -->
+    <div class="policy-container">
+        <div class="policy-header">
+            <div class="policy-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="1" y="3" width="15" height="13" rx="2"/>
+                    <path d="M16 8h4l3 3v5h-7V8z"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+            </div>
+            <h1>Shipping Policy</h1>
+            <p>Last updated: January 2026</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>Logistics Partner</h2>
+            <p>We partner with trusted third-party logistics providers to ensure your Flow Hydration products reach you safely and efficiently.</p>
+            
+            <div class="partner-box">
+                <div class="partner-icon">🚚</div>
+                <div class="partner-content">
+                    <h4>Shadowfax</h4>
+                    <p>Our trusted delivery partner for pan-India shipping with real-time tracking capabilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>Delivery Timeline</h2>
+            <p>Estimated delivery times vary based on your location. Once your order is dispatched, you will receive a tracking link via email and SMS.</p>
+            
+            <div class="delivery-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏙️</div>
+                    <div class="timeline-content">
+                        <h4>Bangalore</h4>
+                        <p>Metro city with fastest delivery</p>
+                    </div>
+                    <div class="timeline-badge">1-2 Business Days</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon">🇮🇳</div>
+                    <div class="timeline-content">
+                        <h4>Other Areas (Pan-India)</h4>
+                        <p>All other serviceable locations across India</p>
+                    </div>
+                    <div class="timeline-badge">2-4 Business Days</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-icon">📦</div>
+                <p><strong>Note:</strong> Business days exclude Sundays and public holidays. Delivery timelines are estimates and may vary based on order volume and courier availability.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>Order Processing</h2>
+            <p>Orders placed before 2:00 PM IST on business days are typically processed and dispatched the same day. Orders placed after 2:00 PM or on weekends/holidays will be processed on the next business day.</p>
+            
+            <div class="tracking-info">
+                <h4 style="font-family: 'Syne', sans-serif; margin-bottom: 1rem; color: var(--flow-white);">How to Track Your Order</h4>
+                <div class="tracking-steps">
+                    <div class="tracking-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">You'll receive an email and SMS with tracking details once your order is shipped</div>
+                    </div>
+                    <div class="tracking-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Click the tracking link or visit the courier partner's website</div>
+                    </div>
+                    <div class="tracking-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Enter your tracking number to see real-time delivery status</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>Shipping Charges</h2>
+            <p>We offer free shipping on select orders across India. Shipping charges, if applicable, will be displayed at checkout before you complete your purchase.</p>
+            <ul>
+                <li>Free shipping available on qualifying orders</li>
+                <li>Standard shipping rates apply for other orders</li>
+                <li>No hidden fees – all charges shown upfront at checkout</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>Delivery Delays</h2>
+            <p>While we strive to ensure timely delivery, certain factors beyond our control may occasionally cause delays.</p>
+            
+            <div class="info-box warning">
+                <div class="info-box-icon">⚠️</div>
+                <p><strong>Important:</strong> Flow Hydration (Podium Performance LLP) is not responsible for delays caused by the courier partner, including but not limited to weather conditions, natural disasters, strikes, or other unforeseen circumstances.</p>
+            </div>
+
+            <p>If you experience significant delays, please contact our support team and we will assist in coordinating with the courier partner to resolve the issue.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>Delivery Attempts</h2>
+            <p>Our courier partner will make multiple delivery attempts. If delivery is unsuccessful after these attempts:</p>
+            <ul>
+                <li>The package may be held at the nearest courier hub for pickup</li>
+                <li>You will be notified via SMS/email with pickup details</li>
+                <li>Unclaimed packages may be returned to us after the holding period</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>Serviceable Areas</h2>
+            <p>We deliver to most pin codes across India. During checkout, you can verify if your location is serviceable by entering your pin code. If your area is not currently serviceable, please contact us and we'll try to find an alternative solution.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>Contact Us</h2>
+            <p>For any shipping-related queries, please reach out to our support team:</p>
+            <ul>
+                <li>Email: <a href="mailto:contact@flowhydration.in" style="color: var(--flow-cyan);">contact@flowhydration.in</a></li>
+                <li>Please include your order number for faster assistance</li>
+            </ul>
+        </div>
+
+        <div class="policy-footer">
+            <p>Have questions? <a href="mailto:contact@flowhydration.in">Contact our support team</a></p>
+            <a href="flow-shop-2.html" class="back-to-shop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Flow" class="logo-img">
+                </a>
+                <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
+                    <li><a href="#" onclick="showComingSoonToast(event)">Subscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="shipping-policy.html">Shipping</a></li>
+                    <li><a href="refund-policy.html">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Podium Performance LLP. All rights reserved.</p>
+            <div class="footer-contact">
+                <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function showComingSoonToast(event) {
+            event.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.textContent = 'Coming Soon!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>

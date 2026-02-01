@@ -594,6 +594,15 @@
             border-radius: 10px;
         }
 
+        .order-item-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-cyan);
+        }
+
         .order-item-flavour {
             font-size: 0.85rem;
             color: var(--flow-gray);
@@ -1120,15 +1129,19 @@
 
         .footer-content {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem;
-            max-width: 1200px;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2.5rem;
+            max-width: 1400px;
             margin: 0 auto 3rem;
         }
 
         .footer-brand .logo {
             margin-bottom: 1rem;
             display: inline-block;
+        }
+
+        .footer-brand .logo-img {
+            height: 70px;
         }
 
         .footer-brand p {
@@ -1258,6 +1271,200 @@
                 gap: 1rem;
                 text-align: center;
             }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .mobile-bottom-nav {
+                display: flex;
+            }
+
+            body {
+                padding-bottom: 80px;
+            }
+
+            .nav-right .profile-btn {
+                display: none;
+            }
+
+            .profile-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.5rem;
+            }
+
+            .tab-btn {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--flow-white);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100%;
+            background: var(--flow-blue);
+            z-index: 999;
+            padding: 5rem 1.5rem 2rem;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--flow-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: 1rem;
+            color: var(--flow-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-cyan);
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 0.5rem 0;
+            padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+            z-index: 1000;
+            justify-content: space-around;
+        }
+
+        .mobile-bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-bottom-nav .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .mobile-bottom-nav .nav-item.active,
+        .mobile-bottom-nav .nav-item:hover {
+            color: var(--flow-cyan);
+        }
+
+        .mobile-bottom-nav .cart-nav-item {
+            position: relative;
+        }
+
+        .mobile-cart-count {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -1291,8 +1498,28 @@
                 </svg>
                 <span class="profile-text">Profile</span>
             </a>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="flow-shop-2.html">Shop</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#how-it-works">How It Works</a></li>
+            <li><a href="profile.html" class="active">My Profile</a></li>
+        </ul>
+    </div>
 
     <!-- Profile Page -->
     <div class="profile-page">
@@ -2016,7 +2243,7 @@
                 <ul>
                     <li><a href="flow-shop-2.html">Products</a></li>
                     <li><a href="flow-shop-2.html">Bundles</a></li>
-                    <li><a href="flow-shop-2.html">Subscription</a></li>
+                    <li><a href="#" onclick="showComingSoonToast(event)">Subscription</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -2024,17 +2251,23 @@
                 <ul>
                     <li><a href="index.html#about">About Us</a></li>
                     <li><a href="index.html#ingredients">Science</a></li>
-                    <li><a href="index.html#about">Careers</a></li>
                     <li><a href="index.html#about">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Shipping</a></li>
-                    <li><a href="#">Returns</a></li>
-                    <li><a href="#">Rewards</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="shipping-policy.html">Shipping</a></li>
+                    <li><a href="refund-policy.html">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
                 </ul>
             </div>
         </div>
@@ -2097,6 +2330,12 @@
             document.body.appendChild(toast);
             
             setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Show Coming Soon toast
+        function showComingSoonToast(event) {
+            event.preventDefault();
+            showToast('Coming Soon!', 'info');
         }
 
         // Format date for display
@@ -2264,7 +2503,14 @@
                         ${order.items.map(item => `
                             <div class="order-item">
                                 <div class="order-item-image">
-                                    <img src="${item.image || 'assets/images/product-placeholder.png'}" alt="${item.name}">
+                                    ${item.image 
+                                        ? `<img src="${item.image}" alt="${item.name}" onerror="this.parentElement.innerHTML='<div class=\\'order-item-placeholder\\'><svg width=\\'24\\' height=\\'24\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><path d=\\'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z\\'/></svg></div>'">`
+                                        : `<div class="order-item-placeholder">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                            </svg>
+                                          </div>`
+                                    }
                                 </div>
                                 <div class="order-item-details">
                                     <div class="order-item-name">${item.name}</div>
@@ -2999,6 +3245,65 @@
                 }
             });
         });
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            if (mobileMenu) {
+                mobileMenu.classList.toggle('active');
+            }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.toggle('active');
+            }
+            document.body.style.overflow = mobileMenu?.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            if (mobileMenu) {
+                mobileMenu.classList.remove('active');
+            }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        // Update mobile cart count on page load
+        function updateMobileCartCount() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const mobileCartCount = document.getElementById('mobileCartCount');
+            if (mobileCartCount) {
+                mobileCartCount.textContent = totalItems;
+                mobileCartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateMobileCartCount);
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="flow-shop-2.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span>Shop</span>
+        </a>
+        <a href="flow-shop-2.html" class="nav-item cart-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            <span class="mobile-cart-count" id="mobileCartCount">0</span>
+            <span>Cart</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profile</span>
+        </a>
+    </nav>
 </body>
 </html>
