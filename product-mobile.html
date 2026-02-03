@@ -1474,12 +1474,10 @@
         <span id="toastMessage">Added to cart!</span>
     </div>
 
+    <!-- API Configuration -->
+    <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
     <script>
-        // API Configuration
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? '' : 'https://api.flowhydration.in';
-
         // URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
         const productSlug = urlParams.get('product') || 'flow-original';

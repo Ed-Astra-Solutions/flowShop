@@ -244,6 +244,9 @@
             border-radius: 16px;
             overflow: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .product-badge {
@@ -285,6 +288,9 @@
 
         .product-info {
             padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         .product-category {
@@ -312,6 +318,7 @@
             align-items: baseline;
             gap: 6px;
             margin-bottom: 10px;
+            margin-top: auto;
         }
 
         .price-current {
@@ -352,6 +359,47 @@
             background: var(--flow-cyan);
             color: var(--flow-dark);
             border-color: var(--flow-cyan);
+        }
+
+        /* Quantity Controls in Grid */
+        .qty-inline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: 100%;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 180, 180, 0.08));
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            border-radius: 10px;
+        }
+
+        .qty-inline-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .qty-inline-btn:active {
+            background: rgba(0, 212, 255, 0.3);
+            transform: scale(0.92);
+        }
+
+        .qty-inline-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flow-white);
+            min-width: 32px;
+            text-align: center;
         }
 
         .add-btn svg {
@@ -1728,6 +1776,10 @@
                     <p>We'll send your order confirmation here</p>
                 </div>
                 <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-input" id="coFullName" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" class="form-input" id="coEmail" placeholder="your@email.com" required>
                 </div>
@@ -1986,12 +2038,10 @@
         <span id="toastMessage">Added to cart</span>
     </div>
 
+    <!-- API Configuration -->
+    <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
     <script>
-        // API Configuration
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? '' : 'https://api.flowhydration.in';
-
         // State
         let products = [];
         let cart = [];
@@ -2037,7 +2087,8 @@
 
             // Add bundles
             bundleProducts.forEach(product => {
-                const pack = product.packSizes[0];
+                const pack = product.packSizes?.[0];
+                if (!pack) return;
                 expandedProducts.push({
                     ...product,
                     displayName: product.name,
@@ -2111,7 +2162,9 @@
             grid.innerHTML = filtered.map(item => {
                 const thumbnail = item.media?.find(m => m.isPrimary && m.type === 'image') || item.media?.find(m => m.type === 'image');
                 const badge = item.badges?.[0];
-                const inCart = cart.some(c => c.productId === item.uniqueId || c.productSlug === item.uniqueId);
+                const cartItem = cart.find(c => c.productId === item.uniqueId || c.productSlug === item.uniqueId);
+                const inCart = !!cartItem;
+                const cartQty = cartItem?.quantity || 0;
                 
                 let badgeHtml = '';
                 if (badge?.type === 'bestseller') {
@@ -2124,6 +2177,30 @@
                     ? `<img src="${thumbnail.url}" alt="${item.displayName}">`
                     : `<div class="sachet-mini"><span>Flow</span></div>`;
 
+                const imageUrl = thumbnail ? thumbnail.url : '';
+                const escapedName = item.displayName.replace(/'/g, "\\'");
+                const escapedFlavour = (item.selectedFlavour?.name || '').replace(/'/g, "\\'");
+                const escapedImage = imageUrl.replace(/'/g, "\\'");
+
+                let buttonHtml = '';
+                if (inCart) {
+                    buttonHtml = `
+                        <div class="qty-inline" onclick="event.stopPropagation();">
+                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${item.uniqueId}', -1)">−</button>
+                            <span class="qty-inline-value">${cartQty}</span>
+                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${item.uniqueId}', 1)">+</button>
+                        </div>
+                    `;
+                } else {
+                    const price = item.selectedPack?.price || 0;
+                    buttonHtml = `
+                        <button class="add-btn" onclick="event.stopPropagation(); addToCartGrid('${item.uniqueId}', '${escapedName}', ${price}, '${escapedFlavour}', '${escapedImage}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Add to Cart
+                        </button>
+                    `;
+                }
+
                 return `
                     <div class="product-card" onclick="goToProduct('${item.slug}', '${item.selectedFlavour?.slug || ''}', ${item.selectedPack.size})">
                         ${badgeHtml}
@@ -2135,15 +2212,7 @@
                                 <span class="price-current">₹${item.selectedPack.price.toLocaleString()}</span>
                                 ${item.selectedPack.comparePrice ? `<span class="price-original">₹${item.selectedPack.comparePrice.toLocaleString()}</span>` : ''}
                             </div>
-                            <button class="add-btn ${inCart ? 'in-cart' : ''}" onclick="event.stopPropagation(); addToCart('${item.uniqueId}', '${item.displayName.replace(/'/g, "\\'")}', ${item.selectedPack.price}, '${item.selectedFlavour?.name || ''}', ${thumbnail ? `'${thumbnail.url}'` : 'null'})">
-                                ${inCart ? `
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                    In Cart
-                                ` : `
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                    Add to Cart
-                                `}
-                            </button>
+                            ${buttonHtml}
                         </div>
                     </div>
                 `;
@@ -2195,12 +2264,19 @@
 
         // Cart Functions
         async function initializeCart() {
-            if (typeof CustomerAuth !== 'undefined') {
-                cart = await CustomerAuth.fetchCart();
-            } else {
+            try {
+                if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                    const fetchedCart = await CustomerAuth.fetchCart();
+                    cart = Array.isArray(fetchedCart) ? fetchedCart : [];
+                } else {
+                    cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+                }
+            } catch (error) {
+                console.error('Error initializing cart:', error);
                 cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
             }
             updateCartUI();
+            renderProducts();
         }
 
         async function addToCart(id, name, price, flavour, image) {
@@ -2216,7 +2292,7 @@
                     flavour: flavour || '',
                     quantity: 1,
                     price: price,
-                    image: image
+                    image: image || null
                 });
             }
 
@@ -2229,6 +2305,87 @@
             updateCartUI();
             renderProducts();
             showToast('Added to cart');
+        }
+
+        // Add to cart from product grid
+        async function addToCartGrid(id, name, price, flavour, image) {
+            if (!Array.isArray(cart)) cart = [];
+            
+            const existing = cart.find(item => item.productId === id || item.productSlug === id);
+            
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({
+                    productId: id,
+                    productSlug: id,
+                    name: name,
+                    flavour: flavour || '',
+                    quantity: 1,
+                    price: price,
+                    image: image || null
+                });
+            }
+
+            // Save to localStorage first (this won't fail)
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
+            
+            // Update UI immediately
+            updateCartUI();
+            renderProducts();
+            showToast('Added to cart');
+            
+            // Sync to server in background (don't await, don't block)
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
+            }
+            
+            // Dispatch event
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
+        }
+
+        // Update quantity from product grid
+        async function updateGridQty(id, delta) {
+            if (!Array.isArray(cart)) cart = [];
+            
+            const item = cart.find(i => i.productId === id || i.productSlug === id);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => (i.productId !== id && i.productSlug !== id));
+                showToast('Removed from cart');
+            }
+
+            // Save to localStorage first
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
+            
+            // Update UI immediately
+            updateCartUI();
+            renderProducts();
+            
+            // Sync to server in background
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
+            }
+            
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
+        }
+
+        // Save cart helper
+        async function saveCart() {
+            if (!Array.isArray(cart)) cart = [];
+            
+            // Always save to localStorage
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
+            
+            // Sync to server in background (don't block)
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
+            }
+            
+            // Dispatch cart updated event
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
         }
 
         function updateQuantity(id, delta) {
@@ -2384,10 +2541,11 @@
         function handleCheckoutNext() {
             if (coCurrentStep === 1) {
                 // Validate contact
+                const fullName = document.getElementById('coFullName').value;
                 const email = document.getElementById('coEmail').value;
                 const phone = document.getElementById('coPhone').value;
                 
-                if (!email || !phone) {
+                if (!fullName || !email || !phone) {
                     showToast('Please fill in all contact details');
                     return;
                 }
@@ -2450,6 +2608,9 @@
         async function prefillCheckoutData() {
             let customer = CustomerAuth.getCustomer();
             
+            if (customer?.name) {
+                document.getElementById('coFullName').value = customer.name;
+            }
             if (customer?.email) {
                 document.getElementById('coEmail').value = customer.email;
             }
@@ -2467,6 +2628,9 @@
                 const freshCustomer = await CustomerAuth.refreshCustomer();
                 if (freshCustomer) {
                     loadCheckoutAddresses(freshCustomer);
+                    if (!document.getElementById('coFullName').value && freshCustomer.name) {
+                        document.getElementById('coFullName').value = freshCustomer.name;
+                    }
                     if (!document.getElementById('coEmail').value && freshCustomer.email) {
                         document.getElementById('coEmail').value = freshCustomer.email;
                     }
@@ -2815,18 +2979,22 @@
                         image: item.image
                     })),
                     shippingAddress: {
+                        fullName: document.getElementById('coFullName').value,
+                        mobile: document.getElementById('coPhone').value,
                         fullAddress: document.getElementById('coAddress').value,
                         houseFloor: document.getElementById('coHouseFloor').value,
                         city: document.getElementById('coCity').value,
                         state: document.getElementById('coState').value,
                         pincode: document.getElementById('coPincode').value,
-                        latitude: document.getElementById('coLatitude').value,
-                        longitude: document.getElementById('coLongitude').value
+                        location: {
+                            type: 'Point',
+                            coordinates: [
+                                parseFloat(document.getElementById('coLongitude').value) || 0,
+                                parseFloat(document.getElementById('coLatitude').value) || 0
+                            ]
+                        }
                     },
-                    contact: {
-                        email: document.getElementById('coEmail').value,
-                        phone: document.getElementById('coPhone').value
-                    },
+                    paymentMethod: 'razorpay',
                     subtotal,
                     shippingCost: coShippingCost,
                     discount: coDiscount,
@@ -2862,6 +3030,7 @@
                         verifyPayment(response, orderResult.orderId);
                     },
                     prefill: {
+                        name: document.getElementById('coFullName').value,
                         email: document.getElementById('coEmail').value,
                         contact: document.getElementById('coPhone').value
                     },

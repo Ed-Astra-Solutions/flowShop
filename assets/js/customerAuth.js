@@ -4,11 +4,11 @@
  */
 
 const CustomerAuth = (function() {
-    // Production: https://api.flowhydration.in/api/customer
-    // Local: /api/customer (relative path for same-origin)
-    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? '/api/customer'
-        : 'https://api.flowhydration.in/api/customer';
+    // Uses config.js for API_BASE (must be included before this file)
+    // Falls back to default if config.js is not loaded
+    const AUTH_API_BASE = (typeof API_BASE !== 'undefined' ? API_BASE : 
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' : 'https://api.flowhydration.in')) + '/api/customer';
     
     const TOKEN_KEY = 'flow_customer_token';
     const CUSTOMER_KEY = 'flow_customer';
@@ -55,7 +55,7 @@ const CustomerAuth = (function() {
     
     async function sendOTP(mobile, channel = 'whatsapp') {
         try {
-            const response = await fetch(`${API_BASE}/send-otp`, {
+            const response = await fetch(`${AUTH_API_BASE}/send-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ const CustomerAuth = (function() {
             const body = { mobile, otp };
             if (name) body.name = name;
             
-            const response = await fetch(`${API_BASE}/verify-otp`, {
+            const response = await fetch(`${AUTH_API_BASE}/verify-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -107,7 +107,7 @@ const CustomerAuth = (function() {
             const token = getToken();
             if (!token) return false;
             
-            const response = await fetch(`${API_BASE}/check-auth`, {
+            const response = await fetch(`${AUTH_API_BASE}/check-auth`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -131,7 +131,7 @@ const CustomerAuth = (function() {
     
     async function getProfile() {
         try {
-            const response = await fetch(`${API_BASE}/profile`, {
+            const response = await fetch(`${AUTH_API_BASE}/profile`, {
                 headers: getAuthHeaders()
             });
             
@@ -165,7 +165,7 @@ const CustomerAuth = (function() {
     
     async function updateName(name) {
         try {
-            const response = await fetch(`${API_BASE}/update-name`, {
+            const response = await fetch(`${AUTH_API_BASE}/update-name`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ const CustomerAuth = (function() {
     
     async function updateProfile(profileData) {
         try {
-            const response = await fetch(`${API_BASE}/profile`, {
+            const response = await fetch(`${AUTH_API_BASE}/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -804,7 +804,7 @@ const CustomerAuth = (function() {
         }
         
         try {
-            const response = await fetch(`${API_BASE}/cart`, {
+            const response = await fetch(`${AUTH_API_BASE}/cart`, {
                 headers: getAuthHeaders()
             });
             
@@ -842,7 +842,7 @@ const CustomerAuth = (function() {
         const cartToSync = cart || getLocalCart();
         
         try {
-            const response = await fetch(`${API_BASE}/cart`, {
+            const response = await fetch(`${AUTH_API_BASE}/cart`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -929,7 +929,7 @@ const CustomerAuth = (function() {
         
         if (isLoggedIn()) {
             try {
-                await fetch(`${API_BASE}/cart`, {
+                await fetch(`${AUTH_API_BASE}/cart`, {
                     method: 'DELETE',
                     headers: getAuthHeaders()
                 });

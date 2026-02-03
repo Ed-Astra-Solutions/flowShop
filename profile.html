@@ -2290,19 +2290,19 @@
                 <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
             </div>
             <div class="social-links">
-                <a href="#" aria-label="Instagram">
+                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Instagram">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="2" width="20" height="20" rx="5"/>
                         <circle cx="12" cy="12" r="4"/>
                         <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
                     </svg>
                 </a>
-                <a href="#" aria-label="Twitter">
+                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Twitter">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
-                <a href="#" aria-label="YouTube">
+                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="YouTube">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
                         <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
@@ -2312,12 +2312,12 @@
         </div>
     </footer>
 
+    <!-- API Configuration -->
+    <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
     <script>
-        // API Configuration
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? '/api/customer'
-            : 'https://api.flowhydration.in/api/customer';
+        // API path for customer endpoints
+        const API_CUSTOMER = `${API_BASE}/api/customer`;
         
         // Global customer data
         let customerData = null;
@@ -2460,7 +2460,7 @@
                 // Show loading state
                 ordersList.innerHTML = '<div class="loading-orders"><div class="spinner"></div><p>Loading orders...</p></div>';
                 
-                const response = await fetch(`${API_BASE.replace('/customer', '/orders')}`, {
+                const response = await fetch(`${API_BASE}/api/orders`, {
                     headers: CustomerAuth.getAuthHeaders()
                 });
                 
@@ -2627,7 +2627,7 @@
             const dateOfBirth = document.getElementById('edit-dob').value;
             
             try {
-                const response = await fetch(`${API_BASE}/profile`, {
+                const response = await fetch(`${API_CUSTOMER}/profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2655,7 +2655,7 @@
         
         async function updatePreference(key, value) {
             try {
-                const response = await fetch(`${API_BASE}/profile`, {
+                const response = await fetch(`${API_CUSTOMER}/profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2687,7 +2687,7 @@
         async function loadAddresses() {
             try {
                 console.log('Fetching addresses from API...');
-                const response = await fetch(`${API_BASE}/addresses`, {
+                const response = await fetch(`${API_CUSTOMER}/addresses`, {
                     headers: CustomerAuth.getAuthHeaders()
                 });
                 
@@ -3157,8 +3157,8 @@
             
             try {
                 const url = addressId 
-                    ? `${API_BASE}/addresses/${addressId}`
-                    : `${API_BASE}/addresses`;
+                    ? `${API_CUSTOMER}/addresses/${addressId}`
+                    : `${API_CUSTOMER}/addresses`;
                     
                 const response = await fetch(url, {
                     method: addressId ? 'PUT' : 'POST',
@@ -3187,7 +3187,7 @@
         
         async function setDefaultAddress(addressId) {
             try {
-                const response = await fetch(`${API_BASE}/addresses/${addressId}/default`, {
+                const response = await fetch(`${API_CUSTOMER}/addresses/${addressId}/default`, {
                     method: 'PUT',
                     headers: CustomerAuth.getAuthHeaders()
                 });
@@ -3209,7 +3209,7 @@
             if (!confirm('Are you sure you want to delete this address?')) return;
             
             try {
-                const response = await fetch(`${API_BASE}/addresses/${addressId}`, {
+                const response = await fetch(`${API_CUSTOMER}/addresses/${addressId}`, {
                     method: 'DELETE',
                     headers: CustomerAuth.getAuthHeaders()
                 });
