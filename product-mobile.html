@@ -1269,7 +1269,7 @@
                     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                 </svg>
             </button>
-            <button class="header-btn" onclick="window.location.href='shop-mobile.html'">
+            <button class="header-btn" onclick="window.location.href='/shop/'">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                     <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
@@ -1463,7 +1463,7 @@
             </svg>
             Shop
         </a>
-        <button class="nav-item" onclick="window.location.href='shop-mobile.html'">
+        <button class="nav-item" onclick="window.location.href='/shop/'">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
@@ -2023,7 +2023,7 @@
 
                 return `
                     <div class="related-card">
-                        <a href="product-mobile.html?product=${p.slug}${flavour ? `&flavour=${flavour.slug}` : ''}&pack=${packSize?.size || ''}" class="related-image">
+                        <a href="/product/?product=${p.slug}${flavour ? `&flavour=${flavour.slug}` : ''}&pack=${packSize?.size || ''}" class="related-image">
                             ${image ? `<img src="${image}" alt="${p.name}">` : `<div style="width: 60px; height: 80px; background: linear-gradient(135deg, #0A1628, #1a2d4a); border-radius: 8px;"></div>`}
                         </a>
                         <div class="related-info">
@@ -2200,7 +2200,7 @@
             if (document.referrer && document.referrer.includes(window.location.origin)) {
                 history.back();
             } else {
-                window.location.href = 'shop-mobile.html';
+                window.location.href = '/shop/';
             }
         }
 

@@ -1492,8 +1492,8 @@
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/shop/">Shop</a></li>
-            <li><a href="index.html#ingredients">Ingredients</a></li>
-            <li><a href="index.html#how-it-works">How It Works</a></li>
+            <li><a href="/#ingredients">Ingredients</a></li>
+            <li><a href="/#how-it-works">How It Works</a></li>
         </ul>
         <div class="nav-right">
             <a href="/shop/" class="cart-btn">
@@ -1528,8 +1528,8 @@
         <ul class="mobile-nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/shop/">Shop</a></li>
-            <li><a href="index.html#ingredients">Ingredients</a></li>
-            <li><a href="index.html#how-it-works">How It Works</a></li>
+            <li><a href="/#ingredients">Ingredients</a></li>
+            <li><a href="/#how-it-works">How It Works</a></li>
             <li><a href="/profile/" class="active">My Profile</a></li>
         </ul>
     </div>
@@ -2262,15 +2262,15 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="index.html#about">About Us</a></li>
-                    <li><a href="index.html#ingredients">Science</a></li>
-                    <li><a href="index.html#about">Contact</a></li>
+                    <li><a href="/#about">About Us</a></li>
+                    <li><a href="/#ingredients">Science</a></li>
+                    <li><a href="/#about">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="/#faq">FAQ</a></li>
                     <li><a href="/shipping-policy/">Shipping</a></li>
                     <li><a href="/refund-policy/">Returns</a></li>
                 </ul>
@@ -3246,7 +3246,7 @@
         document.querySelector('.sidebar-nav-item.logout').addEventListener('click', function() {
             if (confirm('Are you sure you want to logout?')) {
                 CustomerAuth.logout();
-                window.location.href = 'index.html';
+                window.location.href = '/';
             }
         });
         

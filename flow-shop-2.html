@@ -3310,9 +3310,9 @@
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="#" class="active">Shop</a></li>
-            <li><a href="index.html#ingredients">Ingredients</a></li>
-            <li><a href="index.html#benefits">Benefits</a></li>
-            <li><a href="index.html#about">About</a></li>
+            <li><a href="/#ingredients">Ingredients</a></li>
+            <li><a href="/#benefits">Benefits</a></li>
+            <li><a href="/#about">About</a></li>
         </ul>
         <div class="nav-right">
             <button class="cart-btn" id="cartToggle">
@@ -3366,7 +3366,7 @@
                 </a>
             </li>
             <li>
-                <a href="index.html#ingredients">
+                <a href="/#ingredients">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                     </svg>
@@ -3374,7 +3374,7 @@
                 </a>
             </li>
             <li>
-                <a href="index.html#benefits">
+                <a href="/#benefits">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                         <polyline points="22 4 12 14.01 9 11.01"/>
@@ -4183,15 +4183,15 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="index.html#about">About Us</a></li>
-                    <li><a href="index.html#ingredients">Science</a></li>
-                    <li><a href="index.html#about">Contact</a></li>
+                    <li><a href="/#about">About Us</a></li>
+                    <li><a href="/#ingredients">Science</a></li>
+                    <li><a href="/#about">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="/#faq">FAQ</a></li>
                     <li><a href="/shipping-policy/">Shipping</a></li>
                     <li><a href="/refund-policy/">Refund Policy</a></li>
                 </ul>
@@ -4646,7 +4646,7 @@
         }
 
         function goToProduct(slug, flavour, packSize) {
-            window.location.href = `product.html?product=${slug}&flavour=${flavour}&pack=${packSize}`;
+            window.location.href = `/product/?product=${slug}&flavour=${flavour}&pack=${packSize}`;
         }
 
         function hexToRgba(hex, alpha) {

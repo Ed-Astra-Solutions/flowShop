@@ -1569,7 +1569,7 @@
                 const thumbnail = product.media?.find(m => m.isPrimary && m.type === 'image') || product.media?.find(m => m.type === 'image');
                 
                 return `
-                    <a href="product-mobile.html?product=${product.slug}" class="product-card">
+                    <a href="/product/?product=${product.slug}" class="product-card">
                         <div class="product-image">
                             ${thumbnail 
                                 ? `<img src="${thumbnail.url}" alt="${product.name}" loading="lazy">`
