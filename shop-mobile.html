@@ -10,15 +10,34 @@
     <!-- Desktop redirect - redirect to desktop version on larger screens -->
     <script>
         (function() {
-            var isDesktop = window.innerWidth > 768 && 
-                           !('ontouchstart' in window) && 
-                           (navigator.maxTouchPoints === 0);
-            var desktopUA = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var MOBILE_BREAKPOINT = 768;
             
-            if (isDesktop && desktopUA) {
+            function checkDesktop() {
+                return window.innerWidth > MOBILE_BREAKPOINT && 
+                       !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            function redirectToDesktop() {
                 var params = window.location.search;
                 window.location.replace('/shop/' + params);
             }
+            
+            // Initial redirect
+            if (checkDesktop()) {
+                redirectToDesktop();
+                return;
+            }
+            
+            // Listen for resize
+            var resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (checkDesktop()) {
+                        redirectToDesktop();
+                    }
+                }, 250);
+            });
         })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,42 +147,10 @@
             justify-content: center;
         }
 
-        /* Search Bar */
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.15);
-            border-radius: 12px;
-            padding: 10px 14px;
-            gap: 10px;
-        }
-
-        .search-bar svg {
-            width: 18px;
-            height: 18px;
-            color: var(--flow-gray);
-            flex-shrink: 0;
-        }
-
-        .search-bar input {
-            flex: 1;
-            background: none;
-            border: none;
-            outline: none;
-            color: var(--flow-white);
-            font-size: 15px;
-            font-family: inherit;
-        }
-
-        .search-bar input::placeholder {
-            color: var(--flow-gray);
-        }
-
         /* ============ FILTER CHIPS ============ */
         .filter-section {
             padding: 16px;
-            margin-top: 120px; /* Space for fixed header */
+            margin-top: 80px; /* Space for fixed header */
         }
 
         .filter-chips {
@@ -249,6 +236,49 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+        }
+
+        /* ============ FEATURED HORIZONTAL CARD ============ */
+        .product-card.featured {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            height: auto;
+        }
+
+        .product-card.featured .product-image {
+            aspect-ratio: 1;
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .product-card.featured .product-info {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .product-card.featured .product-category {
+            font-size: 11px;
+        }
+
+        .product-card.featured .product-name {
+            font-size: 15px;
+            -webkit-line-clamp: 2;
+            margin-bottom: 6px;
+        }
+
+        .product-card.featured .product-price {
+            margin-bottom: 12px;
+        }
+
+        .product-card.featured .price-current {
+            font-size: 18px;
+        }
+
+        .product-card.featured .add-btn {
+            padding: 12px;
         }
 
         /* ============ PRODUCT CARD ============ */
@@ -1639,12 +1669,6 @@
                 </button>
             </div>
         </div>
-        <div class="search-bar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" placeholder="Search products..." id="searchInput" oninput="handleSearch()">
-        </div>
     </header>
 
     <!-- Filter Chips -->
@@ -2061,7 +2085,6 @@
         let cart = [];
         let activeFilter = 'all';
         let activeSort = 'featured';
-        let searchQuery = '';
         const FREE_SHIPPING = 999;
         const SHIPPING_COST = 99;
 
@@ -2140,15 +2163,6 @@
                 filtered = filtered.filter(p => p.isBundle);
             }
 
-            // Search
-            if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(p => 
-                    p.displayName.toLowerCase().includes(q) ||
-                    p.name.toLowerCase().includes(q)
-                );
-            }
-
             // Sort
             switch (activeSort) {
                 case 'price-low':
@@ -2173,12 +2187,15 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(item => {
+            grid.innerHTML = filtered.map((item, index) => {
                 const thumbnail = item.media?.find(m => m.isPrimary && m.type === 'image') || item.media?.find(m => m.type === 'image');
                 const badge = item.badges?.[0];
                 const cartItem = cart.find(c => c.productId === item.uniqueId || c.productSlug === item.uniqueId);
                 const inCart = !!cartItem;
                 const cartQty = cartItem?.quantity || 0;
+                
+                // First bundle item gets featured horizontal layout
+                const isFeatured = index === 0 && item.isBundle;
                 
                 let badgeHtml = '';
                 if (badge?.type === 'bestseller') {
@@ -2192,23 +2209,24 @@
                     : `<div class="sachet-mini"><span>Flow</span></div>`;
 
                 const imageUrl = thumbnail ? thumbnail.url : '';
-                const escapedName = item.displayName.replace(/'/g, "\\'");
-                const escapedFlavour = (item.selectedFlavour?.name || '').replace(/'/g, "\\'");
-                const escapedImage = imageUrl.replace(/'/g, "\\'");
+                const escapedName = item.displayName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const escapedFlavour = (item.selectedFlavour?.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const escapedImage = encodeURIComponent(imageUrl);
+                const escapedId = item.uniqueId.replace(/'/g, "\\'");
 
                 let buttonHtml = '';
                 if (inCart) {
                     buttonHtml = `
                         <div class="qty-inline" onclick="event.stopPropagation();">
-                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${item.uniqueId}', -1)">−</button>
+                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${escapedId}', -1)">−</button>
                             <span class="qty-inline-value">${cartQty}</span>
-                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${item.uniqueId}', 1)">+</button>
+                            <button class="qty-inline-btn" onclick="event.stopPropagation(); updateGridQty('${escapedId}', 1)">+</button>
                         </div>
                     `;
                 } else {
                     const price = item.selectedPack?.price || 0;
                     buttonHtml = `
-                        <button class="add-btn" onclick="event.stopPropagation(); addToCartGrid('${item.uniqueId}', '${escapedName}', ${price}, '${escapedFlavour}', '${escapedImage}')">
+                        <button class="add-btn" onclick="event.stopPropagation(); addToCartGrid('${escapedId}', '${escapedName}', ${price}, '${escapedFlavour}', '${escapedImage}')">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             Add to Cart
                         </button>
@@ -2216,11 +2234,11 @@
                 }
 
                 return `
-                    <div class="product-card" onclick="goToProduct('${item.slug}', '${item.selectedFlavour?.slug || ''}', ${item.selectedPack.size})">
+                    <div class="product-card${isFeatured ? ' featured' : ''}" onclick="goToProduct('${item.slug}', '${item.selectedFlavour?.slug || ''}', ${item.selectedPack.size})">
                         ${badgeHtml}
                         <div class="product-image">${imageHtml}</div>
                         <div class="product-info">
-                            <div class="product-category">${item.isBundle ? 'Bundle' : item.selectedPack.label}</div>
+                            <div class="product-category">${item.selectedPack.label || (item.isBundle ? 'Bundle' : '')}</div>
                             <h3 class="product-name">${item.displayName}</h3>
                             <div class="product-price">
                                 <span class="price-current">₹${item.selectedPack.price.toLocaleString()}</span>
@@ -2247,12 +2265,6 @@
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 chip.classList.toggle('active', chip.dataset.filter === filter);
             });
-            renderProducts();
-        }
-
-        // Search
-        function handleSearch() {
-            searchQuery = document.getElementById('searchInput').value;
             renderProducts();
         }
 
@@ -2310,11 +2322,14 @@
                 });
             }
 
-            if (typeof CustomerAuth !== 'undefined') {
-                await CustomerAuth.saveCart(cart);
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
             } else {
                 localStorage.setItem('flow_cart', JSON.stringify(cart));
             }
+
+            // Always save to localStorage as backup
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
 
             updateCartUI();
             renderProducts();
@@ -2323,7 +2338,11 @@
 
         // Add to cart from product grid
         async function addToCartGrid(id, name, price, flavour, image) {
+            console.log('addToCartGrid called:', { id, name, price, flavour });
             if (!Array.isArray(cart)) cart = [];
+            
+            // Decode image URL if it was encoded
+            const decodedImage = image ? decodeURIComponent(image) : null;
             
             const existing = cart.find(item => item.productId === id || item.productSlug === id);
             
@@ -2337,7 +2356,7 @@
                     flavour: flavour || '',
                     quantity: 1,
                     price: price,
-                    image: image || null
+                    image: decodedImage
                 });
             }
 
@@ -2349,9 +2368,17 @@
             renderProducts();
             showToast('Added to cart');
             
+            // Open the cart drawer
+            openCart();
+            
             // Sync to server in background (don't await, don't block)
             if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
-                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
+                console.log('Syncing cart to server...');
+                CustomerAuth.syncCartToServer(cart)
+                    .then(() => console.log('Cart synced successfully'))
+                    .catch(err => console.log('Cart sync failed:', err));
+            } else {
+                console.log('Not syncing - CustomerAuth:', typeof CustomerAuth, 'isLoggedIn:', typeof CustomerAuth !== 'undefined' ? CustomerAuth.isLoggedIn() : 'N/A');
             }
             
             // Dispatch event
@@ -2360,6 +2387,7 @@
 
         // Update quantity from product grid
         async function updateGridQty(id, delta) {
+            console.log('updateGridQty called:', { id, delta, cart: JSON.stringify(cart) });
             if (!Array.isArray(cart)) cart = [];
             
             const item = cart.find(i => i.productId === id || i.productSlug === id);
@@ -2380,7 +2408,12 @@
             
             // Sync to server in background
             if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
-                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
+                console.log('updateGridQty: Syncing cart to server...');
+                CustomerAuth.syncCartToServer(cart)
+                    .then(() => console.log('Cart synced successfully'))
+                    .catch(err => console.log('Cart sync failed:', err));
+            } else {
+                console.log('updateGridQty: Not syncing - not logged in');
             }
             
             window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
@@ -2408,13 +2441,15 @@
 
             item.quantity += delta;
             if (item.quantity <= 0) {
-                cart = cart.filter(i => (i.productId || i.productSlug) !== id);
+                cart = cart.filter(i => (i.productId !== id && i.productSlug !== id));
             }
 
-            if (typeof CustomerAuth !== 'undefined') {
-                CustomerAuth.saveCart(cart);
-            } else {
-                localStorage.setItem('flow_cart', JSON.stringify(cart));
+            // Save to localStorage
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
+
+            // Sync to server in background
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart sync failed:', err));
             }
 
             updateCartUI();
@@ -2428,25 +2463,32 @@
             const total = subtotal + shipping;
 
             // Update badges
-            document.getElementById('cartBadge').textContent = totalItems;
-            document.getElementById('navCartBadge').textContent = totalItems;
+            const cartBadge = document.getElementById('cartBadge');
+            const navCartBadge = document.getElementById('navCartBadge');
+            if (cartBadge) cartBadge.textContent = totalItems;
+            if (navCartBadge) navCartBadge.textContent = totalItems;
 
             // Update cart drawer
             const cartItems = document.getElementById('cartItems');
-            const cartEmpty = document.getElementById('cartEmpty');
             const cartFooter = document.getElementById('cartFooter');
 
+            if (!cartItems || !cartFooter) return;
+
             if (cart.length === 0) {
-                cartEmpty.style.display = 'block';
                 cartFooter.style.display = 'none';
-                cartItems.innerHTML = '';
-                cartItems.appendChild(cartEmpty);
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
             } else {
-                cartEmpty.style.display = 'none';
                 cartFooter.style.display = 'block';
 
                 cartItems.innerHTML = cart.map(item => {
-                    const itemId = item.productId || item.productSlug;
+                    const itemId = (item.productId || item.productSlug || '').replace(/'/g, "\\'");
                     return `
                         <div class="cart-item">
                             <div class="cart-item-image">
@@ -2470,17 +2512,25 @@
             }
 
             // Update totals
-            document.getElementById('cartSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
-            document.getElementById('cartShipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
-            document.getElementById('cartTotal').textContent = `₹${total.toLocaleString()}`;
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            const cartShipping = document.getElementById('cartShipping');
+            const cartTotal = document.getElementById('cartTotal');
+            const shippingText = document.getElementById('shippingText');
+            const shippingBar = document.getElementById('shippingBar');
+
+            if (cartSubtotal) cartSubtotal.textContent = `₹${subtotal.toLocaleString()}`;
+            if (cartShipping) cartShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+            if (cartTotal) cartTotal.textContent = `₹${total.toLocaleString()}`;
 
             // Shipping progress
             const remaining = Math.max(0, FREE_SHIPPING - subtotal);
             const progress = Math.min(100, (subtotal / FREE_SHIPPING) * 100);
-            document.getElementById('shippingText').innerHTML = remaining > 0
-                ? `Add <span>₹${remaining}</span> more for free shipping`
-                : `<span>✓</span> You've unlocked free shipping!`;
-            document.getElementById('shippingBar').style.width = `${progress}%`;
+            if (shippingText) {
+                shippingText.innerHTML = remaining > 0
+                    ? `Add <span>₹${remaining}</span> more for free shipping`
+                    : `<span>✓</span> You've unlocked free shipping!`;
+            }
+            if (shippingBar) shippingBar.style.width = `${progress}%`;
         }
 
         function openCart() {

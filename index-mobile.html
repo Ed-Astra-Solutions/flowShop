@@ -10,14 +10,29 @@
     <!-- Desktop redirect - redirect to desktop version on larger screens -->
     <script>
         (function() {
-            var isDesktop = window.innerWidth > 768 && 
-                           !('ontouchstart' in window) && 
-                           (navigator.maxTouchPoints === 0);
-            var desktopUA = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var MOBILE_BREAKPOINT = 768;
             
-            if (isDesktop && desktopUA) {
-                window.location.replace('/');
+            function checkDesktop() {
+                return window.innerWidth > MOBILE_BREAKPOINT && 
+                       !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
+            
+            // Initial redirect
+            if (checkDesktop()) {
+                window.location.replace('/');
+                return;
+            }
+            
+            // Listen for resize
+            var resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (checkDesktop()) {
+                        window.location.replace('/');
+                    }
+                }, 250);
+            });
         })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1663,7 +1678,7 @@
                 const initials = review.name.split(' ').map(n => n[0]).join('').toUpperCase();
                 
                 return `
-                    <div class="review-card">
+                    <div class="review-card" style="opacity: 1; transform: none;">
                         <div class="review-stars">
                             ${Array(5).fill().map((_, i) => `
                                 <svg viewBox="0 0 24 24" style="fill: ${i < review.rating ? 'var(--flow-cyan)' : 'rgba(0,212,255,0.2)'}">
@@ -1682,22 +1697,72 @@
                     </div>
                 `;
             }).join('');
-
-            // Initialize animation for reviews after they're rendered
-            setTimeout(() => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('animate');
-                        }
-                    });
-                }, { threshold: 0.1 });
-
-                document.querySelectorAll('.review-card').forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'none';
-                });
-            }, 100);
+            
+            // Start auto-scroll for reviews
+            initReviewsAutoScroll(container);
+        }
+        
+        // Auto-scroll for reviews - continuous slow movement
+        function initReviewsAutoScroll(container) {
+            let isUserScrolling = false;
+            let scrollTimeout;
+            let animationId;
+            let scrollSpeed = 0.5; // pixels per frame
+            
+            function continuousScroll() {
+                if (isUserScrolling) {
+                    animationId = requestAnimationFrame(continuousScroll);
+                    return;
+                }
+                
+                const maxScroll = container.scrollWidth - container.clientWidth;
+                
+                // If at the end, reset to start
+                if (container.scrollLeft >= maxScroll) {
+                    container.scrollLeft = 0;
+                } else {
+                    container.scrollLeft += scrollSpeed;
+                }
+                
+                animationId = requestAnimationFrame(continuousScroll);
+            }
+            
+            // Start continuous scroll
+            animationId = requestAnimationFrame(continuousScroll);
+            
+            // Pause on user interaction
+            container.addEventListener('touchstart', () => {
+                isUserScrolling = true;
+                clearTimeout(scrollTimeout);
+            });
+            
+            container.addEventListener('touchend', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                }, 2000); // Resume after 2 seconds
+            });
+            
+            // Also handle mouse for desktop testing
+            container.addEventListener('mousedown', () => {
+                isUserScrolling = true;
+                clearTimeout(scrollTimeout);
+            });
+            
+            container.addEventListener('mouseup', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                }, 2000);
+            });
+            
+            container.addEventListener('wheel', () => {
+                isUserScrolling = true;
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                }, 2000);
+            });
         }
 
         // ============ FAQ TOGGLE ============

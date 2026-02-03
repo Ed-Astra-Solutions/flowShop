@@ -7,14 +7,29 @@
     <!-- Mobile redirect - must be first -->
     <script>
         (function() {
-            var isMobile = window.innerWidth <= 768 || 
-                           ('ontouchstart' in window) || 
-                           (navigator.maxTouchPoints > 0);
-            var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var MOBILE_BREAKPOINT = 768;
             
-            if (isMobile || mobileUA) {
-                window.location.replace('index-mobile.html');
+            function checkMobile() {
+                return window.innerWidth <= MOBILE_BREAKPOINT || 
+                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
+            
+            // Initial redirect
+            if (checkMobile()) {
+                window.location.replace('index-mobile.html');
+                return;
+            }
+            
+            // Listen for resize
+            var resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (checkMobile()) {
+                        window.location.replace('index-mobile.html');
+                    }
+                }, 250);
+            });
         })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -650,6 +665,171 @@
         .ingredients {
             padding: 5rem 8%;
             position: relative;
+        }
+
+        /* Shop / Best Sellers Section */
+        .shop-section {
+            padding: 5rem 8%;
+            position: relative;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.02) 0%, transparent 100%);
+        }
+
+        .shop-section .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .product-card {
+            background: rgba(15, 25, 45, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 12px 32px rgba(0, 212, 255, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.8) 0%, rgba(0, 40, 60, 0.6) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.03);
+        }
+
+        .product-image .placeholder-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 180, 180, 0.05) 100%);
+        }
+
+        .product-image .placeholder-img span {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--flow-cyan);
+            opacity: 0.6;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--flow-white);
+            margin: 0 0 0.5rem 0;
+            line-height: 1.3;
+        }
+
+        .product-desc {
+            color: var(--flow-gray);
+            font-size: 0.85rem;
+            margin: 0 0 0.75rem 0;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-pack {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--flow-cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .price-current {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .price-original {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+        }
+
+        .shop-cta {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .shop-cta .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .shop-section {
+                padding: 3rem 5%;
+            }
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
         }
 
         .section-header {
@@ -2419,9 +2599,10 @@
         <ul class="nav-links">
             <li><a href="/" class="active">Home</a></li>
             <li><a href="/shop/">Shop</a></li>
+            <li><a href="#shop">Best Sellers</a></li>
             <li><a href="#ingredients">Ingredients</a></li>
             <li><a href="#benefits">Benefits</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="#faq">FAQ</a></li>
         </ul>
         <div class="nav-right">
             <a href="/shop/" class="cart-btn" aria-label="Cart">
@@ -2627,6 +2808,26 @@
             <div class="stat-label">Clean Formula</div>
         </div>
     </div>
+
+    <!-- Shop / Best Sellers Section -->
+    <section class="shop-section" id="shop">
+        <div class="section-header">
+            <div class="section-tag">Shop</div>
+            <h2 class="section-title">Best Sellers</h2>
+            <p class="section-subtitle">Our most popular hydration packs, loved by thousands.</p>
+        </div>
+        <div class="products-grid" id="bestSellersGrid">
+            <!-- Products will be loaded dynamically -->
+        </div>
+        <div class="shop-cta">
+            <a href="/shop/" class="btn-primary">
+                View All Products
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
 
     <!-- Ingredients Section -->
     <section class="ingredients" id="ingredients">
@@ -3009,19 +3210,185 @@
     <!-- API Configuration -->
     <script src="assets/js/config.js"></script>
     <script>
-        // Smooth scroll for navigation links
+        // Function to update active nav link
+        function updateActiveNav(hash) {
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            // Add active class to matching link
+            const activeLink = document.querySelector(`.nav-links a[href="${hash}"], .nav-links a[href="/${hash}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            } else if (hash === '' || hash === '#') {
+                // If no hash or at top, set Home as active
+                const homeLink = document.querySelector('.nav-links a[href="/"]');
+                if (homeLink) homeLink.classList.add('active');
+            }
+        }
+
+        // Smooth scroll for navigation links with hash update
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const hash = this.getAttribute('href');
+                const target = document.querySelector(hash);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });
+                    // Update URL with hash
+                    history.pushState(null, null, hash);
+                    // Update active nav
+                    updateActiveNav(hash);
                 }
             });
         });
+
+        // Update active nav on scroll using Intersection Observer
+        const sections = document.querySelectorAll('section[id], footer[id]');
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const hash = '#' + id;
+                    updateActiveNav(hash);
+                    // Update URL without triggering scroll
+                    if (window.location.hash !== hash) {
+                        history.replaceState(null, null, hash);
+                    }
+                }
+            });
+        }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+
+        sections.forEach(section => navObserver.observe(section));
+
+        // Set initial active state based on URL hash
+        if (window.location.hash) {
+            updateActiveNav(window.location.hash);
+        }
+
+        // Load Best Sellers
+        async function loadBestSellers() {
+            const grid = document.getElementById('bestSellersGrid');
+            if (!grid) return;
+
+            // Show loading state
+            grid.innerHTML = '<div style="text-align: center; color: var(--flow-gray); padding: 2rem;">Loading products...</div>';
+
+            try {
+                const apiUrl = (typeof API_BASE !== 'undefined' ? API_BASE : 'https://api.flowhydration.in') + '/api/products';
+                console.log('Fetching products from:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                console.log('Products response:', data);
+                
+                // API returns products in 'data' array, not 'products'
+                const products = data.data || data.products || [];
+                
+                if (data.success && products.length > 0) {
+                    // Get first 3 products as best sellers (or filter by featured flag)
+                    const bestSellers = products
+                        .filter(p => p.isActive !== false)
+                        .slice(0, 3);
+                    
+                    if (bestSellers.length === 0) {
+                        showFallbackProducts(grid);
+                        return;
+                    }
+                    
+                    grid.innerHTML = bestSellers.map(product => {
+                        const defaultPack = product.packSizes?.[0];
+                        const price = defaultPack?.price || product.price || 0;
+                        const originalPrice = defaultPack?.comparePrice || defaultPack?.originalPrice || product.comparePrice || product.originalPrice;
+                        const packLabel = defaultPack?.label || (defaultPack?.size ? `Pack of ${defaultPack.size}` : '');
+                        // Get image from media array (primary first) or fallback to images array
+                        const primaryMedia = product.media?.find(m => m.isPrimary && m.type === 'image');
+                        const firstImage = product.media?.find(m => m.type === 'image');
+                        const imageUrl = primaryMedia?.url || firstImage?.url || product.images?.[0] || '';
+                        
+                        return `
+                            <a href="/product/?product=${product.slug}" class="product-card">
+                                <div class="product-image">
+                                    ${product.isFeatured ? '<span class="product-badge">Best Seller</span>' : ''}
+                                    ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" loading="lazy">` : `
+                                        <div class="placeholder-img"><span>FLOW</span></div>
+                                    `}
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">${product.name}</h3>
+                                    <p class="product-desc">${product.tagline || product.shortDescription || 'Premium electrolyte hydration'}</p>
+                                    ${packLabel ? `<span class="product-pack">${packLabel}</span>` : ''}
+                                    <div class="product-price">
+                                        ${originalPrice ? `<span class="price-original">₹${originalPrice.toLocaleString()}</span>` : ''}
+                                        <span class="price-current">₹${price.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    showFallbackProducts(grid);
+                }
+            } catch (error) {
+                console.error('Error loading best sellers:', error);
+                showFallbackProducts(grid);
+            }
+        }
+
+        function showFallbackProducts(grid) {
+            grid.innerHTML = `
+                    <a href="/shop/" class="product-card">
+                        <div class="product-image">
+                            <span class="product-badge">Best Seller</span>
+                            <div class="placeholder-img"><span>FLOW</span></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Flow Original</h3>
+                            <p class="product-desc">Premium electrolyte hydration for everyday wellness</p>
+                            <span class="product-pack">Pack of 30</span>
+                            <div class="product-price">
+                                <span class="price-original">₹1,999</span>
+                                <span class="price-current">₹1,499</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="/shop/" class="product-card">
+                        <div class="product-image">
+                            <div class="placeholder-img"><span>FLOW</span></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Flow Variety Pack</h3>
+                            <p class="product-desc">Try all our flavors in one convenient pack</p>
+                            <span class="product-pack">Pack of 20</span>
+                            <div class="product-price">
+                                <span class="price-original">₹2,299</span>
+                                <span class="price-current">₹1,799</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="/shop/" class="product-card">
+                        <div class="product-image">
+                            <div class="placeholder-img"><span>FLOW</span></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Flow Starter Kit</h3>
+                            <p class="product-desc">Perfect for first-time Flow users</p>
+                            <span class="product-pack">Pack of 10</span>
+                            <div class="product-price">
+                                <span class="price-original">₹799</span>
+                                <span class="price-current">₹599</span>
+                            </div>
+                        </div>
+                    </a>
+            `;
+        }
+
+        // Load best sellers on page load
+        document.addEventListener('DOMContentLoaded', loadBestSellers);
 
         // Intersection Observer for fade-in animations
         const observerOptions = {
