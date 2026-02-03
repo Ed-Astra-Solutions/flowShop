@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#020817">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Product — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <script>
+        var googleMapsReady = false;
+        function initGoogleMaps() { googleMapsReady = true; }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb4ve4orTO8kVsMbJhlV6KtYswlE2LZ7s&libraries=places&callback=initGoogleMaps" async defer></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            padding-bottom: calc(160px + var(--safe-bottom));
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(2, 8, 23, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 12px 16px;
+            padding-top: calc(12px + var(--safe-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-white);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-white);
+            position: relative;
+        }
+
+        .header-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ PRODUCT GALLERY ============ */
+        .product-gallery {
+            margin-top: calc(64px + var(--safe-top));
+            position: relative;
+        }
+
+        .gallery-main {
+            width: 100%;
+            height: 340px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-main::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .gallery-main img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            z-index: 2;
+            border-radius: 12px;
+        }
+
+        .gallery-main video {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            z-index: 2;
+            border-radius: 12px;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: var(--flow-dark);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            z-index: 3;
+        }
+
+        .best-value-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            z-index: 3;
+        }
+
+        /* Thumbnail Strip */
+        .thumbnail-strip {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            background: rgba(13, 26, 45, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thumbnail.active {
+            border-color: var(--flow-cyan);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail svg {
+            width: 20px;
+            height: 20px;
+            color: var(--flow-gray);
+        }
+
+        .thumbnail.active svg {
+            color: var(--flow-cyan);
+        }
+
+        .thumbnail-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumbnail-video-overlay svg {
+            width: 16px;
+            height: 16px;
+            color: var(--flow-white);
+        }
+
+        /* ============ PRODUCT INFO ============ */
+        .product-info {
+            padding: 20px 16px;
+        }
+
+        .product-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--flow-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .product-category svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .product-title span {
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Rating */
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .stars svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .rating-text {
+            font-size: 13px;
+            color: var(--flow-gray);
+        }
+
+        .rating-text strong {
+            color: var(--flow-white);
+        }
+
+        /* Price Section */
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .price-current {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .price-original {
+            font-size: 16px;
+            color: var(--flow-gray);
+            text-decoration: line-through;
+        }
+
+        .price-discount {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Description */
+        .product-description {
+            font-size: 14px;
+            color: var(--flow-gray);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* ============ HIGHLIGHTS ============ */
+        .highlights-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 16px 20px;
+            scrollbar-width: none;
+        }
+
+        .highlights-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .highlight-card {
+            flex-shrink: 0;
+            width: 120px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .highlight-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: var(--flow-cyan);
+        }
+
+        .highlight-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .highlight-card h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .highlight-card p {
+            font-size: 11px;
+            color: var(--flow-gray);
+        }
+
+        /* ============ SELECTORS ============ */
+        .selector-section {
+            padding: 0 16px 20px;
+        }
+
+        .selector-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .selector-label span {
+            color: var(--flow-gray);
+            font-weight: 400;
+        }
+
+        /* Flavour Options */
+        .flavour-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flavour-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--flow-white);
+            font-family: inherit;
+        }
+
+        .flavour-option.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .flavour-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .flavour-dot.original { background: linear-gradient(135deg, #00D4FF, #00B4B4); }
+        .flavour-dot.citrus { background: linear-gradient(135deg, #FFD93D, #FF9500); }
+        .flavour-dot.berry { background: linear-gradient(135deg, #FF6B9D, #C44569); }
+        .flavour-dot.tropical { background: linear-gradient(135deg, #00D9A5, #00B386); }
+
+        /* Pack Size Options */
+        .pack-options {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .pack-options::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pack-option {
+            flex-shrink: 0;
+            min-width: 100px;
+            padding: 12px 16px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            text-align: center;
+            font-family: inherit;
+            color: var(--flow-white);
+            position: relative;
+        }
+
+        .pack-option.selected {
+            border-color: var(--flow-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .pack-option.popular {
+            border-color: rgba(139, 92, 246, 0.6);
+            background: rgba(139, 92, 246, 0.08);
+        }
+
+        .pack-option.popular.selected {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .pack-badge {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .pack-badge.best-value {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .pack-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .pack-price {
+            font-size: 13px;
+            color: var(--flow-gray);
+        }
+
+        .pack-option.selected .pack-price {
+            color: var(--flow-cyan);
+        }
+
+        .pack-option.popular .pack-price {
+            color: #a855f7;
+        }
+
+        .pack-savings {
+            font-size: 11px;
+            color: #10b981;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .pack-per-unit {
+            font-size: 10px;
+            color: var(--flow-gray);
+            margin-top: 2px;
+        }
+
+        /* ============ TABS ============ */
+        .product-tabs {
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 12px;
+        }
+
+        .tabs-header {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .tabs-header::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 14px 20px;
+            background: none;
+            border: none;
+            color: var(--flow-gray);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--flow-cyan);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--flow-cyan);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 16px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ingredients Grid */
+        .ingredients-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ingredient-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .ingredient-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-cyan);
+            flex-shrink: 0;
+        }
+
+        .ingredient-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .ingredient-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .ingredient-card p {
+            font-size: 13px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* Nutrition Table */
+        .nutrition-table {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .nutrition-header {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 14px 16px;
+            font-weight: 600;
+        }
+
+        .nutrition-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .nutrition-row:last-child {
+            border-bottom: none;
+        }
+
+        .nutrition-row span:first-child {
+            color: var(--flow-gray);
+        }
+
+        .nutrition-row span:last-child {
+            font-weight: 500;
+        }
+
+        /* Reviews */
+        .reviews-summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .rating-overview {
+            text-align: center;
+        }
+
+        .rating-big {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .rating-overview .stars {
+            justify-content: center;
+            margin: 6px 0;
+        }
+
+        .rating-count {
+            font-size: 12px;
+            color: var(--flow-gray);
+        }
+
+        .rating-bars {
+            flex: 1;
+        }
+
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .rating-bar-row span:first-child {
+            width: 45px;
+            color: var(--flow-gray);
+        }
+
+        .rating-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            background: var(--flow-cyan);
+            border-radius: 3px;
+        }
+
+        .rating-bar-row span:last-child {
+            width: 25px;
+            text-align: right;
+            color: var(--flow-gray);
+        }
+
+        .review-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: var(--flow-gray);
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .review-rating svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #10B981;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        .review-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .review-content {
+            font-size: 13px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* ============ FAQ ============ */
+        .faq-section {
+            padding: 20px 16px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .faq-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .faq-item {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 14px 16px;
+            background: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flow-white);
+        }
+
+        .faq-icon {
+            color: var(--flow-cyan);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 0 16px 14px;
+            font-size: 13px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* ============ RELATED PRODUCTS ============ */
+        .related-section {
+            padding: 20px 0;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            padding: 0 16px;
+            margin-bottom: 16px;
+        }
+
+        .related-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 16px;
+            scrollbar-width: none;
+        }
+
+        .related-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .related-card {
+            flex-shrink: 0;
+            width: 160px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .related-image {
+            height: 120px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .related-image img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .related-info {
+            padding: 12px;
+        }
+
+        .related-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .related-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .related-add-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--flow-cyan);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ============ STICKY BOTTOM BAR ============ */
+        .sticky-bottom {
+            position: fixed;
+            bottom: calc(70px + var(--safe-bottom));
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 12px 16px;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sticky-price {
+            min-width: 80px;
+        }
+
+        .sticky-price .current {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .sticky-price .original {
+            font-size: 12px;
+            color: var(--flow-gray);
+            text-decoration: line-through;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 25px;
+            padding: 4px;
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--flow-white);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:active {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
+        .qty-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .add-to-cart-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 25px;
+            color: var(--flow-white);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+
+        .add-to-cart-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 8px 0;
+            padding-bottom: calc(8px + var(--safe-bottom));
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item.active {
+            color: var(--flow-cyan);
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ LOADING ============ */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--flow-dark);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top-color: var(--flow-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============ TOAST ============ */
+        .toast {
+            position: fixed;
+            bottom: calc(160px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--flow-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast svg {
+            width: 18px;
+            height: 18px;
+            color: var(--flow-cyan);
+        }
+
+        /* Error State */
+        .error-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .error-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--flow-gray);
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .error-state h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .error-state p {
+            font-size: 14px;
+            color: var(--flow-gray);
+            margin-bottom: 20px;
+        }
+
+        .error-state .browse-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 25px;
+            color: var(--flow-white);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+        </button>
+        <span class="header-title" id="headerTitle">Product</span>
+        <div class="header-actions">
+            <button class="header-btn" onclick="shareProduct()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+            </button>
+            <button class="header-btn" onclick="window.location.href='shop-mobile.html'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+                </svg>
+                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" style="display: none;">
+        <!-- Product Gallery -->
+        <section class="product-gallery">
+            <div class="gallery-main" id="galleryMain">
+                <!-- Dynamic content -->
+            </div>
+            <div class="thumbnail-strip" id="thumbnailStrip">
+                <!-- Dynamic thumbnails -->
+            </div>
+        </section>
+
+        <!-- Product Info -->
+        <section class="product-info" id="productInfo">
+            <div class="product-category" id="productCategory">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                </svg>
+                <span id="categoryText">Hydration</span>
+            </div>
+            <h1 class="product-title" id="productTitle">Loading...</h1>
+            <div class="product-rating" id="productRating">
+                <div class="stars" id="ratingStars"></div>
+                <span class="rating-text" id="ratingText"></span>
+            </div>
+            <div class="price-section" id="priceSection">
+                <span class="price-current" id="priceCurrent">₹0</span>
+                <span class="price-original" id="priceOriginal" style="display: none;"></span>
+                <span class="price-discount" id="priceDiscount" style="display: none;"></span>
+            </div>
+            <p class="product-description" id="productDescription"></p>
+        </section>
+
+        <!-- Highlights -->
+        <section class="highlights-scroll" id="highlightsScroll">
+            <!-- Dynamic highlights -->
+        </section>
+
+        <!-- Flavour Selector -->
+        <section class="selector-section" id="flavourSection" style="display: none;">
+            <div class="selector-label">Flavour <span id="selectedFlavourName"></span></div>
+            <div class="flavour-options" id="flavourOptions">
+                <!-- Dynamic flavours -->
+            </div>
+        </section>
+
+        <!-- Pack Size Selector -->
+        <section class="selector-section" id="packSection">
+            <div class="selector-label">Pack Size <span id="selectedPackName"></span></div>
+            <div class="pack-options" id="packOptions">
+                <!-- Dynamic pack sizes -->
+            </div>
+        </section>
+
+        <!-- Tabs -->
+        <section class="product-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="ingredients">Ingredients</button>
+                <button class="tab-btn" data-tab="nutrition">Nutrition</button>
+                <button class="tab-btn" data-tab="how-to-use">How to Use</button>
+                <button class="tab-btn" data-tab="reviews">Reviews</button>
+            </div>
+            <div class="tab-content active" id="ingredients">
+                <div class="ingredients-grid" id="ingredientsGrid">
+                    <!-- Dynamic ingredients -->
+                </div>
+            </div>
+            <div class="tab-content" id="nutrition">
+                <div class="nutrition-table" id="nutritionTable">
+                    <!-- Dynamic nutrition -->
+                </div>
+            </div>
+            <div class="tab-content" id="how-to-use">
+                <div class="ingredients-grid" id="howToUseGrid">
+                    <!-- Dynamic steps -->
+                </div>
+            </div>
+            <div class="tab-content" id="reviews">
+                <!-- Dynamic reviews -->
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-section">
+            <h2 class="faq-title">FAQs</h2>
+            <div id="faqContainer">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How do I use Flow sachets?</span>
+                        <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Tear open and pour into 500ml of water. Stir or shake well until fully dissolved. Enjoy chilled!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>When should I drink Flow?</span>
+                        <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Before, during, or after workouts. Also great first thing in the morning or during long work sessions.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Is Flow sugar-free?</span>
+                        <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Zero sugar, zero artificial sweeteners. Natural flavoring for a refreshing taste.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How many sachets per day?</span>
+                        <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1-3 sachets depending on activity level. Athletes may benefit from more frequent use.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Related Products -->
+        <section class="related-section">
+            <h2 class="section-title">You May Also Like</h2>
+            <div class="related-scroll" id="relatedScroll">
+                <!-- Dynamic related products -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Sticky Bottom Bar -->
+    <div class="sticky-bottom" id="stickyBottom" style="display: none;">
+        <div class="sticky-price">
+            <div class="current" id="stickyPrice">₹0</div>
+            <div class="original" id="stickyOriginal" style="display: none;"></div>
+        </div>
+        <div class="quantity-control">
+            <button class="qty-btn" onclick="updateQty(-1)">−</button>
+            <span class="qty-value" id="qtyValue">1</span>
+            <button class="qty-btn" onclick="updateQty(1)">+</button>
+        </div>
+        <button class="add-to-cart-btn" onclick="addToCart()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            </svg>
+            Add
+        </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Home
+        </a>
+        <a href="shop-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            Shop
+        </a>
+        <button class="nav-item" onclick="window.location.href='shop-mobile.html'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            </svg>
+            <span class="nav-badge" id="navCartBadge" style="display: none;">0</span>
+            Cart
+        </button>
+        <a href="profile-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Profile
+        </a>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span id="toastMessage">Added to cart!</span>
+    </div>
+
+    <script src="assets/js/customerAuth.js"></script>
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? '' : 'https://api.flowhydration.in';
+
+        // URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const productSlug = urlParams.get('product') || 'flow-original';
+        const preselectedFlavour = urlParams.get('flavour');
+        const preselectedPack = urlParams.get('pack');
+
+        // Product State
+        let product = null;
+        let allProducts = [];
+        let productMedia = [];
+        let selectedFlavour = null;
+        let selectedPackSize = null;
+        let quantity = 1;
+        let currentMediaIndex = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
+            updateCartBadge();
+            initTabs();
+        });
+
+        // Load Product
+        async function loadProduct() {
+            try {
+                // Load all products for related and flavour switching
+                const allResponse = await fetch(`${API_BASE}/api/products`);
+                const allData = await allResponse.json();
+                if (allData.success && allData.data) {
+                    allProducts = allData.data;
+                }
+
+                const response = await fetch(`${API_BASE}/api/products/${productSlug}`);
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    product = data.data;
+                    renderProduct();
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('stickyBottom').style.display = 'flex';
+                } else {
+                    showError('Product not found');
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showError('Failed to load product');
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('mainContent').innerHTML = `
+                <div class="error-state" style="margin-top: 100px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <h2>${message}</h2>
+                    <p>The product you're looking for might have been removed or is temporarily unavailable.</p>
+                    <a href="shop-mobile.html" class="browse-btn">Browse Products</a>
+                </div>
+            `;
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        // Render Product
+        function renderProduct() {
+            const isBundle = product.category === 'bundle';
+
+            // Set defaults or use URL params
+            if (isBundle) {
+                selectedFlavour = null;
+            } else {
+                selectedFlavour = product.flavours?.find(f => f.slug === preselectedFlavour) || product.flavours?.[0];
+            }
+            selectedPackSize = product.packSizes?.find(p => p.size === parseInt(preselectedPack)) || product.packSizes?.[0];
+
+            // Update header title
+            document.getElementById('headerTitle').textContent = product.name;
+            document.title = `${product.name} — Flow Hydration`;
+
+            // Update category
+            document.getElementById('categoryText').textContent = 
+                product.category.charAt(0).toUpperCase() + product.category.slice(1);
+
+            // Update title
+            document.getElementById('productTitle').innerHTML = 
+                `${product.name} <span>${selectedPackSize?.label || ''}</span>`;
+
+            // Update rating
+            renderRating();
+
+            // Update price
+            updatePriceDisplay();
+
+            // Update description
+            document.getElementById('productDescription').textContent = 
+                product.description || product.shortDescription || '';
+
+            // Render gallery
+            renderGallery();
+
+            // Render highlights
+            renderHighlights();
+
+            // Render flavour selector
+            renderFlavourSelector();
+
+            // Render pack size selector
+            renderPackSizeSelector();
+
+            // Render tabs content
+            renderIngredients();
+            renderNutrition();
+            renderHowToUse();
+            renderReviews();
+
+            // Render related products
+            renderRelatedProducts();
+        }
+
+        // Render Gallery
+        function renderGallery() {
+            const galleryMain = document.getElementById('galleryMain');
+            const thumbnailStrip = document.getElementById('thumbnailStrip');
+
+            productMedia = product.media || [];
+
+            if (productMedia.length > 0) {
+                // Show first media
+                showMedia(0);
+
+                // Render thumbnails
+                let thumbsHtml = productMedia.map((media, index) => {
+                    const isVideo = media.type === 'video';
+                    if (isVideo) {
+                        const posterUrl = media.poster || productMedia.find(m => m.type === 'image')?.url;
+                        return `
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="showMedia(${index})">
+                                ${posterUrl ? `<img src="${posterUrl}" alt="Video">` : ''}
+                                <div class="thumbnail-video-overlay">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="showMedia(${index})">
+                                <img src="${media.url}" alt="${media.alt || product.name}">
+                            </div>
+                        `;
+                    }
+                }).join('');
+
+                // Add info thumbnails
+                thumbsHtml += `
+                    <div class="thumbnail" onclick="showInfoView('nutrition')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                `;
+
+                thumbnailStrip.innerHTML = thumbsHtml;
+            } else {
+                // Default sachet visual
+                galleryMain.innerHTML = `
+                    <div style="width: 140px; height: 200px; background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%); border-radius: 14px 14px 20px 20px; box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);"></div>
+                `;
+                thumbnailStrip.innerHTML = '';
+            }
+        }
+
+        function showMedia(index) {
+            const galleryMain = document.getElementById('galleryMain');
+            const media = productMedia[index];
+
+            if (!media) return;
+
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnail').forEach((t, i) => {
+                t.classList.toggle('active', i === index);
+            });
+
+            const badge = product.badges?.length > 0 
+                ? `<span class="product-badge">${product.badges[0].text}</span>` : '';
+
+            if (media.type === 'video') {
+                galleryMain.innerHTML = `
+                    ${badge}
+                    <video src="${media.url}" autoplay loop muted playsinline></video>
+                `;
+            } else {
+                galleryMain.innerHTML = `
+                    ${badge}
+                    <img src="${media.url}" alt="${media.alt || product.name}">
+                `;
+            }
+
+            currentMediaIndex = index;
+        }
+
+        function showInfoView(view) {
+            const galleryMain = document.getElementById('galleryMain');
+            
+            // Clear active state from thumbnails
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+
+            if (view === 'nutrition') {
+                galleryMain.innerHTML = `
+                    <div style="width: 90%; max-width: 320px; padding: 16px;">
+                        <h3 style="text-align: center; font-size: 16px; margin-bottom: 12px;">Nutrition Facts</h3>
+                        <div style="background: rgba(13, 26, 45, 0.9); border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.15); overflow: hidden;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 10px 14px; font-size: 11px; background: rgba(0, 212, 255, 0.1); font-weight: 600;">
+                                <span>Nutrient</span><span style="text-align: right;">Amount</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 8px 14px; font-size: 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.05);">
+                                <span style="color: var(--flow-gray);">Energy</span><span style="text-align: right;">37 kcal</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 8px 14px; font-size: 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.05);">
+                                <span style="color: var(--flow-gray);">Sodium</span><span style="text-align: right;">430 mg</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 8px 14px; font-size: 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.05);">
+                                <span style="color: var(--flow-gray);">Potassium</span><span style="text-align: right;">150 mg</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 8px 14px; font-size: 12px;">
+                                <span style="color: var(--flow-gray);">Vitamins</span><span style="text-align: right;">A-K Complex</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Render Rating
+        function renderRating() {
+            const avgRating = product.rating?.average || 4.5;
+            const reviewCount = product.reviews?.length || 5;
+
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                const fill = i <= Math.round(avgRating) ? '#FFD700' : 'none';
+                const stroke = i <= Math.round(avgRating) ? '#FFD700' : 'var(--flow-gray)';
+                starsHtml += `<svg viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            }
+
+            document.getElementById('ratingStars').innerHTML = starsHtml;
+            document.getElementById('ratingText').innerHTML = `<strong>${avgRating.toFixed(1)}</strong> (${reviewCount} reviews)`;
+        }
+
+        // Update Price Display
+        function updatePriceDisplay() {
+            if (!selectedPackSize) return;
+
+            document.getElementById('priceCurrent').textContent = `₹${selectedPackSize.price.toLocaleString()}`;
+            document.getElementById('stickyPrice').textContent = `₹${selectedPackSize.price.toLocaleString()}`;
+
+            if (selectedPackSize.comparePrice && selectedPackSize.comparePrice > selectedPackSize.price) {
+                const discount = Math.round((selectedPackSize.comparePrice - selectedPackSize.price) / selectedPackSize.comparePrice * 100);
+                
+                document.getElementById('priceOriginal').textContent = `₹${selectedPackSize.comparePrice.toLocaleString()}`;
+                document.getElementById('priceOriginal').style.display = 'inline';
+                
+                document.getElementById('priceDiscount').textContent = `${discount}% OFF`;
+                document.getElementById('priceDiscount').style.display = 'inline';
+
+                document.getElementById('stickyOriginal').textContent = `₹${selectedPackSize.comparePrice.toLocaleString()}`;
+                document.getElementById('stickyOriginal').style.display = 'block';
+            } else {
+                document.getElementById('priceOriginal').style.display = 'none';
+                document.getElementById('priceDiscount').style.display = 'none';
+                document.getElementById('stickyOriginal').style.display = 'none';
+            }
+
+            // Update title with pack label
+            document.getElementById('productTitle').innerHTML = 
+                `${product.name} <span>${selectedPackSize.label}</span>`;
+        }
+
+        // Render Highlights
+        function renderHighlights() {
+            const highlights = [
+                { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>', title: 'Zero Sugar', desc: 'No added sugars' },
+                { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>', title: 'Instant Energy', desc: 'Quick absorption' },
+                { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', title: 'Fast Acting', desc: '15 min hydration' },
+                { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/></svg>', title: 'Clean Formula', desc: 'Natural ingredients' }
+            ];
+
+            document.getElementById('highlightsScroll').innerHTML = highlights.map(h => `
+                <div class="highlight-card">
+                    <div class="highlight-icon">${h.icon}</div>
+                    <h4>${h.title}</h4>
+                    <p>${h.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // Render Flavour Selector
+        function renderFlavourSelector() {
+            const section = document.getElementById('flavourSection');
+            const options = document.getElementById('flavourOptions');
+
+            if (!product.flavours || product.flavours.length <= 1 || product.category === 'bundle') {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            document.getElementById('selectedFlavourName').textContent = selectedFlavour?.name || '';
+
+            options.innerHTML = product.flavours.map(f => `
+                <button class="flavour-option ${selectedFlavour?.slug === f.slug ? 'selected' : ''}" onclick="selectFlavour('${f.slug}')">
+                    <span class="flavour-dot" style="background: ${f.color || 'var(--flow-cyan)'};"></span>
+                    ${f.name}
+                </button>
+            `).join('');
+        }
+
+        function selectFlavour(slug) {
+            selectedFlavour = product.flavours.find(f => f.slug === slug);
+            document.getElementById('selectedFlavourName').textContent = selectedFlavour?.name || '';
+            
+            document.querySelectorAll('.flavour-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.textContent.trim() === selectedFlavour?.name);
+            });
+        }
+
+        // Render Pack Size Selector
+        function renderPackSizeSelector() {
+            const options = document.getElementById('packOptions');
+
+            if (!product.packSizes || product.packSizes.length === 0) {
+                document.getElementById('packSection').style.display = 'none';
+                return;
+            }
+
+            // Find best value pack
+            let bestValueSize = null;
+            let highestSavings = 0;
+            product.packSizes.forEach(pack => {
+                if (pack.comparePrice && pack.price < pack.comparePrice) {
+                    const savings = Math.round((pack.comparePrice - pack.price) / pack.comparePrice * 100);
+                    if (savings > highestSavings) {
+                        highestSavings = savings;
+                        bestValueSize = pack.size;
+                    }
+                }
+            });
+
+            document.getElementById('selectedPackName').textContent = selectedPackSize?.label || '';
+
+            options.innerHTML = product.packSizes.map(pack => {
+                const isSelected = selectedPackSize?.size === pack.size;
+                const isBestValue = pack.size === bestValueSize && highestSavings >= 20;
+                const isPopular = pack.size === 15; // 15-pack is popular
+
+                let savings = '';
+                let perUnit = '';
+                if (pack.comparePrice && pack.price < pack.comparePrice) {
+                    const savingsPercent = Math.round((pack.comparePrice - pack.price) / pack.comparePrice * 100);
+                    savings = `Save ${savingsPercent}%`;
+                }
+                if (pack.size > 0) {
+                    perUnit = `₹${Math.round(pack.price / pack.size)}/sachet`;
+                }
+
+                return `
+                    <button class="pack-option ${isSelected ? 'selected' : ''} ${isPopular ? 'popular' : ''}" onclick="selectPackSize(${pack.size})">
+                        ${isBestValue ? '<span class="pack-badge best-value">Best Value</span>' : ''}
+                        ${isPopular && !isBestValue ? '<span class="pack-badge">Popular</span>' : ''}
+                        <div class="pack-name">${pack.label}</div>
+                        <div class="pack-price">₹${pack.price.toLocaleString()}</div>
+                        ${savings ? `<div class="pack-savings">${savings}</div>` : ''}
+                        ${perUnit ? `<div class="pack-per-unit">${perUnit}</div>` : ''}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectPackSize(size) {
+            selectedPackSize = product.packSizes.find(p => p.size === size);
+            updatePriceDisplay();
+            
+            document.querySelectorAll('.pack-option').forEach(opt => {
+                const packName = opt.querySelector('.pack-name').textContent;
+                opt.classList.toggle('selected', packName === selectedPackSize?.label);
+            });
+
+            document.getElementById('selectedPackName').textContent = selectedPackSize?.label || '';
+        }
+
+        // Render Ingredients
+        function renderIngredients() {
+            const grid = document.getElementById('ingredientsGrid');
+            
+            const ingredients = product.ingredients?.length > 0 ? product.ingredients : [
+                { name: 'Sodium', amount: '430mg', description: 'Essential electrolyte for hydration' },
+                { name: 'Potassium', amount: '150mg', description: 'Supports muscle function' },
+                { name: 'Magnesium', amount: '30mg', description: 'Helps reduce fatigue' },
+                { name: 'Vitamin Complex', amount: 'A-K', description: 'Complete vitamin support' }
+            ];
+
+            grid.innerHTML = ingredients.map(ing => `
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <h4>${ing.name}${ing.amount ? ` (${ing.amount})` : ''}</h4>
+                    </div>
+                    <p>${ing.description || 'Essential for optimal hydration.'}</p>
+                </div>
+            `).join('');
+        }
+
+        // Render Nutrition
+        function renderNutrition() {
+            const table = document.getElementById('nutritionTable');
+            
+            table.innerHTML = `
+                <div class="nutrition-header">Nutrition Facts (per sachet)</div>
+                <div class="nutrition-row"><span>Energy</span><span>37 kcal</span></div>
+                <div class="nutrition-row"><span>Total Carbohydrates</span><span>9g</span></div>
+                <div class="nutrition-row"><span>Sodium</span><span>430mg</span></div>
+                <div class="nutrition-row"><span>Potassium</span><span>150mg</span></div>
+                <div class="nutrition-row"><span>Calcium</span><span>4.7mg</span></div>
+                <div class="nutrition-row"><span>Magnesium</span><span>30mg</span></div>
+                <div class="nutrition-row"><span>Vitamin C</span><span>5mg</span></div>
+                <div class="nutrition-row"><span>Vitamin B Complex</span><span>Various</span></div>
+            `;
+        }
+
+        // Render How to Use
+        function renderHowToUse() {
+            const grid = document.getElementById('howToUseGrid');
+            
+            const steps = product.howToUse?.length > 0 ? product.howToUse : [
+                'Tear open the sachet',
+                'Pour into 500ml of water',
+                'Stir or shake well',
+                'Enjoy chilled for best taste'
+            ];
+
+            grid.innerHTML = steps.map((step, i) => `
+                <div class="ingredient-card">
+                    <div class="ingredient-header">
+                        <div class="ingredient-icon" style="background: rgba(0, 212, 255, 0.2);">
+                            <span style="font-weight: 800; font-size: 16px;">${i + 1}</span>
+                        </div>
+                        <h4>Step ${i + 1}</h4>
+                    </div>
+                    <p>${step}</p>
+                </div>
+            `).join('');
+        }
+
+        // Render Reviews
+        function renderReviews() {
+            const container = document.getElementById('reviews');
+            
+            const reviews = product.reviews?.length > 0 ? product.reviews : [
+                { author: 'Raj K.', rating: 5, title: 'Amazing taste!', content: 'Great for workouts. Highly recommend!', date: new Date().toISOString(), verified: true },
+                { author: 'Priya S.', rating: 5, title: 'Perfect hydration', content: 'Use it daily. No artificial taste.', date: new Date().toISOString(), verified: true },
+                { author: 'Arjun P.', rating: 4, title: 'Good quality', content: 'Body feels more hydrated. Worth it.', date: new Date().toISOString(), verified: true }
+            ];
+
+            const avgRating = product.rating?.average || 4.5;
+
+            container.innerHTML = `
+                <div class="reviews-summary">
+                    <div class="rating-overview">
+                        <div class="rating-big">${avgRating.toFixed(1)}</div>
+                        <div class="stars">${[1,2,3,4,5].map(i => `<svg viewBox="0 0 24 24" fill="${i <= Math.round(avgRating) ? '#FFD700' : 'none'}" stroke="${i <= Math.round(avgRating) ? '#FFD700' : 'var(--flow-gray)'}" stroke-width="1.5" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}</div>
+                        <div class="rating-count">${reviews.length} reviews</div>
+                    </div>
+                    <div class="rating-bars">
+                        ${[5,4,3,2,1].map(star => {
+                            const count = reviews.filter(r => r.rating === star).length;
+                            const percent = (count / reviews.length * 100) || 0;
+                            return `
+                                <div class="rating-bar-row">
+                                    <span>${star} star</span>
+                                    <div class="rating-bar"><div class="rating-bar-fill" style="width: ${percent}%"></div></div>
+                                    <span>${count}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ${reviews.slice(0, 3).map(review => `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-avatar">${review.author.charAt(0)}</div>
+                            <div class="reviewer-info">
+                                <div class="reviewer-name">${review.author}${review.verified ? '<span class="verified-badge">✓ Verified</span>' : ''}</div>
+                                <div class="review-date">${new Date(review.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                            </div>
+                            <div class="review-rating">${[1,2,3,4,5].map(i => `<svg viewBox="0 0 24 24" fill="${i <= review.rating ? '#FFD700' : 'none'}" stroke="${i <= review.rating ? '#FFD700' : 'var(--flow-gray)'}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}</div>
+                        </div>
+                        ${review.title ? `<div class="review-title">${review.title}</div>` : ''}
+                        <div class="review-content">${review.content}</div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Render Related Products
+        function renderRelatedProducts() {
+            const scroll = document.getElementById('relatedScroll');
+
+            const related = allProducts.filter(p => p.slug !== product.slug).slice(0, 4);
+
+            if (related.length === 0) {
+                document.querySelector('.related-section').style.display = 'none';
+                return;
+            }
+
+            scroll.innerHTML = related.map(p => {
+                const packSize = p.packSizes?.[0];
+                const flavour = p.flavours?.[0];
+                const image = p.media?.find(m => m.type === 'image')?.url;
+
+                return `
+                    <div class="related-card">
+                        <a href="product-mobile.html?product=${p.slug}${flavour ? `&flavour=${flavour.slug}` : ''}&pack=${packSize?.size || ''}" class="related-image">
+                            ${image ? `<img src="${image}" alt="${p.name}">` : `<div style="width: 60px; height: 80px; background: linear-gradient(135deg, #0A1628, #1a2d4a); border-radius: 8px;"></div>`}
+                        </a>
+                        <div class="related-info">
+                            <h4>${p.name}</h4>
+                            <div class="related-price">₹${packSize?.price?.toLocaleString() || '0'}</div>
+                            <button class="related-add-btn" onclick="addRelatedToCart('${p.slug}', ${packSize?.size || 0}, '${flavour?.slug || ''}')">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Tabs
+        function initTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        // Quantity
+        function updateQty(change) {
+            quantity = Math.max(1, quantity + change);
+            document.getElementById('qtyValue').textContent = quantity;
+        }
+
+        // Add to Cart
+        function addToCart() {
+            if (!selectedPackSize) {
+                showToast('Please select a pack size');
+                return;
+            }
+
+            const primaryImage = productMedia.find(m => m.isPrimary && m.type === 'image') 
+                              || productMedia.find(m => m.type === 'image');
+            const imageUrl = primaryImage ? primaryImage.url : null;
+
+            const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
+            const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
+            const uniqueId = selectedFlavour 
+                ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
+                : `${product.slug}-${selectedPackSize.size}`;
+
+            const cartItem = {
+                productId: product._id,
+                productSlug: uniqueId,
+                name: displayName,
+                flavour: selectedFlavour ? selectedFlavour.name : null,
+                quantity: quantity,
+                price: selectedPackSize.price,
+                image: imageUrl
+            };
+
+            if (typeof CustomerAuth !== 'undefined') {
+                CustomerAuth.addToCart(cartItem).then(() => {
+                    CustomerAuth.updateCartCount();
+                    updateCartBadge();
+                    showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+                });
+            } else {
+                let cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+                
+                const existingIndex = cart.findIndex(item => 
+                    item.productSlug === uniqueId && item.flavour === cartItem.flavour
+                );
+                
+                if (existingIndex >= 0) {
+                    cart[existingIndex].quantity += quantity;
+                } else {
+                    cart.push(cartItem);
+                }
+                
+                localStorage.setItem('flow_cart', JSON.stringify(cart));
+                updateCartBadge();
+                showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+            }
+        }
+
+        function addRelatedToCart(slug, packSize, flavourSlug) {
+            const targetProduct = allProducts.find(p => p.slug === slug);
+            if (!targetProduct) return;
+
+            const targetPackSize = targetProduct.packSizes?.find(p => p.size === packSize);
+            const targetFlavour = flavourSlug ? targetProduct.flavours?.find(f => f.slug === flavourSlug) : null;
+            
+            if (!targetPackSize) return;
+
+            const primaryImage = targetProduct.media?.find(m => m.isPrimary && m.type === 'image') 
+                              || targetProduct.media?.find(m => m.type === 'image');
+
+            const flavourName = targetFlavour ? targetFlavour.name : (targetProduct.category === 'bundle' ? 'Variety' : 'Original');
+            const displayName = `Flow ${flavourName} — ${targetPackSize.label}`;
+            const uniqueId = targetFlavour 
+                ? `${targetProduct.slug}-${targetFlavour.slug}-${targetPackSize.size}`
+                : `${targetProduct.slug}-${targetPackSize.size}`;
+
+            const cartItem = {
+                productId: targetProduct._id,
+                productSlug: uniqueId,
+                name: displayName,
+                flavour: targetFlavour ? targetFlavour.name : null,
+                quantity: 1,
+                price: targetPackSize.price,
+                image: primaryImage?.url || null
+            };
+
+            let cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            
+            const existingIndex = cart.findIndex(item => item.productSlug === uniqueId);
+            
+            if (existingIndex >= 0) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push(cartItem);
+            }
+            
+            localStorage.setItem('flow_cart', JSON.stringify(cart));
+            updateCartBadge();
+            showToast(`Added ${displayName} to cart!`);
+        }
+
+        // Cart Badge
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const headerBadge = document.getElementById('cartBadge');
+            const navBadge = document.getElementById('navCartBadge');
+            
+            if (total > 0) {
+                if (headerBadge) {
+                    headerBadge.textContent = total;
+                    headerBadge.style.display = 'flex';
+                }
+                if (navBadge) {
+                    navBadge.textContent = total;
+                    navBadge.style.display = 'flex';
+                }
+            } else {
+                if (headerBadge) headerBadge.style.display = 'none';
+                if (navBadge) navBadge.style.display = 'none';
+            }
+        }
+
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const faqItem = btn.closest('.faq-item');
+            const isActive = faqItem.classList.contains('active');
+            
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Navigation
+        function goBack() {
+            if (document.referrer && document.referrer.includes(window.location.origin)) {
+                history.back();
+            } else {
+                window.location.href = 'shop-mobile.html';
+            }
+        }
+
+        // Share
+        function shareProduct() {
+            const url = window.location.href;
+            const title = product?.name || 'Flow Hydration Product';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Link copied to clipboard!');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

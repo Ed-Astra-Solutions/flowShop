@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#020817">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Profile — Flow Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <script>
+        var googleMapsReady = false;
+        function initGoogleMaps() { googleMapsReady = true; }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb4ve4orTO8kVsMbJhlV6KtYswlE2LZ7s&libraries=places&callback=initGoogleMaps" async defer></script>
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            padding-bottom: calc(80px + var(--safe-bottom));
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--flow-dark);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+            padding: 16px 20px;
+            padding-top: calc(16px + var(--safe-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-white);
+        }
+
+        .header-action svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ============ PROFILE HEADER CARD ============ */
+        .profile-header {
+            margin: 16px 20px;
+            padding: 16px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--flow-dark);
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-phone {
+            font-size: 13px;
+            color: var(--flow-gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .profile-phone svg {
+            width: 12px;
+            height: 12px;
+            color: var(--flow-cyan);
+        }
+
+        .edit-profile-btn {
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            color: var(--flow-cyan);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .edit-profile-btn:active {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* ============ MENU SECTIONS ============ */
+        .menu-section {
+            padding: 20px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: var(--flow-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        .menu-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+            text-decoration: none;
+            color: var(--flow-white);
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            width: 100%;
+            font-family: inherit;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:active {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .menu-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--flow-cyan);
+        }
+
+        .menu-icon.orders { background: rgba(0, 212, 255, 0.1); }
+        .menu-icon.orders svg { color: var(--flow-cyan); }
+
+        .menu-icon.addresses { background: rgba(0, 180, 180, 0.1); }
+        .menu-icon.addresses svg { color: var(--flow-teal); }
+
+        .menu-icon.settings { background: rgba(148, 163, 184, 0.1); }
+        .menu-icon.settings svg { color: var(--flow-gray); }
+
+        .menu-icon.help { background: rgba(255, 193, 7, 0.1); }
+        .menu-icon.help svg { color: #ffc107; }
+
+        .menu-icon.logout { background: rgba(255, 107, 107, 0.1); }
+        .menu-icon.logout svg { color: #ff6b6b; }
+
+        .menu-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .menu-title {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .menu-subtitle {
+            font-size: 13px;
+            color: var(--flow-gray);
+        }
+
+        .menu-arrow {
+            color: var(--flow-gray);
+        }
+
+        .menu-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .menu-badge {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* ============ PAGE VIEWS ============ */
+        .page-view {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page-view.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .page-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--flow-dark);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+            padding: 16px 20px;
+            padding-top: calc(16px + var(--safe-top));
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-white);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* ============ ORDERS PAGE ============ */
+        .orders-container {
+            padding: 16px;
+        }
+
+        .order-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: rgba(0, 212, 255, 0.03);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .order-id {
+            font-size: 12px;
+            color: var(--flow-gray);
+            margin-bottom: 4px;
+        }
+
+        .order-date {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .order-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .order-status.delivered {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--flow-cyan);
+        }
+
+        .order-status.processing {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .order-status.shipped {
+            background: rgba(0, 180, 180, 0.15);
+            color: var(--flow-teal);
+        }
+
+        .order-status.pending {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--flow-gray);
+        }
+
+        .order-status.cancelled {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .order-items-preview {
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .order-items-preview::-webkit-scrollbar {
+            display: none;
+        }
+
+        .order-item-thumb {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .order-item-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-item-thumb.more {
+            background: rgba(0, 212, 255, 0.2);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--flow-cyan);
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-top: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .order-total {
+            font-size: 14px;
+        }
+
+        .order-total span {
+            color: var(--flow-gray);
+        }
+
+        .order-total strong {
+            color: var(--flow-white);
+            margin-left: 4px;
+        }
+
+        .order-view-btn {
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            color: var(--flow-cyan);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--flow-gray);
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--flow-gray);
+            margin-bottom: 20px;
+        }
+
+        .empty-state .shop-btn {
+            padding: 12px 28px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 25px;
+            color: var(--flow-white);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* ============ ADDRESSES PAGE ============ */
+        .addresses-container {
+            padding: 16px;
+        }
+
+        .add-address-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px dashed rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            color: var(--flow-cyan);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+
+        .add-address-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .address-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .address-card.default {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .address-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--flow-cyan);
+            margin-bottom: 10px;
+        }
+
+        .address-type-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .default-badge {
+            background: rgba(0, 180, 180, 0.15);
+            color: var(--flow-teal);
+            margin-left: 6px;
+        }
+
+        .address-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--flow-white);
+            margin-bottom: 12px;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .address-action-btn {
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--flow-gray);
+            font-size: 13px;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .address-action-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .address-action-btn.delete {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.2);
+        }
+
+        /* ============ SETTINGS PAGE ============ */
+        .settings-container {
+            padding: 16px;
+        }
+
+        .settings-group {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .settings-group-title {
+            font-size: 12px;
+            color: var(--flow-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px 16px 8px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .setting-label {
+            font-size: 15px;
+            display: block;
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: var(--flow-gray);
+            margin-top: 2px;
+        }
+
+        .setting-value {
+            font-size: 14px;
+            color: var(--flow-gray);
+        }
+
+        .edit-details-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--flow-cyan);
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .edit-details-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .edit-details-btn:active {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--flow-white);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: var(--flow-cyan);
+        }
+
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 8px 0;
+            padding-bottom: calc(8px + var(--safe-bottom));
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            position: relative;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item.active {
+            color: var(--flow-cyan);
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ MODALS ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 90vh;
+            background: var(--flow-blue);
+            border-radius: 24px 24px 0 0;
+            z-index: 201;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-sheet.open {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 12px auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px 16px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: var(--flow-white);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: calc(20px + var(--safe-bottom));
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--flow-gray);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--flow-white);
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--flow-cyan);
+        }
+
+        .form-group input::placeholder {
+            color: var(--flow-gray);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .form-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--flow-cyan);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 12px;
+            color: var(--flow-white);
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 14px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 12px;
+            color: var(--flow-white);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        /* ============ TOAST ============ */
+        .toast {
+            position: fixed;
+            bottom: calc(100px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--flow-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .toast svg {
+            width: 18px;
+            height: 18px;
+            color: var(--flow-cyan);
+        }
+
+        .toast.error svg {
+            color: #ff6b6b;
+        }
+
+        /* ============ LOADING ============ */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top-color: var(--flow-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            margin-top: 16px;
+            color: var(--flow-gray);
+            font-size: 14px;
+        }
+
+        /* Login required state */
+        .login-required {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .login-required svg {
+            width: 80px;
+            height: 80px;
+            color: var(--flow-cyan);
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        .login-required h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .login-required p {
+            font-size: 14px;
+            color: var(--flow-gray);
+            margin-bottom: 24px;
+        }
+
+        .login-btn {
+            padding: 14px 36px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 25px;
+            color: var(--flow-white);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Profile View -->
+    <div class="page-view active" id="mainView">
+        <header class="header">
+            <span class="header-title">Profile</span>
+            <button class="header-action" onclick="showSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Login Required State (hidden when logged in) -->
+        <div class="login-required" id="loginRequired" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <h2>Welcome to Flow</h2>
+            <p>Sign in to view your orders, manage addresses, and more</p>
+            <button class="login-btn" onclick="CustomerAuth.openAuthModal()">Sign In</button>
+        </div>
+
+        <!-- Profile Content (shown when logged in) -->
+        <div id="profileContent" style="display: none;">
+            <div class="profile-header">
+                <div class="avatar" id="userAvatar">?</div>
+                <div class="profile-info">
+                    <h1 class="profile-name" id="userName">Loading...</h1>
+                    <div class="profile-phone">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                        </svg>
+                        <span id="userPhone">+91 ••••••••••</span>
+                    </div>
+                </div>
+                <button class="edit-profile-btn" onclick="openEditProfile()">Edit</button>
+            </div>
+
+            <div class="menu-section">
+                <div class="section-label">Your Activity</div>
+                <div class="menu-card">
+                    <button class="menu-item" onclick="showOrders()">
+                        <div class="menu-icon orders">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 01-8 0"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title">My Orders</div>
+                            <div class="menu-subtitle">Track, return, or buy again</div>
+                        </div>
+                        <span class="menu-badge" id="orderCount" style="display: none;">0</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <button class="menu-item" onclick="showAccountDetails()">
+                        <div class="menu-icon" style="background: rgba(0, 212, 255, 0.1);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title">Account Details</div>
+                            <div class="menu-subtitle">Personal info & account status</div>
+                        </div>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <button class="menu-item" onclick="showAddresses()">
+                        <div class="menu-icon addresses">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title">Saved Addresses</div>
+                            <div class="menu-subtitle">Manage delivery addresses</div>
+                        </div>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <button class="menu-item" onclick="showPreferences()">
+                        <div class="menu-icon settings">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title">Preferences</div>
+                            <div class="menu-subtitle">Notifications & communication</div>
+                        </div>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="section-label">Support</div>
+                <div class="menu-card">
+                    <a class="menu-item" href="mailto:support@flowhydration.in">
+                        <div class="menu-icon help">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title">Help & Support</div>
+                            <div class="menu-subtitle">Get help with your orders</div>
+                        </div>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-card">
+                    <button class="menu-item" onclick="logout()">
+                        <div class="menu-icon logout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </div>
+                        <div class="menu-content">
+                            <div class="menu-title" style="color: #ff6b6b;">Log Out</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Page -->
+    <div class="page-view" id="ordersView">
+        <header class="page-header">
+            <button class="back-btn" onclick="showMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">My Orders</h1>
+        </header>
+        <div class="orders-container" id="ordersContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading orders...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Addresses Page -->
+    <div class="page-view" id="addressesView">
+        <header class="page-header">
+            <button class="back-btn" onclick="showMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Saved Addresses</h1>
+        </header>
+        <div class="addresses-container" id="addressesContainer">
+            <button class="add-address-btn" onclick="openAddressModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add New Address
+            </button>
+            <div id="addressesList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading addresses...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details Page -->
+    <div class="page-view" id="accountDetailsView">
+        <header class="page-header">
+            <button class="back-btn" onclick="showMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Account Details</h1>
+        </header>
+        <div class="settings-container">
+            <div class="settings-group">
+                <div class="settings-group-title">Personal Information</div>
+                <div class="setting-item">
+                    <span class="setting-label">Full Name</span>
+                    <span class="setting-value" id="detail-name">-</span>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Email</span>
+                    <span class="setting-value" id="detail-email">-</span>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Phone</span>
+                    <span class="setting-value" id="detail-phone">-</span>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Date of Birth</span>
+                    <span class="setting-value" id="detail-dob">-</span>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-group-title">Account Status</div>
+                <div class="setting-item">
+                    <span class="setting-label">Status</span>
+                    <span class="setting-value" style="color: var(--flow-cyan);">Active</span>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Member Since</span>
+                    <span class="setting-value" id="detail-member-since">-</span>
+                </div>
+            </div>
+
+            <button class="edit-details-btn" onclick="openEditProfile()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Personal Information
+            </button>
+        </div>
+    </div>
+
+    <!-- Preferences Page -->
+    <div class="page-view" id="preferencesView">
+        <header class="page-header">
+            <button class="back-btn" onclick="showMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Preferences</h1>
+        </header>
+        <div class="settings-container">
+            <div class="settings-group">
+                <div class="settings-group-title">Communication</div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Email Notifications</span>
+                        <span class="setting-desc">Order updates, promotions, and news</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="pref-email" checked onchange="updatePreference('emailNotifications', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">WhatsApp Notifications</span>
+                        <span class="setting-desc">Instant order updates on WhatsApp</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="pref-whatsapp" checked onchange="updatePreference('whatsappNotifications', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">SMS Notifications</span>
+                        <span class="setting-desc">Shipping and delivery updates</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="pref-sms" onchange="updatePreference('smsNotifications', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-group-title">Marketing</div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Promotional Offers</span>
+                        <span class="setting-desc">Exclusive discounts and early access</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="pref-promotional" checked onchange="updatePreference('promotionalOffers', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div class="page-view" id="settingsView">
+        <header class="page-header">
+            <button class="back-btn" onclick="showMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Settings</h1>
+        </header>
+        <div class="settings-container">
+            <div class="settings-group">
+                <div class="settings-group-title">Legal</div>
+                <a class="setting-item" href="privacy-policy.html" style="text-decoration: none; color: inherit;">
+                    <span class="setting-label">Privacy Policy</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+                <a class="setting-item" href="terms-conditions.html" style="text-decoration: none; color: inherit;">
+                    <span class="setting-label">Terms & Conditions</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+                <a class="setting-item" href="refund-policy.html" style="text-decoration: none; color: inherit;">
+                    <span class="setting-label">Refund Policy</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-group-title">About</div>
+                <div class="setting-item">
+                    <span class="setting-label">Version</span>
+                    <span class="setting-value">1.0.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Home
+        </a>
+        <a href="shop-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            Shop
+        </a>
+        <button class="nav-item" onclick="openCart()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            </svg>
+            <span class="badge" id="navCartBadge" style="display: none;">0</span>
+            Cart
+        </button>
+        <a href="profile-mobile.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Profile
+        </a>
+    </nav>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileOverlay" onclick="closeEditProfile()"></div>
+    <div class="modal-sheet" id="editProfileModal">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h3>Edit Profile</h3>
+            <button class="modal-close" onclick="closeEditProfile()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="editProfileForm" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="edit-name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="edit-email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="edit-dob">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditProfile()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div class="modal-overlay" id="addressOverlay" onclick="closeAddressModal()"></div>
+    <div class="modal-sheet" id="addressModal">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h3 id="addressModalTitle">Add Address</h3>
+            <button class="modal-close" onclick="closeAddressModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="addressForm" onsubmit="saveAddress(event)">
+                <input type="hidden" id="address-id">
+                <div class="form-group">
+                    <label>House/Flat/Building *</label>
+                    <input type="text" id="address-house" placeholder="e.g., Flat 204, Tower A" required>
+                </div>
+                <div class="form-group">
+                    <label>Street/Area *</label>
+                    <input type="text" id="address-street" placeholder="Street name, area" required>
+                </div>
+                <div class="form-group">
+                    <label>Landmark</label>
+                    <input type="text" id="address-landmark" placeholder="Near...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="address-city" placeholder="City" required>
+                    </div>
+                    <div class="form-group">
+                        <label>PIN Code *</label>
+                        <input type="text" id="address-pincode" placeholder="6 digits" pattern="[0-9]{6}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="address-state" placeholder="State" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="address-type">
+                            <option value="home">Home</option>
+                            <option value="work">Work</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="address-default">
+                        Set as default address
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddressModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span id="toastMessage">Success</span>
+    </div>
+
+    <script src="assets/js/customerAuth.js"></script>
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? '/api' : 'https://api.flowhydration.in/api';
+
+        let customerData = null;
+        let orders = [];
+        let addresses = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            updateCartBadge();
+        });
+
+        // Check Authentication
+        async function checkAuth() {
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                document.getElementById('loginRequired').style.display = 'none';
+                document.getElementById('profileContent').style.display = 'block';
+                await loadProfileData();
+            } else {
+                document.getElementById('loginRequired').style.display = 'block';
+                document.getElementById('profileContent').style.display = 'none';
+            }
+        }
+
+        // Load Profile Data
+        async function loadProfileData() {
+            try {
+                const response = await fetch(`${API_BASE}/customer/profile`, {
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    customerData = data.customer;
+                    updateProfileUI();
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Update Profile UI
+        function updateProfileUI() {
+            if (!customerData) return;
+
+            const name = customerData.name || 'User';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userPhone').textContent = customerData.phone || '+91 ••••••••••';
+        }
+
+        // Page Navigation
+        function showMain() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('mainView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'flex';
+        }
+
+        function showOrders() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('ordersView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'none';
+            loadOrders();
+        }
+
+        function showAccountDetails() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('accountDetailsView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'none';
+            updateAccountDetailsUI();
+        }
+
+        function updateAccountDetailsUI() {
+            if (!customerData) return;
+            
+            document.getElementById('detail-name').textContent = customerData.name || '-';
+            document.getElementById('detail-email').textContent = customerData.email || '-';
+            document.getElementById('detail-phone').textContent = customerData.phone || '-';
+            
+            if (customerData.dateOfBirth) {
+                const dob = new Date(customerData.dateOfBirth);
+                document.getElementById('detail-dob').textContent = dob.toLocaleDateString('en-IN', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+            } else {
+                document.getElementById('detail-dob').textContent = '-';
+            }
+            
+            if (customerData.createdAt) {
+                const memberSince = new Date(customerData.createdAt);
+                document.getElementById('detail-member-since').textContent = memberSince.toLocaleDateString('en-IN', {
+                    month: 'long', year: 'numeric'
+                });
+            }
+        }
+
+        function showAddresses() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('addressesView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'none';
+            loadAddresses();
+        }
+
+        function showPreferences() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('preferencesView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'none';
+            loadPreferences();
+        }
+
+        function showSettings() {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('settingsView').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'none';
+        }
+
+        // Load Preferences
+        async function loadPreferences() {
+            if (customerData && customerData.preferences) {
+                const prefs = customerData.preferences;
+                document.getElementById('pref-email').checked = prefs.emailNotifications !== false;
+                document.getElementById('pref-whatsapp').checked = prefs.whatsappNotifications !== false;
+                document.getElementById('pref-sms').checked = prefs.smsNotifications === true;
+                document.getElementById('pref-promotional').checked = prefs.promotionalOffers !== false;
+            }
+        }
+
+        // Load Orders
+        async function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            try {
+                const response = await fetch(`${API_BASE}/orders`, {
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success && data.orders && data.orders.length > 0) {
+                    orders = data.orders;
+                    renderOrders();
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 01-8 0"/>
+                            </svg>
+                            <h3>No orders yet</h3>
+                            <p>When you place orders, they'll appear here</p>
+                            <a href="shop-mobile.html" class="shop-btn">Start Shopping</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Failed to load orders</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            container.innerHTML = orders.map(order => {
+                const statusClass = order.status.toLowerCase().replace(/_/g, '-');
+                const maxItems = 3;
+                const extraItems = Math.max(0, order.items.length - maxItems);
+
+                return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">#${order.orderNumber || order._id.slice(-8).toUpperCase()}</div>
+                                <div class="order-date">${formatDate(order.createdAt)}</div>
+                            </div>
+                            <span class="order-status ${statusClass}">${formatStatus(order.status)}</span>
+                        </div>
+                        <div class="order-items-preview">
+                            ${order.items.slice(0, maxItems).map(item => `
+                                <div class="order-item-thumb">
+                                    ${item.image 
+                                        ? `<img src="${item.image}" alt="${item.name}">`
+                                        : `<svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="2" width="24" height="24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`
+                                    }
+                                </div>
+                            `).join('')}
+                            ${extraItems > 0 ? `<div class="order-item-thumb more">+${extraItems}</div>` : ''}
+                        </div>
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <span>Total:</span>
+                                <strong>₹${order.total.toLocaleString()}</strong>
+                            </div>
+                            <button class="order-view-btn" onclick="viewOrder('${order._id}')">View Details</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function formatStatus(status) {
+            const labels = {
+                'pending': 'Pending',
+                'confirmed': 'Confirmed',
+                'processing': 'Processing',
+                'shipped': 'Shipped',
+                'out_for_delivery': 'Out for Delivery',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled'
+            };
+            return labels[status] || status;
+        }
+
+        function viewOrder(orderId) {
+            window.location.href = `order-details.html?id=${orderId}`;
+        }
+
+        // Load Addresses
+        async function loadAddresses() {
+            const list = document.getElementById('addressesList');
+            
+            try {
+                const response = await fetch(`${API_BASE}/customer/addresses`, {
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success && data.addresses && data.addresses.length > 0) {
+                    addresses = data.addresses;
+                    renderAddresses();
+                } else {
+                    list.innerHTML = `
+                        <div class="empty-state" style="padding: 40px 0;">
+                            <p>No saved addresses</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading addresses:', error);
+                list.innerHTML = `<div class="empty-state"><p>Failed to load addresses</p></div>`;
+            }
+        }
+
+        function renderAddresses() {
+            const list = document.getElementById('addressesList');
+            
+            list.innerHTML = addresses.map(addr => {
+                const typeIcon = addr.type === 'home' 
+                    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>'
+                    : addr.type === 'work'
+                    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+                return `
+                    <div class="address-card ${addr.isDefault ? 'default' : ''}">
+                        <span class="address-type-badge">
+                            ${typeIcon}
+                            ${addr.type ? addr.type.charAt(0).toUpperCase() + addr.type.slice(1) : 'Other'}
+                        </span>
+                        ${addr.isDefault ? '<span class="address-type-badge default-badge">Default</span>' : ''}
+                        <div class="address-text">
+                            ${addr.house || ''}${addr.house ? ', ' : ''}
+                            ${addr.street || addr.formatted || ''}
+                            ${addr.landmark ? ', Near ' + addr.landmark : ''}
+                            <br>
+                            ${addr.city || ''}, ${addr.state || ''} ${addr.pincode || ''}
+                        </div>
+                        <div class="address-actions">
+                            <button class="address-action-btn" onclick="editAddress('${addr._id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit
+                            </button>
+                            <button class="address-action-btn delete" onclick="deleteAddress('${addr._id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Address Modal
+        function openAddressModal(addressId = null) {
+            document.getElementById('addressOverlay').classList.add('active');
+            document.getElementById('addressModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            if (addressId) {
+                const addr = addresses.find(a => a._id === addressId);
+                if (addr) {
+                    document.getElementById('addressModalTitle').textContent = 'Edit Address';
+                    document.getElementById('address-id').value = addr._id;
+                    document.getElementById('address-house').value = addr.house || '';
+                    document.getElementById('address-street').value = addr.street || addr.formatted || '';
+                    document.getElementById('address-landmark').value = addr.landmark || '';
+                    document.getElementById('address-city').value = addr.city || '';
+                    document.getElementById('address-pincode').value = addr.pincode || '';
+                    document.getElementById('address-state').value = addr.state || '';
+                    document.getElementById('address-type').value = addr.type || 'home';
+                    document.getElementById('address-default').checked = addr.isDefault || false;
+                }
+            } else {
+                document.getElementById('addressModalTitle').textContent = 'Add Address';
+                document.getElementById('addressForm').reset();
+                document.getElementById('address-id').value = '';
+            }
+        }
+
+        function closeAddressModal() {
+            document.getElementById('addressOverlay').classList.remove('active');
+            document.getElementById('addressModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function editAddress(addressId) {
+            openAddressModal(addressId);
+        }
+
+        async function saveAddress(e) {
+            e.preventDefault();
+            
+            const addressId = document.getElementById('address-id').value;
+            const addressData = {
+                house: document.getElementById('address-house').value,
+                street: document.getElementById('address-street').value,
+                landmark: document.getElementById('address-landmark').value,
+                city: document.getElementById('address-city').value,
+                pincode: document.getElementById('address-pincode').value,
+                state: document.getElementById('address-state').value,
+                type: document.getElementById('address-type').value,
+                isDefault: document.getElementById('address-default').checked
+            };
+
+            try {
+                const url = addressId 
+                    ? `${API_BASE}/customer/addresses/${addressId}`
+                    : `${API_BASE}/customer/addresses`;
+                
+                const response = await fetch(url, {
+                    method: addressId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify(addressData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast(addressId ? 'Address updated' : 'Address added');
+                    closeAddressModal();
+                    loadAddresses();
+                } else {
+                    showToast(data.message || 'Failed to save address', true);
+                }
+            } catch (error) {
+                console.error('Error saving address:', error);
+                showToast('Failed to save address', true);
+            }
+        }
+
+        async function deleteAddress(addressId) {
+            if (!confirm('Delete this address?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/customer/addresses/${addressId}`, {
+                    method: 'DELETE',
+                    headers: CustomerAuth.getAuthHeaders()
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Address deleted');
+                    loadAddresses();
+                } else {
+                    showToast(data.message || 'Failed to delete', true);
+                }
+            } catch (error) {
+                console.error('Error deleting address:', error);
+                showToast('Failed to delete', true);
+            }
+        }
+
+        // Edit Profile Modal
+        function openEditProfile() {
+            document.getElementById('editProfileOverlay').classList.add('active');
+            document.getElementById('editProfileModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            if (customerData) {
+                document.getElementById('edit-name').value = customerData.name || '';
+                document.getElementById('edit-email').value = customerData.email || '';
+                if (customerData.dateOfBirth) {
+                    document.getElementById('edit-dob').value = customerData.dateOfBirth.split('T')[0];
+                }
+            }
+        }
+
+        function closeEditProfile() {
+            document.getElementById('editProfileOverlay').classList.remove('active');
+            document.getElementById('editProfileModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        async function saveProfile(e) {
+            e.preventDefault();
+
+            const profileData = {
+                name: document.getElementById('edit-name').value,
+                email: document.getElementById('edit-email').value,
+                dateOfBirth: document.getElementById('edit-dob').value || null
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/customer/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Profile updated');
+                    closeEditProfile();
+                    loadProfileData();
+                } else {
+                    showToast(data.message || 'Failed to update profile', true);
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Failed to update profile', true);
+            }
+        }
+
+        // Preferences
+        async function updatePreference(key, value) {
+            try {
+                await fetch(`${API_BASE}/customer/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...CustomerAuth.getAuthHeaders()
+                    },
+                    body: JSON.stringify({ preferences: { [key]: value } })
+                });
+            } catch (error) {
+                console.error('Error updating preference:', error);
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to log out?')) {
+                CustomerAuth.logout();
+                window.location.reload();
+            }
+        }
+
+        // Cart
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('navCartBadge');
+            
+            if (total > 0) {
+                badge.textContent = total;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openCart() {
+            window.location.href = 'shop-mobile.html';
+        }
+
+        // Toast
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            
+            toastMsg.textContent = message;
+            toast.classList.toggle('error', isError);
+            toast.classList.add('show');
+            
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Listen for auth changes
+        window.addEventListener('customerLoggedIn', () => {
+            checkAuth();
+        });
+
+        window.addEventListener('customerLoggedOut', () => {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

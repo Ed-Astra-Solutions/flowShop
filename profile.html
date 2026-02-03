@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account — Flow Hydration</title>
+    <!-- Mobile redirect - must be first -->
+    <script>
+        (function() {
+            var isMobile = window.innerWidth <= 768 || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+            var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile || mobileUA) {
+                window.location.replace('profile-mobile.html');
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">

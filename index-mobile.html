@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#020817">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Flow Hydration — Clean Hydration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customerAuth.css">
+    <style>
+        :root {
+            --flow-blue: #0A1628;
+            --flow-cyan: #00D4FF;
+            --flow-teal: #00B4B4;
+            --flow-white: #FAFCFF;
+            --flow-gray: #94A3B8;
+            --flow-dark: #020817;
+            --flow-card: #0d1a2d;
+            --gradient-flow: linear-gradient(135deg, #00D4FF 0%, #00B4B4 50%, #0A1628 100%);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--flow-dark);
+            color: var(--flow-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            padding-bottom: calc(80px + var(--safe-bottom));
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(2, 8, 23, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 12px 16px;
+            padding-top: calc(12px + var(--safe-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 32px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-white);
+            position: relative;
+            text-decoration: none;
+        }
+
+        .header-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ HERO SECTION ============ */
+        .hero {
+            padding: 100px 20px 40px;
+            padding-top: calc(100px + var(--safe-top));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--flow-cyan);
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--flow-gray);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 30px;
+            color: var(--flow-white);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .hero-cta svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .hero-image {
+            margin-top: 32px;
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0, 212, 255, 0.3));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* ============ STATS BAR ============ */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 24px 16px;
+            background: rgba(0, 212, 255, 0.03);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px 8px;
+            background: rgba(13, 26, 45, 0.5);
+            border-radius: 14px;
+            border: 1px solid rgba(0, 212, 255, 0.08);
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-flow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--flow-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============ SECTION STYLES ============ */
+        .section {
+            padding: 48px 16px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .section-tag {
+            font-size: 11px;
+            color: var(--flow-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--flow-gray);
+            line-height: 1.6;
+        }
+
+        /* ============ FEATURED PRODUCTS ============ */
+        .products-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 0 16px 16px;
+            margin: 0 -16px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .products-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .product-card {
+            flex-shrink: 0;
+            width: 160px;
+            background: rgba(13, 26, 45, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-image {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 180, 180, 0.02));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--flow-cyan);
+        }
+
+        .view-all-btn {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            margin-top: 8px;
+            color: var(--flow-cyan);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        /* ============ INGREDIENTS ============ */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .ingredient-card {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .ingredient-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .ingredient-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--flow-cyan);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .ingredient-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .ingredient-desc {
+            font-size: 11px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* ============ BENEFITS ============ */
+        .benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 14px;
+        }
+
+        .benefit-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .benefit-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--flow-cyan);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .benefit-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .benefit-content p {
+            font-size: 12px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* ============ REVIEWS ============ */
+        .reviews-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 0 16px 16px;
+            margin: 0 -16px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .reviews-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .review-card {
+            flex-shrink: 0;
+            width: 280px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 12px;
+        }
+
+        .review-stars svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--flow-cyan);
+        }
+
+        .review-text {
+            font-size: 14px;
+            color: var(--flow-gray);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .review-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-flow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--flow-dark);
+        }
+
+        .review-author-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .review-verified {
+            font-size: 11px;
+            color: var(--flow-cyan);
+        }
+
+        /* ============ HOW IT WORKS ============ */
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 14px;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-flow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--flow-dark);
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 12px;
+            color: var(--flow-gray);
+            line-height: 1.5;
+        }
+
+        /* ============ FAQ ============ */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .faq-item {
+            background: rgba(13, 26, 45, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--flow-white);
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .faq-question svg {
+            width: 20px;
+            height: 20px;
+            color: var(--flow-cyan);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.open .faq-question svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 16px 16px;
+            font-size: 13px;
+            color: var(--flow-gray);
+            line-height: 1.6;
+        }
+
+        /* ============ CTA BANNER ============ */
+        .cta-banner {
+            margin: 32px 16px;
+            padding: 32px 24px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 180, 180, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .cta-banner h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .cta-banner p {
+            font-size: 13px;
+            color: var(--flow-gray);
+            margin-bottom: 20px;
+        }
+
+        .cta-banner .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--gradient-flow);
+            border: none;
+            border-radius: 25px;
+            color: var(--flow-white);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            padding: 32px 16px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .footer-logo {
+            height: 40px;
+            margin-bottom: 16px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--flow-gray);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            color: var(--flow-gray);
+            text-decoration: none;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--flow-cyan);
+        }
+
+        .footer-social svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-copyright {
+            font-size: 12px;
+            color: var(--flow-gray);
+            opacity: 0.7;
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 8px 0;
+            padding-bottom: calc(8px + var(--safe-bottom));
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            color: var(--flow-gray);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            position: relative;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item.active {
+            color: var(--flow-cyan);
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Placeholder for product image */
+        .product-placeholder {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.2), rgba(0, 180, 180, 0.1));
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .product-placeholder span {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--flow-cyan);
+        }
+
+        /* ============ HERO VIDEO/MEDIA ============ */
+        .hero-media-container {
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-media-container video,
+        .hero-media-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+            filter: drop-shadow(0 20px 40px rgba(0, 212, 255, 0.3));
+        }
+
+        .hero-media-container video {
+            background: transparent;
+        }
+
+        .hero-media-glow {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .animate-fadeInLeft {
+            animation: fadeInLeft 0.6s ease forwards;
+        }
+
+        .animate-scaleIn {
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        /* Initial hidden state for animated elements - but keep colors strong */
+        .hero-badge,
+        .hero p,
+        .hero-image {
+            opacity: 0;
+        }
+
+        /* Keep h1 and CTA visible with transform-only animation for stronger colors */
+        .hero h1,
+        .hero-cta {
+            opacity: 1;
+            transform: translateY(30px);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge { animation: fadeInUp 0.6s ease 0.1s forwards; }
+        .hero h1 { animation: slideUp 0.6s ease 0.2s forwards; }
+        .hero p { animation: fadeInUp 0.6s ease 0.3s forwards; }
+        .hero-cta { animation: slideUp 0.6s ease 0.4s forwards; }
+        .hero-image { animation: scaleIn 0.7s ease 0.5s forwards; }
+
+        /* Scroll animations */
+        .stat-item,
+        .ingredient-card,
+        .benefit-item,
+        .review-card,
+        .step-item,
+        .faq-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .stat-item.animate,
+        .ingredient-card.animate,
+        .benefit-item.animate,
+        .review-card.animate,
+        .step-item.animate,
+        .faq-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delays for grid/list items */
+        .stat-item:nth-child(1) { transition-delay: 0.05s; }
+        .stat-item:nth-child(2) { transition-delay: 0.1s; }
+        .stat-item:nth-child(3) { transition-delay: 0.15s; }
+        .stat-item:nth-child(4) { transition-delay: 0.2s; }
+
+        .ingredient-card:nth-child(1) { transition-delay: 0.05s; }
+        .ingredient-card:nth-child(2) { transition-delay: 0.1s; }
+        .ingredient-card:nth-child(3) { transition-delay: 0.15s; }
+        .ingredient-card:nth-child(4) { transition-delay: 0.2s; }
+        .ingredient-card:nth-child(5) { transition-delay: 0.25s; }
+
+        .benefit-item:nth-child(1) { transition-delay: 0.05s; }
+        .benefit-item:nth-child(2) { transition-delay: 0.15s; }
+        .benefit-item:nth-child(3) { transition-delay: 0.25s; }
+        .benefit-item:nth-child(4) { transition-delay: 0.35s; }
+
+        .step-item:nth-child(1) { transition-delay: 0.05s; }
+        .step-item:nth-child(2) { transition-delay: 0.15s; }
+        .step-item:nth-child(3) { transition-delay: 0.25s; }
+
+        .faq-item:nth-child(1) { transition-delay: 0.05s; }
+        .faq-item:nth-child(2) { transition-delay: 0.1s; }
+        .faq-item:nth-child(3) { transition-delay: 0.15s; }
+        .faq-item:nth-child(4) { transition-delay: 0.2s; }
+        .faq-item:nth-child(5) { transition-delay: 0.25s; }
+
+        /* Section headers animation */
+        .section-header {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section-header.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Product cards hover effect */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index-mobile.html">
+            <img src="logo.png" alt="Flow" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span class="logo-fallback" style="display:none; font-size:20px; font-weight:700; color:var(--flow-cyan);">FLOW</span>
+        </a>
+        <div class="header-actions">
+            <a href="shop-mobile.html" class="header-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 01-8 0"/>
+                </svg>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </a>
+            <a href="profile-mobile.html" class="header-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">Pan-India Delivery Available</div>
+        <h1 id="heroTitle">Find Your <span>Flow</span></h1>
+        <p id="heroSubtitle">Clean hydration engineered for optimal performance. Precise electrolyte formulation to fuel your day, power your workouts, and support total body function.</p>
+        <a href="shop-mobile.html" class="hero-cta" id="heroCta">
+            Buy Now
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+            </svg>
+        </a>
+        <div class="hero-image" id="heroVisual">
+            <div class="hero-glow"></div>
+            <!-- Dynamic media from CMS will be loaded here -->
+            <div id="heroFallback">
+                <img src="https://flow-product-media.s3.ap-south-1.amazonaws.com/products/flow-electrolyte-sachet.png" alt="Flow Electrolyte" onerror="this.outerHTML='<div class=\'product-placeholder\'><span>Flow</span></div>'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Key Electrolytes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">0g</div>
+            <div class="stat-label">Added Sugar</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">300+</div>
+            <div class="stat-label">Biochemical Reactions</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Clean Formula</div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section class="section">
+        <div class="section-header">
+            <div class="section-tag">Shop</div>
+            <h2 class="section-title">Best Sellers</h2>
+        </div>
+        <div class="products-scroll" id="productsScroll">
+            <!-- Products loaded dynamically -->
+        </div>
+        <a href="shop-mobile.html" class="view-all-btn">View All Products →</a>
+    </section>
+
+    <!-- Ingredients -->
+    <section class="section" style="background: rgba(0, 212, 255, 0.02);">
+        <div class="section-header">
+            <div class="section-tag">Know Your Ingredients</div>
+            <h2 class="section-title">Electrolyte Balance & Osmoregulation</h2>
+            <p class="section-subtitle">A precise blend of sodium, potassium, magnesium and calcium to keep fluid levels stable, muscles firing and nerves responsive.</p>
+        </div>
+        <div class="ingredients-grid">
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                </div>
+                <div class="ingredient-name">Sodium Chloride (NaCl)</div>
+                <div class="ingredient-desc">Primary extracellular ion for fluid balance and nerve transmission.</div>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div class="ingredient-name">Potassium Chloride (KCl)</div>
+                <div class="ingredient-desc">Supports cardiac rhythm and neuromuscular activity.</div>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="ingredient-name">Magnesium Lactate</div>
+                <div class="ingredient-desc">Cofactor in 300+ biochemical reactions. Helps prevent cramps and fatigue.</div>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"/><path d="M8 18h8M10 22h4M12 18v4"/></svg>
+                </div>
+                <div class="ingredient-name">Calcium Carbonate</div>
+                <div class="ingredient-desc">Stabilises cell membranes and aids muscle contraction.</div>
+            </div>
+            <div class="ingredient-card">
+                <div class="ingredient-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6"/><path d="M12 18h.01"/></svg>
+                </div>
+                <div class="ingredient-name">Trisodium Citrate</div>
+                <div class="ingredient-desc">Buffers lactic acid for smoother endurance performance.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="section">
+        <div class="section-header">
+            <div class="section-tag">Why Flow?</div>
+            <h2 class="section-title">Beyond Plain Water</h2>
+        </div>
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                </div>
+                <div class="benefit-content">
+                    <h4>Optimal Fluid Balance</h4>
+                    <p>Precise mineral ratios maintain cellular hydration levels for peak performance.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div class="benefit-content">
+                    <h4>Nerve & Muscle Function</h4>
+                    <p>Essential electrolytes support smooth signal transmission and muscle response.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                </div>
+                <div class="benefit-content">
+                    <h4>Enhanced Endurance</h4>
+                    <p>Lactic acid buffering keeps you going longer with reduced fatigue.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <div class="benefit-content">
+                    <h4>Clean Formula</h4>
+                    <p>No sugar, no artificial colors. Just pure, functional hydration.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="section" style="background: rgba(0, 212, 255, 0.02);">
+        <div class="section-header">
+            <div class="section-tag">Trusted by Thousands</div>
+            <h2 class="section-title">What Our Customers Say</h2>
+            <p class="section-subtitle">Real reviews from real athletes and everyday performers.</p>
+        </div>
+        <div class="reviews-scroll" id="reviewsScroll">
+            <!-- Reviews loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+        <div class="section-header">
+            <div class="section-tag">Simple & Effective</div>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Clean hydration in three easy steps.</p>
+        </div>
+        <div class="steps-list">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Open Your Sachet</h4>
+                    <p>Tear open a single-serve Flow sachet, perfectly portioned for optimal hydration.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Add to Water</h4>
+                    <p>Mix with 500ml of cold water and stir until fully dissolved.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Find Your Flow</h4>
+                    <p>Drink and feel the difference. Optimal hydration for your active lifestyle.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" style="background: rgba(0, 212, 255, 0.02);">
+        <div class="section-header">
+            <div class="section-tag">Got Questions?</div>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Everything you need to know about Flow Hydration.</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What is Flow Hydration?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Flow Hydration is a precision-engineered electrolyte drink mix designed for optimal hydration. It contains a balanced blend of sodium, potassium, magnesium, and calcium with zero added sugar.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How do I use Flow?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Simply tear open one sachet and mix it with 500ml of cold water. Stir or shake until fully dissolved, and enjoy!</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Is Flow sugar-free?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! Flow contains zero added sugar. We believe in clean hydration without unnecessary additives, making it suitable for those following low-sugar or keto diets.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How long does delivery take?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>We deliver pan-India through our logistics partner. Bangalore orders typically arrive within 1-2 business days, while other locations receive delivery within 2-4 business days.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What is your refund policy?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>We offer refunds for damaged or defective products. If you receive a damaged item, please contact us within 48 hours with photos and your order details.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="logo.png" alt="Flow" class="footer-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span class="footer-logo-fallback" style="display:none; font-size:24px; font-weight:700; color:var(--flow-cyan); margin-bottom:16px;">FLOW</span>
+        <p class="footer-text">Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
+        <div class="footer-links">
+            <a href="privacy-policy.html">Privacy</a>
+            <a href="terms-conditions.html">Terms</a>
+            <a href="refund-policy.html">Refunds</a>
+            <a href="shipping-policy.html">Shipping</a>
+            <a href="mailto:support@flowhydration.in">Contact</a>
+        </div>
+        <div class="footer-social">
+            <a href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                </svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </a>
+        </div>
+        <p class="footer-copyright">© 2026 Podium Performance LLP. All rights reserved.</p>
+    </footer>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index-mobile.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Home
+        </a>
+        <a href="shop-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            Shop
+        </a>
+        <a href="shop-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            </svg>
+            <span class="badge" id="navCartBadge" style="display: none;">0</span>
+            Cart
+        </a>
+        <a href="profile-mobile.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Profile
+        </a>
+    </nav>
+
+    <script src="assets/js/customerAuth.js"></script>
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? '' : 'https://api.flowhydration.in';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            updateCartBadge();
+            initScrollAnimations();
+            await Promise.all([
+                loadWebsiteSettings(),
+                loadProducts(),
+                loadReviews()
+            ]);
+            
+            // Sync cart if logged in
+            if (window.CustomerAuth && CustomerAuth.isLoggedIn()) {
+                await CustomerAuth.initCart();
+                updateCartBadge();
+            }
+        });
+
+        // Listen for cart updates from other pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'flow_cart') {
+                updateCartBadge();
+            }
+        });
+
+        // Update cart badge
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            document.getElementById('cartBadge').textContent = total;
+            
+            const navBadge = document.getElementById('navCartBadge');
+            if (total > 0) {
+                navBadge.textContent = total;
+                navBadge.style.display = 'flex';
+            } else {
+                navBadge.style.display = 'none';
+            }
+        }
+
+        // ============ SCROLL ANIMATIONS ============
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                        // Unobserve after animation to improve performance
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animatable elements
+            document.querySelectorAll('.stat-item, .ingredient-card, .benefit-item, .step-item, .faq-item, .section-header').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ============ WEBSITE SETTINGS (CMS) ============
+        async function loadWebsiteSettings() {
+            try {
+                const response = await fetch(`${API_BASE}/api/website-settings`);
+                
+                if (!response.ok) {
+                    console.log('Website settings not available, using defaults');
+                    return;
+                }
+                
+                const settings = await response.json();
+                
+                // Apply Hero Settings
+                if (settings.hero) {
+                    // Update hero media (video or image)
+                    if (settings.hero.mediaUrl) {
+                        updateHeroMedia(settings.hero.mediaUrl, settings.hero.mediaType);
+                    }
+                    
+                    // Update hero title
+                    if (settings.hero.title && settings.hero.title.trim()) {
+                        const heroTitle = document.getElementById('heroTitle');
+                        if (heroTitle) {
+                            const title = settings.hero.title;
+                            if (title.toLowerCase().includes('flow')) {
+                                heroTitle.innerHTML = title.replace(/flow/i, '<span>Flow</span>');
+                            } else {
+                                heroTitle.innerHTML = title;
+                            }
+                        }
+                    }
+                    
+                    // Update hero subtitle
+                    if (settings.hero.subtitle && settings.hero.subtitle.trim()) {
+                        const heroSubtitle = document.getElementById('heroSubtitle');
+                        if (heroSubtitle) {
+                            heroSubtitle.textContent = settings.hero.subtitle;
+                        }
+                    }
+                    
+                    // Update hero CTA
+                    if (settings.hero.cta && settings.hero.cta.trim()) {
+                        const heroCta = document.getElementById('heroCta');
+                        if (heroCta) {
+                            heroCta.innerHTML = `
+                                ${settings.hero.cta}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            `;
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.log('Could not load website settings:', error.message);
+            }
+        }
+
+        // Update hero media (video or image from CMS)
+        function updateHeroMedia(url, type) {
+            const heroVisual = document.getElementById('heroVisual');
+            const heroFallback = document.getElementById('heroFallback');
+            
+            if (!heroVisual) return;
+            
+            // Create media container
+            const mediaContainer = document.createElement('div');
+            mediaContainer.className = 'hero-media-container';
+            
+            // Add glow effect
+            const glow = document.createElement('div');
+            glow.className = 'hero-media-glow';
+            mediaContainer.appendChild(glow);
+            
+            if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = url;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+                
+                video.addEventListener('loadeddata', () => {
+                    // Hide fallback when video loads
+                    if (heroFallback) {
+                        heroFallback.style.display = 'none';
+                    }
+                    video.play().catch(e => console.log('Autoplay prevented:', e));
+                });
+                
+                video.addEventListener('error', () => {
+                    // If video fails, show fallback
+                    if (heroFallback) {
+                        heroFallback.style.display = 'block';
+                    }
+                    mediaContainer.remove();
+                });
+                
+                mediaContainer.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Flow Hydration';
+                
+                img.addEventListener('load', () => {
+                    // Hide fallback when image loads
+                    if (heroFallback) {
+                        heroFallback.style.display = 'none';
+                    }
+                });
+                
+                img.addEventListener('error', () => {
+                    // If image fails, show fallback
+                    if (heroFallback) {
+                        heroFallback.style.display = 'block';
+                    }
+                    mediaContainer.remove();
+                });
+                
+                mediaContainer.appendChild(img);
+            }
+            
+            heroVisual.insertBefore(mediaContainer, heroFallback);
+        }
+
+        // ============ LOAD PRODUCTS ============
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/api/products`);
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    renderProducts(data.data.slice(0, 6));
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                // Show placeholder products
+                renderPlaceholderProducts();
+            }
+        }
+
+        function renderProducts(products) {
+            const container = document.getElementById('productsScroll');
+            
+            container.innerHTML = products.map(product => {
+                const pack = product.packSizes[0];
+                const thumbnail = product.media?.find(m => m.isPrimary && m.type === 'image') || product.media?.find(m => m.type === 'image');
+                
+                return `
+                    <a href="product-mobile.html?product=${product.slug}" class="product-card">
+                        <div class="product-image">
+                            ${thumbnail 
+                                ? `<img src="${thumbnail.url}" alt="${product.name}" loading="lazy">`
+                                : `<div class="product-placeholder"><span>Flow</span></div>`
+                            }
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">₹${pack.price.toLocaleString()}</div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function renderPlaceholderProducts() {
+            const container = document.getElementById('productsScroll');
+            container.innerHTML = `
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="product-placeholder"><span>Flow</span></div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Flow Electrolyte</div>
+                        <div class="product-price">₹299</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============ LOAD REVIEWS ============
+        // Dummy reviews data (fallback)
+        const dummyReviews = [
+            { name: 'Arjun M.', rating: 5, comment: 'Game changer for my morning runs! No more cramps and I feel hydrated throughout.', verified: true, date: '2 weeks ago' },
+            { name: 'Priya S.', rating: 5, comment: 'Finally an electrolyte drink without all the sugar! I use it during my yoga sessions.', verified: true, date: '1 month ago' },
+            { name: 'Rahul K.', rating: 5, comment: 'As a marathon runner, proper hydration is crucial. Flow has become essential.', verified: true, date: '3 weeks ago' },
+            { name: 'Sneha D.', rating: 4, comment: 'Love the clean ingredient list. My whole family uses it now.', verified: true, date: '1 week ago' },
+            { name: 'Vikram T.', rating: 5, comment: 'Been using Flow for 3 months now. Recovery after gym sessions has improved significantly.', verified: true, date: '2 months ago' }
+        ];
+
+        async function loadReviews() {
+            let reviews = [];
+            
+            try {
+                // Try to fetch reviews from products endpoint
+                const response = await fetch(`${API_BASE}/api/products`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const products = data.success ? data.data : data;
+                    
+                    // Collect all reviews from products
+                    if (Array.isArray(products)) {
+                        products.forEach(product => {
+                            if (product.reviews && product.reviews.length > 0) {
+                                product.reviews.forEach(review => {
+                                    if (review.rating >= 4) {
+                                        reviews.push({
+                                            name: review.customerName || 'Customer',
+                                            rating: review.rating,
+                                            comment: review.comment || review.text,
+                                            verified: true,
+                                            date: formatReviewDate(review.createdAt)
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            } catch (error) {
+                console.log('Could not fetch reviews from server, using placeholder data');
+            }
+            
+            // Use dummy reviews if no server reviews
+            if (reviews.length < 3) {
+                reviews = dummyReviews;
+            }
+            
+            renderReviews(reviews);
+        }
+
+        function formatReviewDate(dateString) {
+            if (!dateString) return 'Recently';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+            return `${Math.floor(diffDays / 365)} years ago`;
+        }
+
+        function renderReviews(reviews) {
+            const container = document.getElementById('reviewsScroll');
+            
+            container.innerHTML = reviews.map(review => {
+                const initials = review.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                return `
+                    <div class="review-card">
+                        <div class="review-stars">
+                            ${Array(5).fill().map((_, i) => `
+                                <svg viewBox="0 0 24 24" style="fill: ${i < review.rating ? 'var(--flow-cyan)' : 'rgba(0,212,255,0.2)'}">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            `).join('')}
+                        </div>
+                        <p class="review-text">"${review.comment}"</p>
+                        <div class="review-author">
+                            <div class="review-avatar">${initials}</div>
+                            <div>
+                                <div class="review-author-name">${review.name}</div>
+                                ${review.verified ? '<div class="review-verified">✓ Verified Purchase</div>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Initialize animation for reviews after they're rendered
+            setTimeout(() => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.review-card').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                });
+            }, 100);
+        }
+
+        // ============ FAQ TOGGLE ============
+        function toggleFaq(button) {
+            const faqItem = button.parentElement;
+            const isOpen = faqItem.classList.contains('open');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('open');
+            });
+            
+            // Open clicked item if it wasn't already open
+            if (!isOpen) {
+                faqItem.classList.add('open');
+            }
+        }
+    </script>
+</body>
+</html>
