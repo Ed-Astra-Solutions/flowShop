@@ -280,7 +280,7 @@ const CustomerAuth = (function() {
                         </svg>
                     </button>
                     
-                    <p class="login-terms">By continuing, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a></p>
+                    <p class="login-terms">By continuing, you agree to our <a href="/terms-conditions/" target="_blank">Terms</a> & <a href="/privacy-policy/" target="_blank">Privacy Policy</a></p>
                 </div>
                 
                 <!-- Step 2: Enter OTP -->

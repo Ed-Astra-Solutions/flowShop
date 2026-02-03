@@ -4266,6 +4266,9 @@
         const FREE_SHIPPING_THRESHOLD = 999;
         const SHIPPING_COST = 99;
         
+        // Buy Now Session State
+        let isBuyNowSession = false;
+        
         // Discount Code State
         let appliedDiscount = null;
         let publicDiscountCodes = []; // Loaded from API
@@ -4309,13 +4312,47 @@
             updateAddToCartButtons();
         });
 
+        // Restore cart after Buy Now session is cancelled
+        function restoreCartAfterBuyNow() {
+            const backupCart = localStorage.getItem('flow_cart_backup');
+            if (backupCart && isBuyNowSession) {
+                localStorage.setItem('flow_cart', backupCart);
+                localStorage.removeItem('flow_cart_backup');
+                cart = JSON.parse(backupCart);
+                updateCartUI();
+                updateAddToCartButtons();
+                if (CustomerAuth.isLoggedIn()) {
+                    CustomerAuth.syncCartToServer();
+                }
+                isBuyNowSession = false;
+            }
+        }
+
         // Load products on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-            initializeCart();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadProducts();
+            await initializeCart();
             loadSavedDiscount();
             loadPublicDiscountCodes();
             initMobileMenu();
+            
+            // Check if redirected from Buy Now with checkout=true
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('checkout') === 'true') {
+                // Track if this is a Buy Now session
+                if (urlParams.get('buynow') === 'true') {
+                    isBuyNowSession = true;
+                }
+                // Remove the query params from URL without refresh
+                window.history.replaceState({}, '', window.location.pathname);
+                // Open checkout if user is logged in and cart has items
+                if (CustomerAuth.isLoggedIn() && cart.length > 0) {
+                    openQuickCheckout();
+                } else if (cart.length > 0) {
+                    // Show login modal first
+                    CustomerAuth.showLoginModal();
+                }
+            }
         });
 
         // Mobile Menu Functions
@@ -5132,7 +5169,26 @@
         
         // Load saved discount on init
         async function loadSavedDiscount() {
-            const saved = localStorage.getItem('flow_discount');
+            // Check both flow_discount (cart drawer) and flow_cart_discount (product page)
+            let saved = localStorage.getItem('flow_discount');
+            const savedFromProduct = localStorage.getItem('flow_cart_discount');
+            
+            // Prefer product page discount if available (for checkout redirect)
+            if (savedFromProduct && !saved) {
+                try {
+                    const productDiscount = JSON.parse(savedFromProduct);
+                    if (productDiscount && productDiscount.code) {
+                        saved = JSON.stringify({
+                            code: productDiscount.code,
+                            type: productDiscount.type === 'percent' ? 'percent' : 'fixed',
+                            value: productDiscount.value
+                        });
+                    }
+                } catch (e) {
+                    console.log('Error parsing product discount:', e);
+                }
+            }
+            
             if (saved) {
                 try {
                     const savedDiscount = JSON.parse(saved);
@@ -5153,9 +5209,9 @@
                             
                             let discountText = appliedDiscount.type === 'percent' 
                                 ? `-${appliedDiscount.value}%` 
-                                : `-₹${appliedDiscount.value}`;
+                                : `-\u20b9${appliedDiscount.value}`;
                             if (appliedDiscount.maxDiscount && appliedDiscount.type === 'percent') {
-                                discountText += ` (max ₹${appliedDiscount.maxDiscount})`;
+                                discountText += ` (max \u20b9${appliedDiscount.maxDiscount})`;
                             }
                             document.getElementById('appliedValue').textContent = discountText;
                             
@@ -5167,11 +5223,13 @@
                         } else {
                             // Code no longer valid, clear it
                             localStorage.removeItem('flow_discount');
+                            localStorage.removeItem('flow_cart_discount');
                             appliedDiscount = null;
                         }
                     }
                 } catch (e) {
                     localStorage.removeItem('flow_discount');
+                    localStorage.removeItem('flow_cart_discount');
                     appliedDiscount = null;
                 }
             }
@@ -5711,6 +5769,9 @@
             const newAddressForm = document.getElementById('qcNewAddressForm');
             if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
             if (newAddressForm) newAddressForm.style.display = 'block';
+            
+            // Restore original cart if this was a Buy Now session that was cancelled
+            restoreCartAfterBuyNow();
         }
 
         quickCheckoutClose.addEventListener('click', closeQuickCheckout);
@@ -6218,6 +6279,12 @@
                                 cart = [];
                                 CustomerAuth.saveLocalCart(cart);
                                 updateCartUI();
+                                
+                                // Clear Buy Now backup if this was a Buy Now session
+                                if (isBuyNowSession) {
+                                    localStorage.removeItem('flow_cart_backup');
+                                    isBuyNowSession = false;
+                                }
                                 
                                 // Clear pending order
                                 localStorage.removeItem('flow_pending_order');

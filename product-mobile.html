@@ -1098,6 +1098,23 @@
             height: 18px;
         }
 
+        .buy-now-btn {
+            padding: 14px 16px;
+            background: transparent;
+            border: 2px solid var(--flow-cyan);
+            border-radius: 25px;
+            color: var(--flow-cyan);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .buy-now-btn:active {
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+        }
+
         /* ============ BOTTOM NAV ============ */
         .bottom-nav {
             position: fixed;
@@ -1444,6 +1461,7 @@
             </svg>
             Add
         </button>
+        <button class="buy-now-btn" onclick="buyNow()">Buy Now</button>
     </div>
 
     <!-- Bottom Navigation -->
@@ -2104,6 +2122,64 @@
                 localStorage.setItem('flow_cart', JSON.stringify(cart));
                 updateCartBadge();
                 showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+            }
+        }
+
+        // Buy Now - purchase only this item directly
+        function buyNow() {
+            if (!selectedPackSize) {
+                showToast('Please select a pack size');
+                return;
+            }
+            
+            // Check if user is logged in first
+            if (typeof CustomerAuth !== 'undefined' && !CustomerAuth.isLoggedIn()) {
+                CustomerAuth.showLoginModal();
+                return;
+            }
+            
+            // Get the primary image or first image from product media
+            const primaryImage = productMedia.find(m => m.isPrimary && m.type === 'image') 
+                              || productMedia.find(m => m.type === 'image');
+            const imageUrl = primaryImage ? primaryImage.url : null;
+            
+            // Build display name
+            const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
+            const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
+            const uniqueId = selectedFlavour 
+                ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
+                : `${product.slug}-${selectedPackSize.size}`;
+            
+            // Create cart item for ONLY this product
+            const buyNowItem = {
+                productId: product._id,
+                productSlug: uniqueId,
+                name: displayName,
+                flavour: selectedFlavour ? selectedFlavour.name : null,
+                quantity: quantity,
+                price: selectedPackSize.price,
+                image: imageUrl
+            };
+            
+            // Save current cart to restore later if user cancels
+            const existingCart = localStorage.getItem('flow_cart');
+            if (existingCart) {
+                localStorage.setItem('flow_cart_backup', existingCart);
+            }
+            
+            // Set cart to ONLY this item (for Buy Now)
+            const buyNowCart = [buyNowItem];
+            localStorage.setItem('flow_cart', JSON.stringify(buyNowCart));
+            
+            // Sync to server if logged in
+            if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                CustomerAuth.syncCartToServer(buyNowCart).then(() => {
+                    window.location.href = '/shop/?checkout=true&buynow=true';
+                }).catch(() => {
+                    window.location.href = '/shop/?checkout=true&buynow=true';
+                });
+            } else {
+                window.location.href = '/shop/?checkout=true&buynow=true';
             }
         }
 

@@ -1449,6 +1449,18 @@
             flex: 1;
         }
 
+        .discount-row input.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
         .apply-discount-btn {
             padding: 0 20px;
             background: rgba(0, 212, 255, 0.1);
@@ -2088,11 +2100,63 @@
         const FREE_SHIPPING = 999;
         const SHIPPING_COST = 99;
 
+        // Track if this is a Buy Now session (single item checkout)
+        let isBuyNowSession = false;
+
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             await loadProducts();
             await initializeCart();
+            
+            // Setup discount code input - clear error on input
+            const discountInput = document.getElementById('coDiscountCode');
+            if (discountInput) {
+                discountInput.addEventListener('input', () => {
+                    discountInput.classList.remove('error');
+                });
+            }
+            
+            // Check if redirected from Buy Now with checkout=true
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('checkout') === 'true') {
+                // Check if this is a Buy Now session
+                isBuyNowSession = urlParams.get('buynow') === 'true';
+                
+                // Remove the query params from URL without refresh
+                window.history.replaceState({}, '', window.location.pathname);
+                
+                // Open checkout if user is logged in and cart has items
+                if (CustomerAuth.isLoggedIn() && cart.length > 0) {
+                    openCheckout();
+                } else if (cart.length > 0) {
+                    // Show login modal, then open checkout after login
+                    CustomerAuth.showLoginModal(() => {
+                        if (cart.length > 0) {
+                            openCheckout();
+                        }
+                    });
+                }
+            }
         });
+
+        // Restore cart after Buy Now session ends (cancelled or completed)
+        function restoreCartAfterBuyNow() {
+            if (isBuyNowSession) {
+                const backupCart = localStorage.getItem('flow_cart_backup');
+                if (backupCart) {
+                    localStorage.setItem('flow_cart', backupCart);
+                    localStorage.removeItem('flow_cart_backup');
+                    cart = JSON.parse(backupCart);
+                    updateCartUI();
+                    
+                    // Sync restored cart to server
+                    if (typeof CustomerAuth !== 'undefined' && CustomerAuth.isLoggedIn()) {
+                        CustomerAuth.syncCartToServer(cart).catch(err => console.log('Cart restore sync failed:', err));
+                    }
+                }
+                isBuyNowSession = false;
+            }
+        }
 
         // Load Products
         async function loadProducts() {
@@ -2574,6 +2638,30 @@
         let coDiscount = 0;
         let coDiscountCode = null;
 
+        // Load saved discount from product page cart
+        function loadSavedCartDiscount() {
+            const saved = localStorage.getItem('flow_cart_discount');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.code && typeof data.discount === 'number') {
+                        coDiscount = data.discount;
+                        coDiscountCode = data.code;
+                        
+                        const discountInput = document.getElementById('coDiscountCode');
+                        const discountRow = document.getElementById('coDiscountRow');
+                        const discountAmount = document.getElementById('coDiscountAmount');
+                        
+                        if (discountInput) discountInput.value = data.code;
+                        if (discountRow) discountRow.style.display = 'flex';
+                        if (discountAmount) discountAmount.textContent = '-₹' + coDiscount.toLocaleString();
+                    }
+                } catch (e) {
+                    console.log('Error loading saved discount:', e);
+                }
+            }
+        }
+
         function openCheckout() {
             closeCart();
             document.getElementById('checkoutOverlay').classList.add('active');
@@ -2582,6 +2670,10 @@
             // Reset to step 1
             coCurrentStep = 1;
             updateCheckoutStep();
+            
+            // Load saved discount from product page
+            loadSavedCartDiscount();
+            
             updateCheckoutSummary();
             
             // Pre-fill customer data
@@ -2591,6 +2683,9 @@
         function closeCheckout() {
             document.getElementById('checkoutOverlay').classList.remove('active');
             document.body.style.overflow = '';
+            
+            // Restore cart if this was a Buy Now session
+            restoreCartAfterBuyNow();
         }
 
         function handleCheckoutBack() {
@@ -2986,13 +3081,14 @@
         }
 
         async function applyDiscount() {
-            const code = document.getElementById('coDiscountCode').value.trim();
+            const code = document.getElementById('coDiscountCode').value.trim().toUpperCase();
             if (!code) {
                 showToast('Please enter a discount code');
                 return;
             }
             
             try {
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const response = await fetch(`${API_BASE}/api/discount-codes/validate`, {
                     method: 'POST',
                     headers: {
@@ -3001,24 +3097,39 @@
                     },
                     body: JSON.stringify({ 
                         code, 
-                        cartTotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                        orderTotal: subtotal
                     })
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    coDiscount = data.discount;
+                    // Handle API response - could be data.code.discountAmount or data.discount
+                    const discountInfo = data.code || data;
+                    coDiscount = Math.round(discountInfo.discountAmount || data.discount || 0);
                     coDiscountCode = code;
+                    
                     document.getElementById('coDiscountRow').style.display = 'flex';
                     document.getElementById('coDiscountAmount').textContent = '-₹' + coDiscount.toLocaleString();
+                    document.getElementById('coDiscountCode').classList.remove('error');
+                    
+                    // Save to localStorage for persistence
+                    localStorage.setItem('flow_cart_discount', JSON.stringify({
+                        code: coDiscountCode,
+                        discount: coDiscount,
+                        type: discountInfo.type || 'fixed',
+                        value: discountInfo.value || coDiscount
+                    }));
+                    
                     showToast('Discount applied!');
                     updateCheckoutSummary();
                 } else {
+                    document.getElementById('coDiscountCode').classList.add('error');
                     showToast(data.message || 'Invalid code');
                 }
             } catch (error) {
                 console.error('Discount error:', error);
+                document.getElementById('coDiscountCode').classList.add('error');
                 showToast('Failed to apply discount');
             }
         }
@@ -3163,6 +3274,11 @@
 
         function closeCheckoutSuccess() {
             document.getElementById('checkoutSuccess').classList.remove('show');
+            
+            // Clear the Buy Now backup since order was successful
+            localStorage.removeItem('flow_cart_backup');
+            isBuyNowSession = false;
+            
             closeCheckout();
             
             // Reset checkout state
