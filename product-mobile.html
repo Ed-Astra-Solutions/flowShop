@@ -7,6 +7,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Product — Flow Hydration</title>
+    <!-- Desktop redirect - redirect to desktop version on larger screens -->
+    <script>
+        (function() {
+            var isDesktop = window.innerWidth > 768 && 
+                           !('ontouchstart' in window) && 
+                           (navigator.maxTouchPoints === 0);
+            var desktopUA = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isDesktop && desktopUA) {
+                var params = window.location.search;
+                window.location.replace('/product/' + params);
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1434,14 +1448,14 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
+        <a href="/" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                 <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             Home
         </a>
-        <a href="shop-mobile.html" class="nav-item">
+        <a href="/shop/" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
@@ -1457,7 +1471,7 @@
             <span class="nav-badge" id="navCartBadge" style="display: none;">0</span>
             Cart
         </button>
-        <a href="profile-mobile.html" class="nav-item">
+        <a href="/profile/" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -1539,7 +1553,7 @@
                     </svg>
                     <h2>${message}</h2>
                     <p>The product you're looking for might have been removed or is temporarily unavailable.</p>
-                    <a href="shop-mobile.html" class="browse-btn">Browse Products</a>
+                    <a href="/shop/" class="browse-btn">Browse Products</a>
                 </div>
             `;
             document.getElementById('mainContent').style.display = 'block';

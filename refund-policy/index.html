@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy — Flow Hydration</title>
+    <title>Refund Policy — Flow Hydration</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +15,8 @@
             --flow-white: #FAFCFF;
             --flow-gray: #94A3B8;
             --flow-dark: #020817;
+            --flow-green: #22C55E;
+            --flow-red: #EF4444;
         }
 
         * {
@@ -118,6 +120,12 @@
             font-size: 0.95rem;
         }
 
+        .intro-text {
+            color: var(--flow-gray);
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
         .policy-section {
             margin-bottom: 2.5rem;
         }
@@ -128,6 +136,34 @@
             font-weight: 600;
             color: var(--flow-cyan);
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .policy-section h2.eligible::before {
+            content: '✅';
+        }
+
+        .policy-section h2.ineligible::before {
+            content: '❌';
+        }
+
+        .policy-section h2.how-to::before {
+            content: '🛠️';
+        }
+
+        .policy-section h2.note::before {
+            content: '📌';
+        }
+
+        .policy-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--flow-white);
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
         }
 
         .policy-section p {
@@ -170,6 +206,37 @@
 
         .email-link:hover {
             text-decoration: underline;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-box p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .eligible-box {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ineligible-box {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
         }
 
         /* Footer */
@@ -357,7 +424,7 @@
 <body>
     <nav>
         <a href="/" class="logo">
-            <img src="logo.png" alt="Flow" class="logo-img">
+            <img src="../logo.png" alt="Flow" class="logo-img">
         </a>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
@@ -375,60 +442,74 @@
 
     <div class="policy-container">
         <div class="policy-header">
-            <h1>Privacy Policy</h1>
+            <h1>Refund Policy</h1>
             <p>Last updated: January 2026</p>
         </div>
 
+        <p class="intro-text">We strive to ensure a high-quality experience for every customer. Due to the perishable and consumable nature of our products, we do not accept returns or cancellations under normal circumstances. Refunds or returns are processed only under specific conditions outlined below.</p>
+
         <div class="policy-section">
-            <h2>1. Information We Collect</h2>
-            <p>We collect the following types of information:</p>
+            <h2 class="eligible">Eligible Cases for Refund or Return</h2>
+            
+            <div class="eligible-box">
+                <h3>1. Defective or Damaged Product Delivery</h3>
+                <p>You are eligible for a refund or replacement only if:</p>
+                <ul>
+                    <li>The product delivered is physically damaged, defective, leaking, or spoiled at the time of delivery.</li>
+                    <li>Clear photographic proof is submitted to our customer support team within 24 hours of delivery.</li>
+                </ul>
+                <p>Upon verification, we will offer:</p>
+                <ul>
+                    <li>A full refund to the original payment method, or</li>
+                    <li>A replacement of the same product at no extra cost.</li>
+                </ul>
+
+                <h3>2. Technical or Payment Errors</h3>
+                <p>If you are charged for a payment and:</p>
+                <ul>
+                    <li>The order is not confirmed or not reflected in your order history, or</li>
+                    <li>A technical error (e.g., payment gateway glitch, duplicate charge) occurs,</li>
+                </ul>
+                <p>You may request a refund within 48 hours of the transaction by contacting our support team with:</p>
+                <ul>
+                    <li>Transaction ID / UTR</li>
+                    <li>Screenshot of the deduction</li>
+                    <li>Email ID / Phone number used for the transaction</li>
+                </ul>
+                <p>Upon internal verification with our payment partners, valid claims will be refunded within 7–10 working days.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2 class="ineligible">Ineligible Scenarios</h2>
+            <div class="ineligible-box">
+                <p>Refunds/returns are <span class="highlight">not applicable</span> in the following cases:</p>
+                <ul>
+                    <li>If you change your mind after ordering.</li>
+                    <li>If you provide an incorrect delivery address.</li>
+                    <li>If the product taste, texture, or colour does not meet personal expectations.</li>
+                    <li>If a claim is made after the stipulated timelines (24 hours for product issues, 48 hours for payment issues).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2 class="how-to">How to Raise a Refund Request</h2>
+            <p>Please email us at <a href="mailto:support@flowhydration.in" class="email-link">support@flowhydration.in</a> with:</p>
             <ul>
-                <li><span class="highlight">Personal Details:</span> Name, phone number, email, address, and payment details.</li>
-                <li><span class="highlight">Technical Data:</span> IP address, browser type, device information, and cookies.</li>
-                <li><span class="highlight">Order Data:</span> Purchase history, delivery instructions, and feedback.</li>
+                <li>Your order number</li>
+                <li>Date of purchase</li>
+                <li>Issue description</li>
+                <li>Supporting photographs/screenshots (if applicable)</li>
             </ul>
         </div>
 
         <div class="policy-section">
-            <h2>2. How We Use Your Information</h2>
-            <ul>
-                <li>To process and deliver your order.</li>
-                <li>To provide customer support and updates.</li>
-                <li>For internal business analytics and improvements.</li>
-                <li>To comply with legal obligations.</li>
-            </ul>
-        </div>
-
-        <div class="policy-section">
-            <h2>3. Sharing of Data</h2>
-            <p>We do not sell your data. It may be shared with:</p>
-            <ul>
-                <li>Delivery partners.</li>
-                <li>Payment processors.</li>
-                <li>Customer support platforms.</li>
-                <li>Authorities if legally required.</li>
-            </ul>
-        </div>
-
-        <div class="policy-section">
-            <h2>4. Cookies</h2>
-            <p>We use cookies to improve your browsing experience. You can adjust cookie preferences in your browser settings. For more details, please see our <a href="/cookie-policy/" class="email-link">Cookie Policy</a>.</p>
-        </div>
-
-        <div class="policy-section">
-            <h2>5. Data Security</h2>
-            <p>We use encryption and security protocols, but no system is completely secure. Please exercise caution when sharing personal information online.</p>
-        </div>
-
-        <div class="policy-section">
-            <h2>6. Your Rights</h2>
-            <p>You may request:</p>
-            <ul>
-                <li>Access to your data.</li>
-                <li>Correction or deletion of your data.</li>
-                <li>Withdrawal of consent for marketing communication.</li>
-            </ul>
-            <p>Email us at <a href="mailto:support@flowhydration.in" class="email-link">support@flowhydration.in</a> for such requests.</p>
+            <h2 class="note">Additional Notes</h2>
+            <div class="info-box">
+                <p>• Refunds will only be issued to the original payment method.</p>
+                <p>• We reserve the right to approve or reject refund claims at our sole discretion based on evidence and internal investigation.</p>
+            </div>
         </div>
     </div>
 
@@ -437,7 +518,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="/" class="logo">
-                    <img src="logo.png" alt="Flow" class="logo-img">
+                    <img src="../logo.png" alt="Flow" class="logo-img">
                 </a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>

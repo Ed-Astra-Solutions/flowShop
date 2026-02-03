@@ -7,6 +7,19 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Profile — Flow Hydration</title>
+    <!-- Desktop redirect - redirect to desktop version on larger screens -->
+    <script>
+        (function() {
+            var isDesktop = window.innerWidth > 768 && 
+                           !('ontouchstart' in window) && 
+                           (navigator.maxTouchPoints === 0);
+            var desktopUA = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isDesktop && desktopUA) {
+                window.location.replace('/profile/');
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1367,19 +1380,19 @@
         <div class="settings-container">
             <div class="settings-group">
                 <div class="settings-group-title">Legal</div>
-                <a class="setting-item" href="privacy-policy.html" style="text-decoration: none; color: inherit;">
+                <a class="setting-item" href="/privacy-policy/" style="text-decoration: none; color: inherit;">
                     <span class="setting-label">Privacy Policy</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </a>
-                <a class="setting-item" href="terms-conditions.html" style="text-decoration: none; color: inherit;">
+                <a class="setting-item" href="/terms-conditions/" style="text-decoration: none; color: inherit;">
                     <span class="setting-label">Terms & Conditions</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </a>
-                <a class="setting-item" href="refund-policy.html" style="text-decoration: none; color: inherit;">
+                <a class="setting-item" href="/refund-policy/" style="text-decoration: none; color: inherit;">
                     <span class="setting-label">Refund Policy</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--flow-gray)" stroke-width="2" width="20" height="20">
                         <polyline points="9 18 15 12 9 6"/>
@@ -1399,14 +1412,14 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" id="bottomNav">
-        <a href="index.html" class="nav-item">
+        <a href="/" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                 <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             Home
         </a>
-        <a href="shop-mobile.html" class="nav-item">
+        <a href="/shop/" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
@@ -1422,7 +1435,7 @@
             <span class="badge" id="navCartBadge" style="display: none;">0</span>
             Cart
         </button>
-        <a href="profile-mobile.html" class="nav-item active">
+        <a href="/profile/" class="nav-item active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -1687,7 +1700,7 @@
                             </svg>
                             <h3>No orders yet</h3>
                             <p>When you place orders, they'll appear here</p>
-                            <a href="shop-mobile.html" class="shop-btn">Start Shopping</a>
+                            <a href="/shop/" class="shop-btn">Start Shopping</a>
                         </div>
                     `;
                 }

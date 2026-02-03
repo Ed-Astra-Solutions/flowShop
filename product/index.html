@@ -14,7 +14,7 @@
             
             if ((isMobile || mobileUA) && !window.location.hash) {
                 var params = window.location.search;
-                window.location.replace('product-mobile.html' + params);
+                window.location.replace('../product-mobile.html' + params);
             }
         })();
     </script>
@@ -2039,7 +2039,7 @@
     <!-- Navigation -->
     <nav>
         <a href="/" class="logo">
-            <img src="logo.png" alt="Flow" class="logo-img">
+            <img src="../logo.png" alt="Flow" class="logo-img">
         </a>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
@@ -2596,7 +2596,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="/" class="logo">
-                    <img src="logo.png" alt="Flow" class="logo-img">
+                    <img src="../logo.png" alt="Flow" class="logo-img">
                 </a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>
@@ -2677,7 +2677,7 @@
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
     <!-- API Configuration -->
-    <script src="assets/js/config.js"></script>
+    <script src="../assets/js/config.js"></script>
     <script>
         // Get product slug from URL params
         const urlParams = new URLSearchParams(window.location.search);
