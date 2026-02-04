@@ -11,10 +11,7 @@
             
             function getMobileUrl() {
                 var params = window.location.search;
-                // Get the base path and replace product.html with product-mobile.html
-                var path = window.location.pathname;
-                var basePath = path.substring(0, path.lastIndexOf('/') + 1);
-                return basePath + 'product-mobile.html' + params;
+                return '/product-mobile.html' + params;
             }
             
             function checkMobile() {
@@ -2738,7 +2735,7 @@
     <!-- Navigation -->
     <nav>
         <a href="/" class="logo">
-            <img src="logo.png" alt="Flow" class="logo-img">
+            <img src="/logo.png" alt="Flow" class="logo-img">
         </a>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
@@ -3402,7 +3399,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="/" class="logo">
-                    <img src="logo.png" alt="Flow" class="logo-img">
+                    <img src="/logo.png" alt="Flow" class="logo-img">
                 </a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>
@@ -3573,7 +3570,7 @@
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
     <!-- API Configuration -->
-    <script src="assets/js/config.js"></script>
+    <script src="/assets/js/config.js"></script>
     <script>
         // Get product slug from URL params
         const urlParams = new URLSearchParams(window.location.search);
