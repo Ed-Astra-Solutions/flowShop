@@ -770,11 +770,11 @@ const CustomerAuth = (function() {
         
         if (isLoggedIn()) {
             // Redirect to profile page
-            window.location.href = 'profile.html';
+            window.location.href = '/profile/';
         } else {
             // Show login modal
             showModal(callback || (() => {
-                window.location.href = 'profile.html';
+                window.location.href = '/profile/';
             }));
         }
     }
