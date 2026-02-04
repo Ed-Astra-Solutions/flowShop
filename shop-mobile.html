@@ -726,6 +726,34 @@
             transform: scale(0.98);
         }
 
+        .continue-shopping-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--flow-cyan);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .continue-shopping-btn:active {
+            background: rgba(0, 212, 255, 0.1);
+            transform: scale(0.98);
+        }
+
+        .continue-shopping-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* ============ BOTTOM NAV ============ */
         .bottom-nav {
             position: fixed;
@@ -842,6 +870,108 @@
             width: 18px;
             height: 18px;
             color: var(--flow-cyan);
+        }
+
+        /* ============ CART TOAST ============ */
+        .cart-toast {
+            position: fixed;
+            top: calc(70px + env(safe-area-inset-top, 0px));
+            left: 12px;
+            right: 12px;
+            background: var(--flow-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 8px 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 350;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .cart-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cart-toast-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 180, 180, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .cart-toast-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-toast-image .sachet-fallback {
+            width: 28px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            font-weight: bold;
+            color: var(--flow-dark);
+        }
+
+        .cart-toast-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flow-white);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-toast-message {
+            font-size: 12px;
+            color: var(--flow-cyan);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-toast-message svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .cart-toast-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--flow-gray);
+            padding: 6px;
+            border-radius: 50%;
+            line-height: 0;
+            transition: all 0.2s;
+        }
+
+        .cart-toast-close:active {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--flow-white);
         }
 
         /* ============ SORT MODAL ============ */
@@ -1765,6 +1895,13 @@
                     <polyline points="12 5 19 12 12 19"/>
                 </svg>
             </button>
+            <button class="continue-shopping-btn" onclick="closeCart()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Continue Shopping
+            </button>
         </div>
     </div>
 
@@ -2088,6 +2225,28 @@
         <span id="toastMessage">Added to cart</span>
     </div>
 
+    <!-- Cart Toast with Product Image -->
+    <div class="cart-toast" id="cartToast">
+        <div class="cart-toast-image" id="cartToastImage">
+            <div class="sachet-fallback">Flow</div>
+        </div>
+        <div class="cart-toast-content">
+            <div class="cart-toast-title" id="cartToastTitle">Product Name</div>
+            <div class="cart-toast-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span id="cartToastText">Added to cart!</span>
+            </div>
+        </div>
+        <button class="cart-toast-close" onclick="hideCartToast()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
     <!-- API Configuration -->
     <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
@@ -2116,8 +2275,18 @@
                 });
             }
             
-            // Check if redirected from Buy Now with checkout=true
+            // Check URL params
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // Check if redirected with cart=true to open cart
+            if (urlParams.get('cart') === 'true') {
+                // Remove the query param from URL without refresh
+                window.history.replaceState({}, '', window.location.pathname);
+                // Open cart drawer
+                setTimeout(() => openCart(), 100);
+            }
+            
+            // Check if redirected from Buy Now with checkout=true
             if (urlParams.get('checkout') === 'true') {
                 // Check if this is a Buy Now session
                 isBuyNowSession = urlParams.get('buynow') === 'true';
@@ -2427,10 +2596,16 @@
             // Save to localStorage first (this won't fail)
             localStorage.setItem('flow_cart', JSON.stringify(cart));
             
+            // Get the updated quantity for the toast
+            const cartItem = cart.find(item => item.productId === id || item.productSlug === id);
+            const qty = cartItem ? cartItem.quantity : 1;
+            
             // Update UI immediately
             updateCartUI();
             renderProducts();
-            showToast('Added to cart');
+            
+            // Show cart toast with product image
+            showCartToast(name, qty, decodedImage);
             
             // Open the cart drawer
             openCart();
@@ -3294,6 +3469,51 @@
             document.getElementById('toastMessage').textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Cart Toast with product image
+        let cartToastTimeout = null;
+
+        function showCartToast(productName, quantity, image = null) {
+            // Clear any existing timeout
+            if (cartToastTimeout) {
+                clearTimeout(cartToastTimeout);
+            }
+            
+            const cartToast = document.getElementById('cartToast');
+            const cartToastImage = document.getElementById('cartToastImage');
+            const cartToastTitle = document.getElementById('cartToastTitle');
+            const cartToastText = document.getElementById('cartToastText');
+            
+            // Update toast content
+            cartToastTitle.textContent = productName;
+            cartToastText.textContent = quantity > 1 ? `Qty: ${quantity} in cart` : 'Added to cart!';
+            
+            // Update image
+            if (image) {
+                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}">`;
+            } else {
+                cartToastImage.innerHTML = '<div class="sachet-fallback">Flow</div>';
+            }
+            
+            // Show toast
+            cartToast.classList.add('show');
+            
+            // Auto-hide after 2.5 seconds
+            cartToastTimeout = setTimeout(() => {
+                hideCartToast();
+            }, 2500);
+        }
+
+        function hideCartToast() {
+            const cartToast = document.getElementById('cartToast');
+            if (cartToast) {
+                cartToast.classList.remove('show');
+            }
+            if (cartToastTimeout) {
+                clearTimeout(cartToastTimeout);
+                cartToastTimeout = null;
+            }
         }
 
         // Listen for cart updates

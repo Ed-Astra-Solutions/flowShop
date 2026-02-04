@@ -1059,10 +1059,13 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 0.5rem;
+            flex-wrap: nowrap;
+            align-items: center;
         }
 
         .discount-input-wrapper {
             flex: 1;
+            min-width: 0;
             position: relative;
             display: flex;
             align-items: center;
@@ -1112,6 +1115,8 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Outfit', sans-serif;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .discount-apply-btn:hover {
@@ -1399,7 +1404,7 @@
         .cart-toast {
             position: fixed;
             top: 75px;
-            right: 20px;
+            left: 20px;
             background: var(--flow-card);
             border: 1px solid rgba(0, 212, 255, 0.3);
             padding: 12px 16px;
@@ -1409,7 +1414,7 @@
             gap: 12px;
             z-index: 2000;
             opacity: 0;
-            transform: translateX(100%);
+            transform: translateX(-100%);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             max-width: 320px;
@@ -1640,6 +1645,7 @@
             gap: 2rem;
             padding: 1.5rem 2rem;
             border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            position: relative;
         }
 
         .qc-step {
@@ -1649,6 +1655,27 @@
             gap: 0.5rem;
             opacity: 0.4;
             transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Connecting line between steps */
+        .qc-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: calc(50% + 10px);
+            width: calc(2rem + 100% - 20px);
+            height: 2px;
+            background: rgba(0, 212, 255, 0.2);
+            z-index: 0;
+        }
+
+        .qc-step.completed:not(:last-child)::after {
+            background: #10B981;
+        }
+
+        .qc-step.active:not(:last-child)::after {
+            background: linear-gradient(90deg, var(--flow-cyan) 0%, rgba(0, 212, 255, 0.2) 100%);
         }
 
         .qc-step.active {
@@ -1665,6 +1692,8 @@
             border-radius: 50%;
             background: rgba(0, 212, 255, 0.3);
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .qc-step.active .qc-step-dot {
@@ -1745,6 +1774,11 @@
         .qc-input:focus {
             border-color: var(--flow-cyan);
             box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .qc-input.error {
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
         }
 
         .qc-input::placeholder {
@@ -2043,6 +2077,153 @@
 
         .qc-done-btn:hover {
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Add New Address Popup Modal */
+        .address-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .address-popup-overlay.visible {
+            display: flex;
+        }
+
+        .address-popup-modal {
+            background: linear-gradient(180deg, #0d1f35 0%, #0A1628 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .address-popup-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .address-popup-modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .address-popup-modal::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .address-popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: #0d1f35;
+            z-index: 1;
+        }
+
+        .address-popup-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .address-popup-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: var(--flow-gray);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .address-popup-close:hover {
+            background: rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+        }
+
+        .address-popup-content {
+            padding: 1.5rem;
+        }
+
+        .address-popup-actions {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .address-popup-cancel-btn {
+            flex: 1;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--flow-gray);
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .address-popup-cancel-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            color: var(--flow-white);
+        }
+
+        .address-popup-save-btn {
+            flex: 2;
+            background: var(--flow-cyan);
+            border: none;
+            color: var(--flow-dark);
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .address-popup-save-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .address-popup-save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Mobile Menu Styles */
@@ -2730,6 +2911,11 @@
         }
 
         #qcMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        #popupMap {
             width: 100%;
             height: 100%;
         }
@@ -3880,13 +4066,13 @@
                 <span>Subtotal</span>
                 <span id="cartSubtotal">₹0</span>
             </div>
-            <div class="cart-discount-row" id="discountRow" style="display: none;">
-                <span>Discount</span>
-                <span id="cartDiscount">-₹0</span>
-            </div>
             <div class="cart-subtotal">
                 <span>Shipping</span>
                 <span id="cartShipping">₹99</span>
+            </div>
+            <div class="cart-discount-row" id="discountRow" style="display: none;">
+                <span>Discount</span>
+                <span id="cartDiscount">-₹0</span>
             </div>
             <div class="cart-total">
                 <span>Total</span>
@@ -3930,6 +4116,85 @@
         </button>
     </div>
 
+    <!-- Add New Address Popup Modal -->
+    <div class="address-popup-overlay" id="addressPopupOverlay">
+        <div class="address-popup-modal">
+            <div class="address-popup-header">
+                <h3><span class="material-icons" style="font-size: 20px;">add_location</span> Add New Address</h3>
+                <button class="address-popup-close" onclick="closeAddressPopup()">×</button>
+            </div>
+            <div class="address-popup-content">
+                <!-- Google Maps Search -->
+                <div class="qc-map-container">
+                    <div class="qc-address-search">
+                        <span class="material-icons" style="font-size: 18px; color: var(--flow-cyan);">search</span>
+                        <input type="search" id="popupAddressSearch" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
+                    </div>
+                    
+                    <button type="button" class="qc-use-current-location" onclick="useCurrentLocationPopup()">
+                        <span class="material-icons" style="font-size: 16px; vertical-align: middle;">my_location</span>
+                        Use my current location
+                    </button>
+                    
+                    <div class="qc-map-wrapper">
+                        <div id="popupMap"></div>
+                    </div>
+                    
+                    <!-- Selected Address Display -->
+                    <div class="qc-selected-address" id="popupSelectedAddress">
+                        <div class="qc-selected-address-label">Selected Location</div>
+                        <div class="qc-selected-address-text" id="popupSelectedAddressText"></div>
+                        <div class="qc-address-details">
+                            <div class="qc-address-detail-item">
+                                <span>City</span>
+                                <strong id="popupCityDisplay">-</strong>
+                            </div>
+                            <div class="qc-address-detail-item">
+                                <span>State</span>
+                                <strong id="popupStateDisplay">-</strong>
+                            </div>
+                            <div class="qc-address-detail-item">
+                                <span>PIN Code</span>
+                                <strong id="popupPincodeDisplay">-</strong>
+                            </div>
+                            <div class="qc-address-detail-item">
+                                <span>Country</span>
+                                <strong id="popupCountryDisplay">India</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- House/Floor Number Input -->
+                <div class="qc-house-input">
+                    <label for="popupHouseFloor">House No. / Floor / Building Name *</label>
+                    <input type="text" class="qc-input" id="popupHouseFloor" placeholder="e.g., Flat 204, 2nd Floor, Sunshine Apartments">
+                </div>
+                
+                <!-- Address Error Message -->
+                <div class="qc-address-error" id="popupAddressError" style="display: none;">
+                    <span class="material-icons" style="font-size: 16px;">error_outline</span>
+                    <span id="popupAddressErrorText"></span>
+                </div>
+                
+                <!-- Hidden fields to store data -->
+                <input type="hidden" id="popupCity" value="">
+                <input type="hidden" id="popupState" value="">
+                <input type="hidden" id="popupPincode" value="">
+                <input type="hidden" id="popupAddress" value="">
+                <input type="hidden" id="popupLatitude" value="">
+                <input type="hidden" id="popupLongitude" value="">
+            </div>
+            <div class="address-popup-actions">
+                <button class="address-popup-cancel-btn" onclick="closeAddressPopup()">Cancel</button>
+                <button class="address-popup-save-btn" id="popupSaveAddressBtn" onclick="saveNewAddressFromPopup()">
+                    <span class="material-icons" style="font-size: 18px;">save</span>
+                    Save Address
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Checkout Modal -->
     <div class="quick-checkout-overlay" id="quickCheckoutOverlay">
         <div class="quick-checkout-modal">
@@ -3954,7 +4219,7 @@
             <!-- Step 1: Contact -->
             <div class="qc-content" id="qcStep1">
                 <div class="qc-header">
-                    <h3>📧 Contact Information</h3>
+                    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem;">mail</span> Contact Information</h3>
                     <p>We'll send your order confirmation here</p>
                 </div>
                 <div class="qc-form">
@@ -3967,16 +4232,14 @@
                 </div>
                 <button class="qc-continue-btn" onclick="goToStep(2)">
                     Continue to Shipping
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">arrow_forward</span>
                 </button>
             </div>
 
             <!-- Step 2: Shipping with Google Maps -->
             <div class="qc-content hidden" id="qcStep2">
                 <div class="qc-header">
-                    <h3>📍 Delivery Address</h3>
+                    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem;">location_on</span> Delivery Address</h3>
                     <p id="qcAddressHeaderText">Select your delivery address</p>
                 </div>
                 
@@ -3986,10 +4249,7 @@
                         <!-- Saved addresses will be populated here -->
                     </div>
                     <button type="button" class="qc-add-new-address-btn" onclick="showNewAddressForm()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
+                        <span class="material-icons" style="font-size: 16px; vertical-align: middle;">add</span>
                         Add New Address
                     </button>
                 </div>
@@ -3999,19 +4259,12 @@
                     <!-- Google Maps Search -->
                     <div class="qc-map-container">
                         <div class="qc-address-search">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21l-4.35-4.35"/>
-                            </svg>
+                            <span class="material-icons" style="font-size: 18px; color: var(--flow-cyan);">search</span>
                             <input type="search" id="qcAddressSearch" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
                         </div>
                         
                         <button type="button" class="qc-use-current-location" onclick="useCurrentLocation()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
-                            </svg>
+                            <span class="material-icons" style="font-size: 16px; vertical-align: middle;">my_location</span>
                             Use my current location
                         </button>
                         
@@ -4052,11 +4305,7 @@
                     
                     <!-- Address Error Message -->
                     <div class="qc-address-error" id="qcAddressError" style="display: none;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="12" y1="8" x2="12" y2="12"/>
-                            <line x1="12" y1="16" x2="12.01" y2="16"/>
-                        </svg>
+                        <span class="material-icons" style="font-size: 16px;">error_outline</span>
                         <span id="qcAddressErrorText"></span>
                     </div>
                     
@@ -4079,7 +4328,7 @@
                 
                 <!-- Shipping Info -->
                 <div class="qc-shipping-info-box" id="qcShippingInfoBox">
-                    <div class="qc-shipping-icon">🚚</div>
+                    <div class="qc-shipping-icon"><span class="material-icons">local_shipping</span></div>
                     <div class="qc-shipping-details">
                         <span class="qc-shipping-title" id="qcShippingTitle">Standard Delivery</span>
                         <span class="qc-shipping-estimate" id="qcShippingEstimate">Estimated delivery: 2-4 days</span>
@@ -4089,16 +4338,14 @@
                     </div>
                 </div>
                 <p class="qc-free-shipping-note" id="qcFreeShippingNote" style="display: none;">
-                    🎉 Free shipping on orders above ₹999!
+                    <span class="material-icons" style="vertical-align: middle; font-size: 1rem; margin-right: 0.25rem;">celebration</span> Free shipping on orders above ₹999!
                 </p>
                 
                 <div class="qc-btn-row">
-                    <button class="qc-back-btn" onclick="goToStep(1)">← Back</button>
+                    <button class="qc-back-btn" onclick="goToStep(1)"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">arrow_back</span> Back</button>
                     <button class="qc-continue-btn" onclick="validateAndContinueToPayment()">
                         Continue to Payment
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
+                        <span class="material-icons" style="font-size: 18px; vertical-align: middle;">arrow_forward</span>
                     </button>
                 </div>
             </div>
@@ -4141,6 +4388,10 @@
                         <span>Shipping</span>
                         <span id="qcShippingCost">FREE</span>
                     </div>
+                    <div class="qc-summary-row qc-discount-row" id="qcDiscountRow" style="display: none;">
+                        <span>Discount <span id="qcDiscountCode" style="color: var(--flow-cyan); font-size: 0.8rem;"></span></span>
+                        <span id="qcDiscountAmount" style="color: #10B981;">-₹0</span>
+                    </div>
                     <div class="qc-summary-row qc-total">
                         <span>Total</span>
                         <span id="qcTotal">₹0</span>
@@ -4148,7 +4399,7 @@
                 </div>
 
                 <div class="qc-btn-row">
-                    <button class="qc-back-btn" onclick="goToStep(2)">← Back</button>
+                    <button class="qc-back-btn" onclick="goToStep(2)"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">arrow_back</span> Back</button>
                     <button class="qc-place-order-btn" id="qcPlaceOrder">
                         <span class="qc-btn-text">Pay Now</span>
                         <div class="qc-spinner"></div>
@@ -4156,10 +4407,7 @@
                 </div>
 
                 <div class="qc-secure">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0110 0v4"/>
-                    </svg>
+                    <span class="material-icons" style="font-size: 14px; vertical-align: middle;">lock</span>
                     Secured by Razorpay • 256-bit SSL encryption
                 </div>
             </div>
@@ -4167,7 +4415,7 @@
             <!-- Success Step -->
             <div class="qc-content hidden" id="qcSuccess">
                 <div class="qc-success-content">
-                    <div class="qc-success-icon">✓</div>
+                    <div class="qc-success-icon"><span class="material-icons">check_circle</span></div>
                     <h3>Order Placed!</h3>
                     <p>Thank you for your order. We've sent a confirmation to your email.</p>
                     <div class="qc-order-number">
@@ -4336,19 +4584,52 @@
             loadPublicDiscountCodes();
             initMobileMenu();
             
-            // Check if redirected from Buy Now with checkout=true
+            // Remove error highlight on input
+            const qcEmailInput = document.getElementById('qcEmail');
+            const qcPhoneInput = document.getElementById('qcPhone');
+            if (qcEmailInput) {
+                qcEmailInput.addEventListener('input', () => qcEmailInput.classList.remove('error'));
+            }
+            if (qcPhoneInput) {
+                qcPhoneInput.addEventListener('input', () => qcPhoneInput.classList.remove('error'));
+            }
+            
+            // Check URL params
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // Check if redirected with cart=true to open cart
+            if (urlParams.get('cart') === 'true') {
+                // Remove the query param from URL without refresh
+                window.history.replaceState({}, '', window.location.pathname);
+                // Open cart drawer
+                setTimeout(() => openCart(), 100);
+            }
+            
+            // Check if redirected from Buy Now with checkout=true
             if (urlParams.get('checkout') === 'true') {
                 // Track if this is a Buy Now session
                 if (urlParams.get('buynow') === 'true') {
                     isBuyNowSession = true;
                 }
+                
+                // Get discount code from URL if passed
+                const discountCode = urlParams.get('discount');
+                
                 // Remove the query params from URL without refresh
                 window.history.replaceState({}, '', window.location.pathname);
+                
                 // Open checkout if user is logged in and cart has items
                 if (CustomerAuth.isLoggedIn() && cart.length > 0) {
+                    // Auto-apply discount code first, then open checkout
+                    if (discountCode) {
+                        await autoApplyDiscountCode(discountCode);
+                    }
                     openQuickCheckout();
                 } else if (cart.length > 0) {
+                    // Store discount code to apply after login
+                    if (discountCode) {
+                        sessionStorage.setItem('flow_pending_discount', discountCode);
+                    }
                     // Show login modal first
                     CustomerAuth.showLoginModal();
                 }
@@ -4677,7 +4958,7 @@
                                     <span class="price-current">₹${selectedPack.price.toLocaleString()}</span>
                                     ${selectedPack.comparePrice ? `<span class="price-original">₹${selectedPack.comparePrice.toLocaleString()}</span>` : ''}
                                 </div>
-                                <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price}, '${selectedFlavour.name}', ${thumbnailImage ? `'${thumbnailImage.url}'` : 'null'});">
+                                <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" data-image="${thumbnailImage ? thumbnailImage.url : ''}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price}, '${selectedFlavour.name}', this.dataset.image || null);">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                                         <line x1="3" y1="6" x2="21" y2="6"/>
@@ -4894,9 +5175,9 @@
             cartToastTitle.textContent = productName;
             cartToastText.textContent = quantity > 1 ? `Quantity: ${quantity} in cart` : 'Added to cart!';
             
-            // Update image
-            if (image) {
-                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}">`;
+            // Update image - handle null, undefined, empty string, and 'null' string
+            if (image && image !== 'null' && image !== 'undefined' && image !== '') {
+                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}" onerror="this.parentElement.innerHTML='<div class=\\'sachet-mini\\'>Flow</div>'">`;
             } else {
                 // Use sachet visual as fallback
                 cartToastImage.innerHTML = '<div class="sachet-mini">Flow</div>';
@@ -4925,11 +5206,15 @@
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            // Calculate discount
+            // Calculate shipping first (before discount) - no shipping if cart is empty
+            const shipping = (subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
+            const orderTotal = subtotal + shipping;
+            
+            // Calculate discount on cart total (round up to benefit customer)
             let discountAmount = 0;
-            if (appliedDiscount) {
+            if (appliedDiscount && orderTotal > 0) {
                 if (appliedDiscount.type === 'percent') {
-                    discountAmount = Math.round(subtotal * (appliedDiscount.value / 100));
+                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
                     // Apply max discount cap if specified
                     if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
                         discountAmount = appliedDiscount.maxDiscount;
@@ -4937,13 +5222,11 @@
                 } else {
                     discountAmount = appliedDiscount.value;
                 }
-                // Discount cannot exceed subtotal
-                discountAmount = Math.min(discountAmount, subtotal);
+                // Discount cannot exceed cart total
+                discountAmount = Math.min(discountAmount, orderTotal);
             }
             
-            const discountedSubtotal = subtotal - discountAmount;
-            const shipping = discountedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-            const total = discountedSubtotal + shipping;
+            const total = orderTotal - discountAmount;
 
             // Update cart count
             cartCount.textContent = totalItems;
@@ -5010,17 +5293,17 @@
             cartShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
             cartTotal.textContent = `₹${total.toLocaleString()}`;
 
-            // Update shipping progress
-            if (discountedSubtotal >= FREE_SHIPPING_THRESHOLD) {
+            // Update shipping progress (based on subtotal, before discount)
+            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
                 shippingText.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> You\'ve unlocked <span>FREE shipping!</span>';
                 shippingText.classList.add('free-shipping');
                 shippingBar.style.width = '100%';
                 shippingBar.classList.add('complete');
             } else {
-                const remaining = FREE_SHIPPING_THRESHOLD - discountedSubtotal;
+                const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
                 shippingText.innerHTML = `Add <span>₹${remaining}</span> more for free shipping!`;
                 shippingText.classList.remove('free-shipping');
-                shippingBar.style.width = `${(discountedSubtotal / FREE_SHIPPING_THRESHOLD) * 100}%`;
+                shippingBar.style.width = `${(subtotal / FREE_SHIPPING_THRESHOLD) * 100}%`;
                 shippingBar.classList.remove('complete');
             }
         }
@@ -5077,9 +5360,6 @@
                     appliedEl.style.display = 'flex';
                     input.value = '';
                     
-                    // Save to localStorage
-                    localStorage.setItem('flow_discount', JSON.stringify(appliedDiscount));
-                    
                     updateCartUI();
                     showToast(`Discount code "${appliedDiscount.code}" applied!`);
                 } else {
@@ -5103,15 +5383,67 @@
             const formSection = document.getElementById('discountFormSection');
             
             appliedEl.style.display = 'none';
-            formSection.style.display = 'block';
-            
-            localStorage.removeItem('flow_discount');
+            formSection.style.display = 'flex';
             
             // Re-render public codes if available
             renderPublicCodes();
             
             updateCartUI();
             showToast('Discount code removed');
+        }
+        
+        // Auto-apply discount code from URL (no user input required)
+        async function autoApplyDiscountCode(code) {
+            if (!code) return;
+            
+            console.log('Auto-applying discount code:', code);
+            console.log('Cart:', cart);
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            console.log('Subtotal for discount:', subtotal);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/discount-codes/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code.toUpperCase(), orderTotal: subtotal })
+                });
+                
+                const data = await response.json();
+                console.log('Discount validation response:', data);
+                
+                if (data.success) {
+                    appliedDiscount = data.code;
+                    console.log('Applied discount set to:', appliedDiscount);
+                    
+                    // Update UI elements if they exist
+                    const appliedEl = document.getElementById('discountApplied');
+                    const formSection = document.getElementById('discountFormSection');
+                    const appliedCodeEl = document.getElementById('appliedCode');
+                    const appliedValueEl = document.getElementById('appliedValue');
+                    
+                    if (appliedCodeEl) appliedCodeEl.textContent = appliedDiscount.code;
+                    
+                    let discountText = appliedDiscount.type === 'percent' 
+                        ? `-${appliedDiscount.value}%` 
+                        : `-₹${appliedDiscount.value}`;
+                    if (appliedDiscount.maxDiscount && appliedDiscount.type === 'percent') {
+                        discountText += ` (max ₹${appliedDiscount.maxDiscount})`;
+                    }
+                    if (appliedValueEl) appliedValueEl.textContent = discountText;
+                    
+                    if (formSection) formSection.style.display = 'none';
+                    document.getElementById('publicCodesSection')?.remove();
+                    if (appliedEl) appliedEl.style.display = 'flex';
+                    
+                    updateCartUI();
+                    showToast(`Discount code "${appliedDiscount.code}" applied!`);
+                } else {
+                    console.log('Discount validation failed:', data.message);
+                }
+            } catch (error) {
+                console.error('Error auto-applying discount code:', error);
+            }
         }
         
         // Load and display public discount codes
@@ -5169,70 +5501,9 @@
         
         // Load saved discount on init
         async function loadSavedDiscount() {
-            // Check both flow_discount (cart drawer) and flow_cart_discount (product page)
-            let saved = localStorage.getItem('flow_discount');
-            const savedFromProduct = localStorage.getItem('flow_cart_discount');
-            
-            // Prefer product page discount if available (for checkout redirect)
-            if (savedFromProduct && !saved) {
-                try {
-                    const productDiscount = JSON.parse(savedFromProduct);
-                    if (productDiscount && productDiscount.code) {
-                        saved = JSON.stringify({
-                            code: productDiscount.code,
-                            type: productDiscount.type === 'percent' ? 'percent' : 'fixed',
-                            value: productDiscount.value
-                        });
-                    }
-                } catch (e) {
-                    console.log('Error parsing product discount:', e);
-                }
-            }
-            
-            if (saved) {
-                try {
-                    const savedDiscount = JSON.parse(saved);
-                    if (savedDiscount && savedDiscount.code) {
-                        // Re-validate with API to ensure it's still valid
-                        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                        const response = await fetch(`${API_BASE_URL}/api/discount-codes/validate`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ code: savedDiscount.code, orderTotal: subtotal })
-                        });
-                        
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            appliedDiscount = data.code;
-                            document.getElementById('appliedCode').textContent = appliedDiscount.code;
-                            
-                            let discountText = appliedDiscount.type === 'percent' 
-                                ? `-${appliedDiscount.value}%` 
-                                : `-\u20b9${appliedDiscount.value}`;
-                            if (appliedDiscount.maxDiscount && appliedDiscount.type === 'percent') {
-                                discountText += ` (max \u20b9${appliedDiscount.maxDiscount})`;
-                            }
-                            document.getElementById('appliedValue').textContent = discountText;
-                            
-                            document.getElementById('discountApplied').style.display = 'flex';
-                            document.getElementById('discountFormSection').style.display = 'none';
-                            
-                            // Update localStorage with fresh data
-                            localStorage.setItem('flow_discount', JSON.stringify(appliedDiscount));
-                        } else {
-                            // Code no longer valid, clear it
-                            localStorage.removeItem('flow_discount');
-                            localStorage.removeItem('flow_cart_discount');
-                            appliedDiscount = null;
-                        }
-                    }
-                } catch (e) {
-                    localStorage.removeItem('flow_discount');
-                    localStorage.removeItem('flow_cart_discount');
-                    appliedDiscount = null;
-                }
-            }
+            // Discount codes are no longer persisted in localStorage
+            // Users must re-apply discount codes each session
+            appliedDiscount = null;
         }
 
         // Add to Cart - integrated with CustomerAuth
@@ -5456,7 +5727,7 @@
         });
         
         async function prefillCustomerData() {
-            // First use cached customer data for immediate UI
+            // First use cached customer data for immediate UI (name, phone, email only)
             let customer = CustomerAuth.getCustomer();
             
             // Pre-fill name if available
@@ -5477,32 +5748,44 @@
                 emailInput.value = customer.email;
             }
             
-            // Load saved addresses from cache first (if available)
-            if (customer && customer.addresses && customer.addresses.length > 0) {
-                loadSavedAddresses(customer);
-            }
-            
-            // Always refresh from server to get latest addresses
+            // Fetch fresh customer profile from server (includes addresses)
             try {
-                const freshCustomer = await CustomerAuth.refreshCustomer();
-                if (freshCustomer) {
+                const token = CustomerAuth.getToken();
+                console.log('Fetching customer profile with token:', token ? 'present' : 'missing');
+                
+                const response = await fetch(`${API_BASE_URL}/api/customer/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                console.log('Profile API response:', data);
+                
+                if (data.success && data.customer) {
+                    const freshCustomer = data.customer;
                     console.log('Loaded customer from server, addresses:', freshCustomer.addresses?.length || 0);
-                    loadSavedAddresses(freshCustomer);
                     
-                    // Also update name/email if not filled
+                    // Update localStorage with fresh data
+                    localStorage.setItem('flow_customer', JSON.stringify(freshCustomer));
+                    
+                    // Update name/email fields if not already filled
                     if (nameInput && !nameInput.value && freshCustomer.name) {
                         nameInput.value = freshCustomer.name;
                     }
                     if (emailInput && !emailInput.value && freshCustomer.email) {
                         emailInput.value = freshCustomer.email;
                     }
+                    
+                    // Load addresses
+                    loadSavedAddresses(freshCustomer);
+                } else {
+                    console.log('Profile API failed, using cached customer');
+                    loadSavedAddresses(customer || { addresses: [] });
                 }
             } catch (error) {
-                console.error('Failed to refresh customer data:', error);
-                // If refresh fails but we have cached data, use it
-                if (customer) {
-                    loadSavedAddresses(customer);
-                }
+                console.error('Failed to fetch customer profile from server:', error);
+                // Fallback to cached customer data
+                loadSavedAddresses(customer || { addresses: [] });
             }
         }
         
@@ -5645,25 +5928,321 @@
             updateShippingDeliveryTime(qcSelectedLocation.pincode);
         }
         
+        // Address Popup Variables
+        let popupMap = null;
+        let popupMarker = null;
+        let popupAutocomplete = null;
+        let popupSelectedLocation = null;
+        
         function showNewAddressForm() {
-            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
-            const newAddressForm = document.getElementById('qcNewAddressForm');
+            const customer = CustomerAuth.getCustomer();
+            const hasExistingAddresses = customer && customer.addresses && customer.addresses.length > 0;
             
-            // Hide saved addresses, show map form
-            if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
-            if (newAddressForm) newAddressForm.style.display = 'block';
-            
-            // Reset selected location for new entry
-            qcSelectedLocation = null;
-            qcSelectedSavedAddress = null;
-            document.getElementById('qcSelectedAddress').classList.remove('visible');
-            document.getElementById('qcHouseFloor').value = '';
-            
-            // Initialize map if not already
-            if (!qcMap && typeof google !== 'undefined' && google.maps) {
-                initCheckoutMap();
+            if (hasExistingAddresses) {
+                // Show popup modal for adding new address
+                openAddressPopup();
+            } else {
+                // No existing addresses - show inline form (original behavior)
+                const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+                const newAddressForm = document.getElementById('qcNewAddressForm');
+                
+                if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+                if (newAddressForm) newAddressForm.style.display = 'block';
+                
+                qcSelectedLocation = null;
+                qcSelectedSavedAddress = null;
+                document.getElementById('qcSelectedAddress').classList.remove('visible');
+                document.getElementById('qcHouseFloor').value = '';
+                
+                if (!qcMap && typeof google !== 'undefined' && google.maps) {
+                    initCheckoutMap();
+                }
             }
         }
+        
+        function openAddressPopup() {
+            const overlay = document.getElementById('addressPopupOverlay');
+            overlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset popup state
+            popupSelectedLocation = null;
+            document.getElementById('popupSelectedAddress').classList.remove('visible');
+            document.getElementById('popupHouseFloor').value = '';
+            document.getElementById('popupAddressSearch').value = '';
+            document.getElementById('popupAddressError').style.display = 'none';
+            
+            // Initialize popup map with a delay to ensure container is visible
+            setTimeout(() => {
+                if (typeof google !== 'undefined' && google.maps) {
+                    if (!popupMap) {
+                        initPopupMap();
+                    } else {
+                        // Trigger resize if map already exists
+                        google.maps.event.trigger(popupMap, 'resize');
+                    }
+                }
+            }, 300);
+        }
+        
+        function closeAddressPopup() {
+            const overlay = document.getElementById('addressPopupOverlay');
+            overlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+        
+        function initPopupMap() {
+            const mapContainer = document.getElementById('popupMap');
+            if (!mapContainer || popupMap) return;
+            
+            const defaultCenter = { lat: 20.5937, lng: 78.9629 };
+            
+            popupMap = new google.maps.Map(mapContainer, {
+                center: defaultCenter,
+                zoom: 5,
+                styles: [
+                    { elementType: 'geometry', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.stroke', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
+                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2b47' }] },
+                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#00D4FF', lightness: -70 }] },
+                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }
+                ],
+                disableDefaultUI: true,
+                zoomControl: true,
+            });
+            
+            // Create marker
+            popupMarker = new google.maps.Marker({
+                map: popupMap,
+                draggable: true,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: '#00D4FF',
+                    fillOpacity: 1,
+                    strokeWeight: 3,
+                    strokeColor: '#ffffff'
+                }
+            });
+            
+            // Setup autocomplete
+            const searchInput = document.getElementById('popupAddressSearch');
+            popupAutocomplete = new google.maps.places.Autocomplete(searchInput, {
+                componentRestrictions: { country: 'in' },
+                fields: ['formatted_address', 'geometry', 'address_components']
+            });
+            
+            popupAutocomplete.addListener('place_changed', () => {
+                const place = popupAutocomplete.getPlace();
+                if (place.geometry) {
+                    const location = place.geometry.location;
+                    popupMap.setCenter(location);
+                    popupMap.setZoom(17);
+                    popupMarker.setPosition(location);
+                    popupMarker.setVisible(true);
+                    updatePopupAddressFromPlace(place);
+                }
+            });
+            
+            // Marker drag event
+            popupMarker.addListener('dragend', () => {
+                const pos = popupMarker.getPosition();
+                reverseGeocodePopup(pos.lat(), pos.lng());
+            });
+            
+            // Map click event
+            popupMap.addListener('click', (e) => {
+                popupMarker.setPosition(e.latLng);
+                popupMarker.setVisible(true);
+                reverseGeocodePopup(e.latLng.lat(), e.latLng.lng());
+            });
+            
+            // Trigger resize to ensure map renders correctly
+            setTimeout(() => {
+                google.maps.event.trigger(popupMap, 'resize');
+                popupMap.setCenter(defaultCenter);
+            }, 100);
+        }
+        
+        function updatePopupAddressFromPlace(place) {
+            const addressComponents = place.address_components || [];
+            let city = '', state = '', pincode = '', country = 'India';
+            
+            addressComponents.forEach(comp => {
+                const types = comp.types;
+                if (types.includes('locality')) city = comp.long_name;
+                if (types.includes('administrative_area_level_1')) state = comp.long_name;
+                if (types.includes('postal_code')) pincode = comp.long_name;
+                if (types.includes('country')) country = comp.long_name;
+            });
+            
+            popupSelectedLocation = {
+                address: place.formatted_address,
+                city: city,
+                state: state,
+                pincode: pincode,
+                country: country,
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+            
+            document.getElementById('popupSelectedAddressText').textContent = place.formatted_address;
+            document.getElementById('popupCityDisplay').textContent = city || '-';
+            document.getElementById('popupStateDisplay').textContent = state || '-';
+            document.getElementById('popupPincodeDisplay').textContent = pincode || '-';
+            document.getElementById('popupCountryDisplay').textContent = country;
+            document.getElementById('popupSelectedAddress').classList.add('visible');
+            
+            document.getElementById('popupCity').value = city;
+            document.getElementById('popupState').value = state;
+            document.getElementById('popupPincode').value = pincode;
+            document.getElementById('popupAddress').value = place.formatted_address;
+            document.getElementById('popupLatitude').value = popupSelectedLocation.lat;
+            document.getElementById('popupLongitude').value = popupSelectedLocation.lng;
+        }
+        
+        function reverseGeocodePopup(lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    updatePopupAddressFromPlace(results[0]);
+                }
+            });
+        }
+        
+        function useCurrentLocationPopup() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation is not supported by your browser');
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const pos = { lat, lng };
+                    
+                    if (popupMap) {
+                        popupMap.setCenter(pos);
+                        popupMap.setZoom(17);
+                        popupMarker.setPosition(pos);
+                        popupMarker.setVisible(true);
+                        reverseGeocodePopup(lat, lng);
+                    }
+                },
+                (error) => {
+                    showToast('Unable to get your location. Please search manually.');
+                }
+            );
+        }
+        
+        async function saveNewAddressFromPopup() {
+            const errorEl = document.getElementById('popupAddressError');
+            const errorTextEl = document.getElementById('popupAddressErrorText');
+            const saveBtn = document.getElementById('popupSaveAddressBtn');
+            
+            // Validate
+            if (!popupSelectedLocation || !popupSelectedLocation.address) {
+                errorTextEl.textContent = 'Please select a location on the map';
+                errorEl.style.display = 'flex';
+                return;
+            }
+            
+            const houseFloor = document.getElementById('popupHouseFloor').value.trim();
+            if (!houseFloor) {
+                errorTextEl.textContent = 'Please enter house/floor/building details';
+                errorEl.style.display = 'flex';
+                document.getElementById('popupHouseFloor').classList.add('error');
+                return;
+            }
+            
+            errorEl.style.display = 'none';
+            document.getElementById('popupHouseFloor').classList.remove('error');
+            
+            // Prepare address object
+            const newAddress = {
+                type: 'home',
+                houseFloor: houseFloor,
+                fullAddress: popupSelectedLocation.address,
+                formattedAddress: popupSelectedLocation.address,
+                city: popupSelectedLocation.city,
+                state: popupSelectedLocation.state,
+                pincode: popupSelectedLocation.pincode,
+                country: popupSelectedLocation.country || 'India',
+                latitude: popupSelectedLocation.lat,
+                longitude: popupSelectedLocation.lng,
+                isDefault: false
+            };
+            
+            // Save to backend
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="material-icons" style="font-size: 18px; animation: spin 1s linear infinite;">sync</span> Saving...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/customer/addresses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    },
+                    body: JSON.stringify(newAddress)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local customer data using the correct localStorage key
+                    const customer = CustomerAuth.getCustomer();
+                    if (customer) {
+                        customer.addresses = data.addresses || [...(customer.addresses || []), newAddress];
+                        localStorage.setItem('flow_customer', JSON.stringify(customer));
+                    }
+                    
+                    // Close popup and refresh saved addresses
+                    closeAddressPopup();
+                    showToast('Address saved successfully!');
+                    
+                    // Ensure saved addresses section is visible and map form is hidden
+                    const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+                    const newAddressForm = document.getElementById('qcNewAddressForm');
+                    if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
+                    if (newAddressForm) newAddressForm.style.display = 'none';
+                    
+                    // Refresh the saved addresses list with updated customer data
+                    const updatedCustomer = CustomerAuth.getCustomer();
+                    loadSavedAddresses(updatedCustomer);
+                    
+                    // Auto-select the newly added address (last one)
+                    setTimeout(() => {
+                        const addresses = updatedCustomer?.addresses || [];
+                        if (addresses.length > 0) {
+                            selectSavedAddress(addresses.length - 1, addresses);
+                            const radio = document.querySelector(`input[name="savedAddress"][value="${addresses.length - 1}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                    }, 150);
+                } else {
+                    errorTextEl.textContent = data.message || 'Failed to save address';
+                    errorEl.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error saving address:', error);
+                errorTextEl.textContent = 'Failed to save address. Please try again.';
+                errorEl.style.display = 'flex';
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<span class="material-icons" style="font-size: 18px;">save</span> Save Address';
+            }
+        }
+        
+        // Add event listener to remove error on input
+        document.addEventListener('DOMContentLoaded', () => {
+            const popupHouseInput = document.getElementById('popupHouseFloor');
+            if (popupHouseInput) {
+                popupHouseInput.addEventListener('input', () => popupHouseInput.classList.remove('error'));
+            }
+        });
         
         function showSavedAddresses() {
             const savedAddressesContainer = document.getElementById('qcSavedAddresses');
@@ -5783,6 +6362,42 @@
 
         // Navigate to step
         function goToStep(step) {
+            // Validate Step 1 before proceeding to Step 2
+            if (step === 2 && qcCurrentStep === 1) {
+                const emailInput = document.getElementById('qcEmail');
+                const phoneInput = document.getElementById('qcPhone');
+                const email = emailInput.value.trim();
+                const phone = phoneInput.value.trim();
+                
+                // Clear previous errors
+                emailInput.classList.remove('error');
+                phoneInput.classList.remove('error');
+                
+                let hasError = false;
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email || !emailRegex.test(email)) {
+                    emailInput.classList.add('error');
+                    if (!hasError) {
+                        emailInput.focus();
+                        hasError = true;
+                    }
+                }
+                
+                // Phone validation (at least 10 digits)
+                const phoneDigits = phone.replace(/\D/g, '');
+                if (!phone || phoneDigits.length < 10) {
+                    phoneInput.classList.add('error');
+                    if (!hasError) {
+                        phoneInput.focus();
+                        hasError = true;
+                    }
+                }
+                
+                if (hasError) return;
+            }
+            
             // Hide all steps
             document.getElementById('qcStep1').classList.add('hidden');
             document.getElementById('qcStep2').classList.add('hidden');
@@ -6093,10 +6708,37 @@
         // Update QC Summary
         function updateQCSummary() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const total = subtotal + qcShippingCost;
+            const orderTotal = subtotal + qcShippingCost;
+            
+            // Calculate discount on order total (same logic as cart)
+            let discountAmount = 0;
+            if (appliedDiscount && orderTotal > 0) {
+                if (appliedDiscount.type === 'percent') {
+                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
+                    if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
+                        discountAmount = appliedDiscount.maxDiscount;
+                    }
+                } else {
+                    discountAmount = appliedDiscount.value;
+                }
+                discountAmount = Math.min(discountAmount, orderTotal);
+            }
+            
+            const total = orderTotal - discountAmount;
 
             document.getElementById('qcSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
             document.getElementById('qcShippingCost').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            
+            // Show/hide discount row
+            const discountRow = document.getElementById('qcDiscountRow');
+            if (appliedDiscount && discountAmount > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('qcDiscountCode').textContent = `(${appliedDiscount.code})`;
+                document.getElementById('qcDiscountAmount').textContent = `-₹${discountAmount.toLocaleString()}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+            
             document.getElementById('qcTotal').textContent = `₹${total.toLocaleString()}`;
         }
 
@@ -6167,7 +6809,8 @@
                     items,
                     shippingAddress,
                     shippingMethod,
-                    paymentMethod: 'razorpay'
+                    paymentMethod: 'razorpay',
+                    discountCode: appliedDiscount ? appliedDiscount.code : null
                 };
                 
                 // Initiate Razorpay payment
@@ -6279,6 +6922,13 @@
                                 cart = [];
                                 CustomerAuth.saveLocalCart(cart);
                                 updateCartUI();
+                                
+                                // Clear applied discount and reset discount UI
+                                appliedDiscount = null;
+                                const discountAppliedEl = document.getElementById('discountApplied');
+                                const discountFormSection = document.getElementById('discountFormSection');
+                                if (discountAppliedEl) discountAppliedEl.style.display = 'none';
+                                if (discountFormSection) discountFormSection.style.display = 'flex';
                                 
                                 // Clear Buy Now backup if this was a Buy Now session
                                 if (isBuyNowSession) {

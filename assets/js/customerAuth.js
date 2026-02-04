@@ -679,7 +679,22 @@ const CustomerAuth = (function() {
         // Update UI
         updateAuthUI();
         
-        // Call success callback if provided
+        // Determine if we should redirect to shop
+        const path = window.location.pathname;
+        // Check if on home page (various formats: /, /index.html, /index-mobile.html, or just the root)
+        const isHomePage = path === '/' || 
+                           path === '/index.html' || 
+                           path === '/index-mobile.html' ||
+                           path === '' ||
+                           (path.endsWith('/') && path.split('/').filter(Boolean).length === 0);
+        
+        // If on home page, always redirect to shop (ignore callback)
+        if (isHomePage) {
+            window.location.href = '/shop/';
+            return;
+        }
+        
+        // Call success callback if provided (for non-home pages)
         if (onLoginSuccess && typeof onLoginSuccess === 'function') {
             onLoginSuccess(customer);
         }

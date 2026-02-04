@@ -10,15 +10,40 @@
     <!-- Desktop redirect - redirect to desktop version on larger screens -->
     <script>
         (function() {
-            var isDesktop = window.innerWidth > 768 && 
-                           !('ontouchstart' in window) && 
-                           (navigator.maxTouchPoints === 0);
-            var desktopUA = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var DESKTOP_BREAKPOINT = 768;
             
-            if (isDesktop && desktopUA) {
+            function getDesktopUrl() {
                 var params = window.location.search;
-                window.location.replace('/product/' + params);
+                var path = window.location.pathname;
+                var basePath = path.substring(0, path.lastIndexOf('/') + 1);
+                return basePath + 'product.html' + params;
             }
+            
+            function isDesktopSize() {
+                return window.innerWidth > DESKTOP_BREAKPOINT;
+            }
+            
+            function isDesktopDevice() {
+                return !('ontouchstart' in window) && 
+                       (navigator.maxTouchPoints === 0) &&
+                       !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            // Initial redirect for desktop devices
+            if (isDesktopSize() && isDesktopDevice()) {
+                window.location.replace(getDesktopUrl());
+            }
+            
+            // Auto-switch to desktop version on resize
+            var resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (isDesktopSize()) {
+                        window.location.replace(getDesktopUrl());
+                    }
+                }, 250);
+            });
         })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">

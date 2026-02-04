@@ -1027,15 +1027,14 @@
             <span class="logo-fallback" style="display:none; font-size:20px; font-weight:700; color:var(--flow-cyan);">FLOW</span>
         </a>
         <div class="header-actions">
-            <a href="/shop/" class="header-btn">
+            <a href="/shop/?cart=true" class="header-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <path d="M16 10a4 4 0 01-8 0"/>
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
                 </svg>
                 <span class="cart-badge" id="cartBadge">0</span>
             </a>
-            <a href="/profile/" class="header-btn">
+            <a href="/profile/" class="header-btn" onclick="return handleProfileClick(event)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
@@ -1247,7 +1246,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
                 <div class="faq-answer">
-                    <p>Flow Hydration is a precision-engineered electrolyte drink mix designed for optimal hydration. It contains a balanced blend of sodium, potassium, magnesium, and calcium with zero added sugar.</p>
+                    <p>Flow Hydration is a precision-engineered electrolyte drink mix designed for optimal hydration. It contains a balanced blend of sodium, potassium, magnesium, and calcium with just 6.9g of glucose for quick energy.</p>
                 </div>
             </div>
             <div class="faq-item">
@@ -1261,11 +1260,11 @@
             </div>
             <div class="faq-item">
                 <button class="faq-question" onclick="toggleFaq(this)">
-                    Is Flow sugar-free?
+                    Does Flow contain sugar?
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
                 <div class="faq-answer">
-                    <p>Yes! Flow contains zero added sugar. We believe in clean hydration without unnecessary additives, making it suitable for those following low-sugar or keto diets.</p>
+                    <p>Flow contains 6.9g of glucose per sachet for quick energy absorption during activity. We use zero artificial sweeteners – just natural flavoring for clean, effective hydration.</p>
                 </div>
             </div>
             <div class="faq-item">
@@ -1334,7 +1333,7 @@
             </svg>
             Shop
         </a>
-        <a href="/shop/" class="nav-item">
+        <a href="/shop/?cart=true" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
@@ -1342,7 +1341,7 @@
             <span class="badge" id="navCartBadge" style="display: none;">0</span>
             Cart
         </a>
-        <a href="/profile/" class="nav-item">
+        <a href="/profile/" class="nav-item" onclick="return handleProfileClick(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -1355,6 +1354,21 @@
     <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
     <script>
+        // Handle profile button click - show login modal if not logged in
+        function handleProfileClick(event) {
+            if (window.CustomerAuth && CustomerAuth.isLoggedIn()) {
+                // User is logged in, go to profile page
+                return true;
+            } else {
+                // Not logged in, show login modal with callback to redirect to shop
+                event.preventDefault();
+                CustomerAuth.showModal(() => {
+                    window.location.href = '/shop/';
+                });
+                return false;
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             updateCartBadge();
@@ -1395,7 +1409,7 @@
             }
         }
 
-        // ============ SCROLL ANIMATIONS ============
+        // ============ SCROLL ANIMATIONS (Repeatable) ============
         function initScrollAnimations() {
             const observerOptions = {
                 threshold: 0.15,
@@ -1406,8 +1420,12 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate');
-                        // Unobserve after animation to improve performance
-                        observer.unobserve(entry.target);
+                    } else {
+                        // Reset animation when scrolled above the element
+                        const rect = entry.boundingClientRect;
+                        if (rect.top > 0) {
+                            entry.target.classList.remove('animate');
+                        }
                     }
                 });
             }, observerOptions);
