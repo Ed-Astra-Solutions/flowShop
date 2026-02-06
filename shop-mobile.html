@@ -2346,46 +2346,70 @@
             }
         }
 
+        // Known flavor colors mapping
+        const FLAVOR_COLORS = {
+            'original': '#00D4FF',
+            'lemonade': '#FFD93D',
+            'mango': '#FF9F43',
+            'berry': '#EE5A6F',
+            'citrus': '#7BD83A',
+            'tropical': '#FF6B9D',
+            'mint': '#2ED573',
+            'variety': '#00D4FF'
+        };
+
+        // Extract flavor from product name
+        function extractFlavorFromName(productName) {
+            if (!productName) return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+            const name = productName.toLowerCase();
+            if (name.includes('lemonade')) return { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade };
+            if (name.includes('mango')) return { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango };
+            if (name.includes('original')) return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+            if (name.includes('berry')) return { name: 'Berry', slug: 'berry', color: FLAVOR_COLORS.berry };
+            if (name.includes('citrus')) return { name: 'Citrus', slug: 'citrus', color: FLAVOR_COLORS.citrus };
+            if (name.includes('tropical')) return { name: 'Tropical', slug: 'tropical', color: FLAVOR_COLORS.tropical };
+            if (name.includes('mint')) return { name: 'Mint', slug: 'mint', color: FLAVOR_COLORS.mint };
+            if (name.includes('variety')) return { name: 'Variety', slug: 'variety', color: FLAVOR_COLORS.variety };
+            return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+        }
+
+        // Get bundle flavors
+        function getBundleFlavors() {
+            return [
+                { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original },
+                { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango },
+                { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade }
+            ];
+        }
+
         // Render Products
         function renderProducts() {
             const grid = document.getElementById('productsGrid');
             
-            // Expand products
+            if (!products || products.length === 0) {
+                grid.innerHTML = `<div class="loading"><p>No products available</p></div>`;
+                return;
+            }
+            
+            // Expand products - one card per product per pack size
             const expandedProducts = [];
-            const bundleProducts = products.filter(p => p.category === 'bundle');
-            const singleProducts = products.filter(p => p.category !== 'bundle');
 
-            // Add bundles
-            bundleProducts.forEach(product => {
-                const pack = product.packSizes?.[0];
-                if (!pack) return;
-                expandedProducts.push({
-                    ...product,
-                    displayName: product.name,
-                    selectedPack: pack,
-                    uniqueId: product.slug,
-                    isBundle: true
-                });
-            });
-
-            // Add single flavour products
-            [10, 20, 30].forEach(size => {
-                singleProducts.forEach(product => {
-                    const flavours = product.flavours?.length > 0 ? product.flavours : [{ name: 'Original', slug: 'original', color: '#00D4FF' }];
-                    const pack = product.packSizes.find(p => p.size === size);
-                    if (pack) {
-                        flavours.forEach(flavour => {
-                            expandedProducts.push({
-                                ...product,
-                                displayName: `Flow ${flavour.name} — ${pack.label}`,
-                                selectedFlavour: flavour,
-                                selectedPack: pack,
-                                uniqueId: `${product.slug}-${flavour.slug}-${pack.size}`,
-                                isBundle: false
-                            });
+            products.forEach(product => {
+                const isBundle = product.category === 'bundle';
+                const flavor = extractFlavorFromName(product.name);
+                
+                if (product.packSizes && product.packSizes.length > 0) {
+                    product.packSizes.forEach(pack => {
+                        expandedProducts.push({
+                            ...product,
+                            displayName: `${product.name} — ${pack.label}`,
+                            selectedFlavour: isBundle ? null : flavor,
+                            selectedPack: pack,
+                            uniqueId: `${product.slug}-${pack.size}`,
+                            isBundle
                         });
-                    }
-                });
+                    });
+                }
             });
 
             // Filter
@@ -2407,6 +2431,13 @@
                 case 'name-az':
                     filtered.sort((a, b) => a.displayName.localeCompare(b.displayName));
                     break;
+                default:
+                    // Bundles first
+                    filtered.sort((a, b) => {
+                        if (a.isBundle && !b.isBundle) return -1;
+                        if (!a.isBundle && b.isBundle) return 1;
+                        return 0;
+                    });
             }
 
             document.getElementById('productCount').textContent = filtered.length;
@@ -2420,6 +2451,21 @@
                 return;
             }
 
+            // Pick one random bundle to be featured
+            const bundleItems = filtered.filter(p => p.isBundle);
+            const featuredBundleId = bundleItems.length > 0 
+                ? bundleItems[Math.floor(Math.random() * bundleItems.length)].uniqueId 
+                : null;
+
+            // Move featured card to first position
+            if (featuredBundleId) {
+                const featuredIndex = filtered.findIndex(p => p.uniqueId === featuredBundleId);
+                if (featuredIndex > 0) {
+                    const [featuredItem] = filtered.splice(featuredIndex, 1);
+                    filtered.unshift(featuredItem);
+                }
+            }
+
             grid.innerHTML = filtered.map((item, index) => {
                 const thumbnail = item.media?.find(m => m.isPrimary && m.type === 'image') || item.media?.find(m => m.type === 'image');
                 const badge = item.badges?.[0];
@@ -2427,8 +2473,8 @@
                 const inCart = !!cartItem;
                 const cartQty = cartItem?.quantity || 0;
                 
-                // First bundle item gets featured horizontal layout
-                const isFeatured = index === 0 && item.isBundle;
+                // Only the randomly selected bundle gets featured horizontal layout
+                const isFeatured = item.isBundle && item.uniqueId === featuredBundleId;
                 
                 let badgeHtml = '';
                 if (badge?.type === 'bestseller') {
@@ -2443,9 +2489,11 @@
 
                 const imageUrl = thumbnail ? thumbnail.url : '';
                 const escapedName = item.displayName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                const escapedFlavour = (item.selectedFlavour?.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const flavorName = item.selectedFlavour?.name || (item.isBundle ? 'Variety' : 'Original');
+                const escapedFlavour = flavorName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 const escapedImage = encodeURIComponent(imageUrl);
                 const escapedId = item.uniqueId.replace(/'/g, "\\'");
+                const flavorSlug = item.selectedFlavour?.slug || '';
 
                 let buttonHtml = '';
                 if (inCart) {
@@ -2467,7 +2515,7 @@
                 }
 
                 return `
-                    <div class="product-card${isFeatured ? ' featured' : ''}" onclick="goToProduct('${item.slug}', '${item.selectedFlavour?.slug || ''}', ${item.selectedPack.size})">
+                    <div class="product-card${isFeatured ? ' featured' : ''}" onclick="goToProduct('${item.slug}', '${flavorSlug}', ${item.selectedPack.size})">
                         ${badgeHtml}
                         <div class="product-image">${imageHtml}</div>
                         <div class="product-info">

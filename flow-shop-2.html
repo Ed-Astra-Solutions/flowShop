@@ -4,39 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop — Flow Hydration</title>
-    <!-- Mobile redirect - must be first -->
-    <script>
-        (function() {
-            var MOBILE_BREAKPOINT = 768;
-            
-            function checkMobile() {
-                return window.innerWidth <= MOBILE_BREAKPOINT || 
-                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
-            
-            function redirectToMobile() {
-                var params = window.location.search;
-                window.location.replace('shop-mobile.html' + params);
-            }
-            
-            // Initial redirect
-            if (checkMobile() && !window.location.hash) {
-                redirectToMobile();
-                return;
-            }
-            
-            // Listen for resize
-            var resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    if (checkMobile()) {
-                        redirectToMobile();
-                    }
-                }, 250);
-            });
-        })();
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -487,7 +454,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            z-index: 5;
+            z-index: 2;
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -608,24 +575,6 @@
 
         .product-card[data-flavor="mint"] .sachet-visual {
             background: linear-gradient(135deg, #1a2d2d 0%, #2d4a4a 50%, #1a2d2d 100%);
-        }
-
-        /* Product Thumbnail Image */
-        .product-thumbnail-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 2;
-            transition: transform 0.4s ease;
-        }
-
-        /* Bundle/Variety Pack - stretch image to fill container */
-        .product-card.bundle .product-thumbnail-img {
-            object-fit: fill;
-        }
-
-        .product-card:hover .product-thumbnail-img {
-            transform: scale(1.05);
         }
 
         .product-info {
@@ -777,7 +726,6 @@
         .product-card.featured .product-image {
             height: 100%;
             min-height: 350px;
-            max-height: 350px;
         }
 
         .product-card.featured .product-info {
@@ -833,8 +781,8 @@
         .cart-drawer {
             position: fixed;
             top: 0;
-            right: -380px;
-            width: 380px;
+            right: -450px;
+            width: 450px;
             max-width: 100%;
             height: 100%;
             background: var(--flow-dark);
@@ -850,137 +798,94 @@
         }
 
         .cart-header {
-            padding: 1rem 1.25rem;
+            padding: 1.5rem;
             border-bottom: 1px solid rgba(0, 212, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(13, 26, 45, 0.5);
         }
 
         .cart-header h3 {
             font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cart-header h3 svg {
-            width: 18px;
-            height: 18px;
+            font-size: 1.25rem;
         }
 
         .cart-close {
-            background: rgba(255, 255, 255, 0.1);
+            background: none;
             border: none;
             color: var(--flow-gray);
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0.4rem;
-            border-radius: 8px;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transition: color 0.3s ease;
+            padding: 0.5rem;
         }
 
         .cart-close:hover {
             color: var(--flow-white);
-            background: rgba(255, 255, 255, 0.15);
         }
 
         .cart-items {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 1.5rem;
         }
 
         .cart-empty {
             text-align: center;
-            padding: 2.5rem 1rem;
+            padding: 3rem 1rem;
             color: var(--flow-gray);
         }
 
         .cart-empty-icon {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             opacity: 0.5;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .cart-empty-icon svg {
-            width: 40px;
-            height: 40px;
-        }
-
-        .cart-empty p {
-            font-size: 0.9rem;
-        }
-
         .cart-item {
             display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
+            gap: 1rem;
+            padding: 1rem;
             background: rgba(13, 26, 45, 0.5);
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
-            border: 1px solid rgba(0, 212, 255, 0.08);
-            transition: all 0.2s ease;
-        }
-
-        .cart-item:hover {
-            border-color: rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.1);
         }
 
         .cart-item-image {
-            width: 56px;
-            height: 70px;
+            width: 70px;
+            height: 90px;
             background: rgba(0, 212, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
         }
 
         .cart-item-image .mini-sachet {
-            width: 32px;
-            height: 44px;
+            width: 40px;
+            height: 55px;
             background: linear-gradient(135deg, #0A1628 0%, #1a2d4a 50%, #0A1628 100%);
-            border-radius: 4px 4px 8px 8px;
+            border-radius: 6px 6px 10px 10px;
         }
 
         .cart-item-details {
             flex: 1;
-            min-width: 0;
         }
 
         .cart-item-name {
             font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 0.15rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 0.25rem;
         }
 
         .cart-item-variant {
             color: var(--flow-gray);
-            font-size: 0.7rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
         }
 
         .cart-item-actions {
@@ -992,33 +897,28 @@
         .cart-item-qty {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.5rem;
             background: rgba(0, 212, 255, 0.1);
             border-radius: 50px;
-            padding: 0.2rem;
+            padding: 0.25rem;
         }
 
         .cart-item-qty button {
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             border: none;
             background: var(--flow-cyan);
             color: var(--flow-dark);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .cart-item-qty button:hover {
-            transform: scale(1.1);
         }
 
         .cart-item-qty span {
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
@@ -1026,7 +926,6 @@
             font-family: 'Syne', sans-serif;
             font-weight: 700;
             color: var(--flow-cyan);
-            font-size: 0.85rem;
         }
 
         .cart-item-remove {
@@ -1034,10 +933,9 @@
             border: none;
             color: var(--flow-gray);
             cursor: pointer;
-            font-size: 0.7rem;
-            margin-top: 0.35rem;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
             transition: color 0.3s ease;
-            padding: 0;
         }
 
         .cart-item-remove:hover {
@@ -1045,228 +943,26 @@
         }
 
         .cart-footer {
-            padding: 1rem 1.25rem;
+            padding: 1.5rem;
             border-top: 1px solid rgba(0, 212, 255, 0.1);
-            background: rgba(13, 26, 45, 0.7);
-        }
-
-        /* Discount Code Section */
-        .discount-section {
-            margin-bottom: 0.75rem;
-        }
-
-        .discount-form {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            flex-wrap: nowrap;
-            align-items: center;
-        }
-
-        .discount-input-wrapper {
-            flex: 1;
-            min-width: 0;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .discount-input-icon {
-            position: absolute;
-            left: 0.75rem;
-            width: 14px;
-            height: 14px;
-            stroke: var(--flow-cyan);
-            pointer-events: none;
-        }
-
-        .discount-input {
-            width: 100%;
-            background: rgba(0, 212, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.6rem 0.75rem 0.6rem 2.25rem;
-            color: var(--flow-white);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .discount-input::placeholder {
-            color: var(--flow-gray);
-            text-transform: none;
-            letter-spacing: normal;
-        }
-
-        .discount-input:focus {
-            outline: none;
-            border-color: var(--flow-cyan);
-        }
-
-        .discount-apply-btn {
-            background: rgba(0, 212, 255, 0.15);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            color: var(--flow-cyan);
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Outfit', sans-serif;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .discount-apply-btn:hover {
-            background: rgba(0, 212, 255, 0.25);
-        }
-
-        .discount-apply-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .discount-applied {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(0, 180, 100, 0.1);
-            border: 1px solid rgba(0, 180, 100, 0.3);
-            border-radius: 8px;
-            padding: 0.5rem 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .discount-applied-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .discount-applied-info svg {
-            color: #00B464;
-            width: 16px;
-            height: 16px;
-        }
-
-        .discount-applied-code {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #00B464;
-            text-transform: uppercase;
-        }
-
-        .discount-applied-value {
-            font-size: 0.75rem;
-            color: var(--flow-gray);
-        }
-
-        .discount-remove {
-            background: none;
-            border: none;
-            color: var(--flow-gray);
-            cursor: pointer;
-            padding: 0.25rem;
-            transition: color 0.2s ease;
-        }
-
-        .discount-remove:hover {
-            color: #FF6B6B;
-        }
-
-        .discount-error {
-            font-size: 0.75rem;
-            color: #FF6B6B;
-            margin-top: 0.35rem;
-        }
-
-        /* Public Discount Codes */
-        .public-codes-section {
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px dashed rgba(0, 212, 255, 0.2);
-        }
-
-        .public-codes-label {
-            font-size: 0.7rem;
-            color: var(--flow-gray);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .public-codes-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .public-code-chip {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.25);
-            border-radius: 8px;
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .public-code-chip:hover {
-            background: rgba(139, 92, 246, 0.2);
-            border-color: rgba(139, 92, 246, 0.4);
-        }
-
-        .public-code-name {
-            font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #8b5cf6;
-            letter-spacing: 0.05em;
-        }
-
-        .public-code-desc {
-            font-size: 0.65rem;
-            color: var(--flow-gray);
-            margin-top: 0.15rem;
+            background: rgba(13, 26, 45, 0.5);
         }
 
         .cart-subtotal {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
             color: var(--flow-gray);
-            font-size: 0.85rem;
-        }
-
-        .cart-discount-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.35rem;
-            font-size: 0.85rem;
-        }
-
-        .cart-discount-row span:first-child {
-            color: #00B464;
-        }
-
-        .cart-discount-row span:last-child {
-            color: #00B464;
-            font-weight: 600;
         }
 
         .cart-total {
             display: flex;
             justify-content: space-between;
             font-family: 'Syne', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 1rem;
-            padding-top: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
             border-top: 1px solid rgba(0, 212, 255, 0.1);
         }
 
@@ -1275,10 +971,10 @@
             background: var(--flow-cyan);
             color: var(--flow-dark);
             border: none;
-            padding: 0.85rem;
+            padding: 1rem;
             border-radius: 50px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1289,44 +985,39 @@
         }
 
         .checkout-btn:hover {
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
             transform: translateY(-2px);
-        }
-
-        .checkout-btn svg {
-            width: 16px;
-            height: 16px;
         }
 
         .continue-shopping {
             width: 100%;
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--flow-white);
-            padding: 0.7rem;
+            padding: 0.85rem;
             border-radius: 50px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
-            margin-top: 0.6rem;
+            margin-top: 0.75rem;
             transition: all 0.3s ease;
         }
 
         .continue-shopping:hover {
             background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         /* Free Shipping Bar */
         .shipping-progress {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .shipping-text {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--flow-gray);
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
             text-align: center;
         }
 
@@ -1335,19 +1026,8 @@
             font-weight: 600;
         }
 
-        .shipping-text.free-shipping {
-            color: #00B464;
-        }
-
-        .shipping-text.free-shipping svg {
-            width: 14px;
-            height: 14px;
-            vertical-align: middle;
-            margin-right: 4px;
-        }
-
         .shipping-bar {
-            height: 4px;
+            height: 6px;
             background: rgba(0, 212, 255, 0.2);
             border-radius: 10px;
             overflow: hidden;
@@ -1358,10 +1038,6 @@
             background: var(--gradient-flow);
             border-radius: 10px;
             transition: width 0.5s ease;
-        }
-
-        .shipping-bar-fill.complete {
-            background: linear-gradient(90deg, #00B464, #00D4A4);
         }
 
         /* Toast Notification */
@@ -1404,7 +1080,7 @@
         .cart-toast {
             position: fixed;
             top: 75px;
-            left: 20px;
+            right: 20px;
             background: var(--flow-card);
             border: 1px solid rgba(0, 212, 255, 0.3);
             padding: 12px 16px;
@@ -1414,7 +1090,7 @@
             gap: 12px;
             z-index: 2000;
             opacity: 0;
-            transform: translateX(-100%);
+            transform: translateX(100%);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             max-width: 320px;
@@ -1645,7 +1321,6 @@
             gap: 2rem;
             padding: 1.5rem 2rem;
             border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-            position: relative;
         }
 
         .qc-step {
@@ -1655,27 +1330,6 @@
             gap: 0.5rem;
             opacity: 0.4;
             transition: all 0.3s ease;
-            position: relative;
-        }
-
-        /* Connecting line between steps */
-        .qc-step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: calc(50% + 10px);
-            width: calc(2rem + 100% - 20px);
-            height: 2px;
-            background: rgba(0, 212, 255, 0.2);
-            z-index: 0;
-        }
-
-        .qc-step.completed:not(:last-child)::after {
-            background: #10B981;
-        }
-
-        .qc-step.active:not(:last-child)::after {
-            background: linear-gradient(90deg, var(--flow-cyan) 0%, rgba(0, 212, 255, 0.2) 100%);
         }
 
         .qc-step.active {
@@ -1692,8 +1346,6 @@
             border-radius: 50%;
             background: rgba(0, 212, 255, 0.3);
             transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
         }
 
         .qc-step.active .qc-step-dot {
@@ -1774,11 +1426,6 @@
         .qc-input:focus {
             border-color: var(--flow-cyan);
             box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-
-        .qc-input.error {
-            border-color: #FF6B6B;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
         }
 
         .qc-input::placeholder {
@@ -2079,361 +1726,6 @@
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
         }
 
-        /* Add New Address Popup Modal */
-        .address-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 10001;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .address-popup-overlay.visible {
-            display: flex;
-        }
-
-        .address-popup-modal {
-            background: linear-gradient(180deg, #0d1f35 0%, #0A1628 100%);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .address-popup-modal::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .address-popup-modal::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .address-popup-modal::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .address-popup-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-            position: sticky;
-            top: 0;
-            background: #0d1f35;
-            z-index: 1;
-        }
-
-        .address-popup-header h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .address-popup-close {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            color: var(--flow-gray);
-            font-size: 1.25rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .address-popup-close:hover {
-            background: rgba(255, 107, 107, 0.2);
-            color: #FF6B6B;
-        }
-
-        .address-popup-content {
-            padding: 1.5rem;
-        }
-
-        .address-popup-actions {
-            display: flex;
-            gap: 0.75rem;
-            padding: 1rem 1.5rem 1.5rem;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-        }
-
-        .address-popup-cancel-btn {
-            flex: 1;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--flow-gray);
-            padding: 0.85rem 1rem;
-            border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .address-popup-cancel-btn:hover {
-            border-color: rgba(255, 255, 255, 0.4);
-            color: var(--flow-white);
-        }
-
-        .address-popup-save-btn {
-            flex: 2;
-            background: var(--flow-cyan);
-            border: none;
-            color: var(--flow-dark);
-            padding: 0.85rem 1rem;
-            border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .address-popup-save-btn:hover {
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-        }
-
-        .address-popup-save-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Mobile Menu Styles */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            z-index: 1002;
-        }
-        
-        .mobile-menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: var(--flow-white);
-            margin: 6px 0;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-        
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .mobile-menu-overlay.active {
-            opacity: 1;
-        }
-        
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 85%;
-            max-width: 320px;
-            height: 100vh;
-            background: linear-gradient(180deg, rgba(10, 22, 40, 0.98) 0%, rgba(2, 8, 23, 0.98) 100%);
-            border-left: 1px solid rgba(0, 212, 255, 0.15);
-            z-index: 999;
-            padding: 80px 24px 24px;
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-        }
-        
-        .mobile-menu.active {
-            right: 0;
-        }
-        
-        .mobile-menu-links {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-        
-        .mobile-menu-links li {
-            border-bottom: 1px solid rgba(0, 212, 255, 0.08);
-        }
-        
-        .mobile-menu-links a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 0;
-            color: var(--flow-white);
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .mobile-menu-links a svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--flow-cyan);
-            opacity: 0.7;
-        }
-        
-        .mobile-menu-links a:hover,
-        .mobile-menu-links a.active {
-            color: var(--flow-cyan);
-        }
-        
-        /* Mobile Bottom Navigation */
-        .mobile-bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            background: rgba(10, 22, 40, 0.98);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0, 212, 255, 0.15);
-            z-index: 997;
-            padding: 8px 0;
-            padding-bottom: calc(8px + env(safe-area-inset-bottom));
-            justify-content: space-around;
-        }
-        
-        .mobile-bottom-nav .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Outfit', sans-serif;
-        }
-        
-        .mobile-bottom-nav .nav-item svg {
-            width: 22px;
-            height: 22px;
-        }
-        
-        .mobile-bottom-nav .nav-item.active,
-        .mobile-bottom-nav .nav-item:hover {
-            color: var(--flow-cyan);
-        }
-        
-        .mobile-bottom-nav-inner {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .mobile-bottom-nav a,
-        .mobile-bottom-nav button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Outfit', sans-serif;
-        }
-        
-        .mobile-bottom-nav a svg,
-        .mobile-bottom-nav button svg {
-            width: 22px;
-            height: 22px;
-        }
-        
-        .mobile-bottom-nav a.active,
-        .mobile-bottom-nav a:hover,
-        .mobile-bottom-nav button:hover {
-            color: var(--flow-cyan);
-        }
-        
-        .mobile-bottom-nav .cart-badge,
-        .mobile-cart-count {
-            position: absolute;
-            top: 2px;
-            right: 8px;
-            background: var(--flow-cyan);
-            color: var(--flow-dark);
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
-        
-        .cart-nav-item {
-            position: relative;
-        }
-
         /* Mobile Responsive */
         @media (max-width: 1024px) {
             .shop-container {
@@ -2480,265 +1772,51 @@
         }
 
         @media (max-width: 768px) {
-            /* Show mobile navigation */
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            .mobile-menu,
-            .mobile-menu-overlay {
-                display: block;
-            }
-            
-            .mobile-bottom-nav {
-                display: flex;
-                justify-content: space-around;
-            }
-            
-            /* Hide desktop nav elements */
-            .nav-links {
-                display: none !important;
-            }
-            
-            .nav-right .cart-btn,
-            .nav-right .profile-btn {
-                display: none;
-            }
-            
-            /* Adjust body for bottom nav */
-            body {
-                padding-bottom: calc(70px + env(safe-area-inset-bottom));
-            }
-            
             nav {
-                padding: 12px 16px;
+                padding: 1rem 5%;
             }
-            
-            .logo-img {
-                height: 44px;
+
+            .nav-links {
+                display: none;
             }
 
             .shop-container {
-                padding: 5rem 16px 2rem;
-            }
-            
-            .sidebar-header h1 {
-                font-size: 1.75rem;
-            }
-            
-            .sidebar-header p {
-                font-size: 0.9rem;
+                padding: 6rem 5% 4rem;
             }
 
             .sidebar-filters {
                 grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .filter-section {
-                padding: 1rem;
-                border-radius: 14px;
-            }
-            
-            .filter-title {
-                font-size: 0.85rem;
             }
 
             .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            
-            .product-card {
-                border-radius: 14px;
-            }
-            
-            .product-image {
-                min-height: 150px;
-            }
-            
-            .product-info {
-                padding: 12px;
-            }
-            
-            .product-name {
-                font-size: 0.9rem;
-                margin-bottom: 4px;
-            }
-            
-            .product-desc {
-                display: none;
-            }
-            
-            .product-meta {
-                display: none;
-            }
-            
-            .product-footer {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .product-price {
-                flex-direction: row;
-                gap: 8px;
-            }
-            
-            .price-current {
-                font-size: 1rem;
-            }
-            
-            .price-original {
-                font-size: 0.8rem;
-            }
-            
-            .add-to-cart {
-                width: 100%;
-                justify-content: center;
-                padding: 10px 16px;
-                font-size: 0.85rem;
-                border-radius: 10px;
-            }
-            
-            .add-to-cart svg {
-                width: 16px;
-                height: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
 
-            /* Cart drawer full width */
             .cart-drawer {
                 width: 100%;
                 right: -100%;
-                border-radius: 0;
-            }
-            
-            .cart-drawer.open {
-                right: 0;
-            }
-            
-            .cart-header {
-                padding: 16px;
-            }
-            
-            .cart-body {
-                padding: 16px;
-            }
-            
-            .cart-footer {
-                padding: 16px;
-                padding-bottom: calc(16px + env(safe-area-inset-bottom));
-            }
-            
-            .cart-item {
-                padding: 12px;
-            }
-            
-            .cart-item-image {
-                width: 60px;
-                height: 60px;
-            }
-            
-            /* Products header mobile */
-            .products-header {
-                flex-direction: column;
-                gap: 12px;
-                align-items: stretch;
-                margin-bottom: 16px;
-            }
-            
-            .products-count {
-                text-align: center;
-            }
-            
-            .sort-dropdown {
-                width: 100%;
-            }
-            
-            .sort-dropdown select {
-                width: 100%;
-            }
-            
-            /* Promo banner mobile */
-            .promo-banner {
-                padding: 1rem;
-                border-radius: 14px;
-            }
-            
-            .promo-banner h4 {
-                font-size: 0.95rem;
-            }
-            
-            .promo-banner p {
-                font-size: 0.85rem;
-            }
-            
-            /* Footer mobile */
-            footer {
-                padding: 2rem 16px;
-                padding-bottom: calc(80px + env(safe-area-inset-bottom));
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                text-align: center;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
             }
         }
 
         @media (max-width: 480px) {
+            .products-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
             .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                grid-template-columns: 1fr;
             }
-            
-            .product-image {
-                min-height: 120px;
+
+            .product-footer {
+                flex-direction: column;
+                gap: 1rem;
             }
-            
-            .product-info {
-                padding: 10px;
-            }
-            
-            .product-name {
-                font-size: 0.85rem;
-                line-height: 1.3;
-            }
-            
-            .price-current {
-                font-size: 0.95rem;
-            }
-            
+
             .add-to-cart {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-            
-            /* Single column for smaller screens if needed */
-            .sidebar-filters {
-                gap: 10px;
-            }
-        }
-        
-        /* Safe area support */
-        @supports (padding: max(0px)) {
-            .mobile-bottom-nav {
-                padding-bottom: max(8px, env(safe-area-inset-bottom));
-            }
-        }
-        
-        /* Touch-friendly tap targets */
-        @media (pointer: coarse) {
-            .add-to-cart,
-            .filter-option label,
-            .mobile-menu-links a,
-            .mobile-bottom-nav a {
-                min-height: 44px;
+                width: 100%;
+                justify-content: center;
             }
         }
 
@@ -2911,11 +1989,6 @@
         }
 
         #qcMap {
-            width: 100%;
-            height: 100%;
-        }
-
-        #popupMap {
             width: 100%;
             height: 100%;
         }
@@ -3506,16 +2579,15 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="/" class="logo">
+        <a href="index.html" class="logo">
             <img src="logo.png" alt="Flow" class="logo-img">
         </a>
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="#" class="active">Shop</a></li>
-            <li><a href="/#shop">Best Sellers</a></li>
-            <li><a href="/#ingredients">Ingredients</a></li>
-            <li><a href="/#benefits">Benefits</a></li>
-            <li><a href="/#faq">FAQ</a></li>
+            <li><a href="index.html#ingredients">Ingredients</a></li>
+            <li><a href="index.html#benefits">Benefits</a></li>
+            <li><a href="index.html#about">About</a></li>
         </ul>
         <div class="nav-right">
             <button class="cart-btn" id="cartToggle">
@@ -3527,75 +2599,15 @@
                 <span class="cart-text">Cart</span>
                 <span class="cart-count" id="cartCount">0</span>
             </button>
-            <a href="/profile/" class="profile-btn" aria-label="Profile">
+            <a href="profile.html" class="profile-btn" aria-label="Profile">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
                 <span class="profile-text">Profile</span>
             </a>
-            <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-toggle" aria-label="Menu" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </nav>
-    
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
-    
-    <!-- Mobile Slide-out Menu -->
-    <div class="mobile-menu">
-        <ul class="mobile-menu-links">
-            <li>
-                <a href="/">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="/shop/" class="active">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <path d="M16 10a4 4 0 01-8 0"/>
-                    </svg>
-                    Shop
-                </a>
-            </li>
-            <li>
-                <a href="/#ingredients">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                    </svg>
-                    Ingredients
-                </a>
-            </li>
-            <li>
-                <a href="/#benefits">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                    Benefits
-                </a>
-            </li>
-            <li>
-                <a href="/profile/">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    My Account
-                </a>
-            </li>
-        </ul>
-    </div>
 
     <!-- Shop Container -->
     <div class="shop-container">
@@ -3610,12 +2622,17 @@
             <div class="sidebar-filters">
                 <div class="filter-section" id="categoryFilters">
                     <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Category</h3>
-                    <div class="filter-option active" data-category="single" onclick="setCategory('single')">
+                    <div class="filter-option active" data-category="all" onclick="setCategory('all')">
+                        <div class="filter-checkbox"></div>
+                        <span class="filter-label">All Products</span>
+                        <span class="filter-count" id="countAll">0</span>
+                    </div>
+                    <div class="filter-option" data-category="single" onclick="setCategory('single')">
                         <div class="filter-checkbox"></div>
                         <span class="filter-label">Single Flavours</span>
                         <span class="filter-count" id="countSingle">0</span>
                     </div>
-                    <div class="filter-option active" data-category="bundle" onclick="setCategory('bundle')">
+                    <div class="filter-option" data-category="bundle" onclick="setCategory('bundle')">
                         <div class="filter-checkbox"></div>
                         <span class="filter-label">Variety Packs</span>
                         <span class="filter-count" id="countBundle">0</span>
@@ -4033,35 +3050,6 @@
                     <div class="shipping-bar-fill" id="shippingBar" style="width: 0%;"></div>
                 </div>
             </div>
-            
-            <!-- Discount Code Section -->
-            <div class="discount-section">
-                <div class="discount-form" id="discountFormSection">
-                    <div class="discount-input-wrapper">
-                        <svg class="discount-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-                        </svg>
-                        <input type="text" class="discount-input" id="discountInput" placeholder="Have a discount code?">
-                    </div>
-                    <button class="discount-apply-btn" id="discountApplyBtn" onclick="applyDiscountCode()">Apply</button>
-                </div>
-                <div class="discount-applied" id="discountApplied" style="display: none;">
-                    <div class="discount-applied-info">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        <span class="discount-applied-code" id="appliedCode">FIRSTFLOW15</span>
-                        <span class="discount-applied-value" id="appliedValue">-15%</span>
-                    </div>
-                    <button class="discount-remove" onclick="removeDiscountCode()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>
-                </div>
-                <p class="discount-error" id="discountError" style="display: none;"></p>
-            </div>
-            
             <div class="cart-subtotal">
                 <span>Subtotal</span>
                 <span id="cartSubtotal">₹0</span>
@@ -4070,17 +3058,13 @@
                 <span>Shipping</span>
                 <span id="cartShipping">₹99</span>
             </div>
-            <div class="cart-discount-row" id="discountRow" style="display: none;">
-                <span>Discount</span>
-                <span id="cartDiscount">-₹0</span>
-            </div>
             <div class="cart-total">
                 <span>Total</span>
                 <span id="cartTotal">₹0</span>
             </div>
             <button class="checkout-btn" onclick="goToCheckout()">
                 Proceed to Checkout
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </button>
@@ -4116,85 +3100,6 @@
         </button>
     </div>
 
-    <!-- Add New Address Popup Modal -->
-    <div class="address-popup-overlay" id="addressPopupOverlay">
-        <div class="address-popup-modal">
-            <div class="address-popup-header">
-                <h3><span class="material-icons" style="font-size: 20px;">add_location</span> Add New Address</h3>
-                <button class="address-popup-close" onclick="closeAddressPopup()">×</button>
-            </div>
-            <div class="address-popup-content">
-                <!-- Google Maps Search -->
-                <div class="qc-map-container">
-                    <div class="qc-address-search">
-                        <span class="material-icons" style="font-size: 18px; color: var(--flow-cyan);">search</span>
-                        <input type="search" id="popupAddressSearch" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
-                    </div>
-                    
-                    <button type="button" class="qc-use-current-location" onclick="useCurrentLocationPopup()">
-                        <span class="material-icons" style="font-size: 16px; vertical-align: middle;">my_location</span>
-                        Use my current location
-                    </button>
-                    
-                    <div class="qc-map-wrapper">
-                        <div id="popupMap"></div>
-                    </div>
-                    
-                    <!-- Selected Address Display -->
-                    <div class="qc-selected-address" id="popupSelectedAddress">
-                        <div class="qc-selected-address-label">Selected Location</div>
-                        <div class="qc-selected-address-text" id="popupSelectedAddressText"></div>
-                        <div class="qc-address-details">
-                            <div class="qc-address-detail-item">
-                                <span>City</span>
-                                <strong id="popupCityDisplay">-</strong>
-                            </div>
-                            <div class="qc-address-detail-item">
-                                <span>State</span>
-                                <strong id="popupStateDisplay">-</strong>
-                            </div>
-                            <div class="qc-address-detail-item">
-                                <span>PIN Code</span>
-                                <strong id="popupPincodeDisplay">-</strong>
-                            </div>
-                            <div class="qc-address-detail-item">
-                                <span>Country</span>
-                                <strong id="popupCountryDisplay">India</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- House/Floor Number Input -->
-                <div class="qc-house-input">
-                    <label for="popupHouseFloor">House No. / Floor / Building Name *</label>
-                    <input type="text" class="qc-input" id="popupHouseFloor" placeholder="e.g., Flat 204, 2nd Floor, Sunshine Apartments">
-                </div>
-                
-                <!-- Address Error Message -->
-                <div class="qc-address-error" id="popupAddressError" style="display: none;">
-                    <span class="material-icons" style="font-size: 16px;">error_outline</span>
-                    <span id="popupAddressErrorText"></span>
-                </div>
-                
-                <!-- Hidden fields to store data -->
-                <input type="hidden" id="popupCity" value="">
-                <input type="hidden" id="popupState" value="">
-                <input type="hidden" id="popupPincode" value="">
-                <input type="hidden" id="popupAddress" value="">
-                <input type="hidden" id="popupLatitude" value="">
-                <input type="hidden" id="popupLongitude" value="">
-            </div>
-            <div class="address-popup-actions">
-                <button class="address-popup-cancel-btn" onclick="closeAddressPopup()">Cancel</button>
-                <button class="address-popup-save-btn" id="popupSaveAddressBtn" onclick="saveNewAddressFromPopup()">
-                    <span class="material-icons" style="font-size: 18px;">save</span>
-                    Save Address
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Quick Checkout Modal -->
     <div class="quick-checkout-overlay" id="quickCheckoutOverlay">
         <div class="quick-checkout-modal">
@@ -4219,7 +3124,7 @@
             <!-- Step 1: Contact -->
             <div class="qc-content" id="qcStep1">
                 <div class="qc-header">
-                    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem;">mail</span> Contact Information</h3>
+                    <h3>📧 Contact Information</h3>
                     <p>We'll send your order confirmation here</p>
                 </div>
                 <div class="qc-form">
@@ -4232,14 +3137,16 @@
                 </div>
                 <button class="qc-continue-btn" onclick="goToStep(2)">
                     Continue to Shipping
-                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">arrow_forward</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
                 </button>
             </div>
 
             <!-- Step 2: Shipping with Google Maps -->
             <div class="qc-content hidden" id="qcStep2">
                 <div class="qc-header">
-                    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem;">location_on</span> Delivery Address</h3>
+                    <h3>📍 Delivery Address</h3>
                     <p id="qcAddressHeaderText">Select your delivery address</p>
                 </div>
                 
@@ -4249,7 +3156,10 @@
                         <!-- Saved addresses will be populated here -->
                     </div>
                     <button type="button" class="qc-add-new-address-btn" onclick="showNewAddressForm()">
-                        <span class="material-icons" style="font-size: 16px; vertical-align: middle;">add</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
                         Add New Address
                     </button>
                 </div>
@@ -4259,12 +3169,19 @@
                     <!-- Google Maps Search -->
                     <div class="qc-map-container">
                         <div class="qc-address-search">
-                            <span class="material-icons" style="font-size: 18px; color: var(--flow-cyan);">search</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
                             <input type="search" id="qcAddressSearch" role="combobox" aria-autocomplete="list" placeholder="Search for your area, street or landmark...">
                         </div>
                         
                         <button type="button" class="qc-use-current-location" onclick="useCurrentLocation()">
-                            <span class="material-icons" style="font-size: 16px; vertical-align: middle;">my_location</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                            </svg>
                             Use my current location
                         </button>
                         
@@ -4305,7 +3222,11 @@
                     
                     <!-- Address Error Message -->
                     <div class="qc-address-error" id="qcAddressError" style="display: none;">
-                        <span class="material-icons" style="font-size: 16px;">error_outline</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
                         <span id="qcAddressErrorText"></span>
                     </div>
                     
@@ -4328,7 +3249,7 @@
                 
                 <!-- Shipping Info -->
                 <div class="qc-shipping-info-box" id="qcShippingInfoBox">
-                    <div class="qc-shipping-icon"><span class="material-icons">local_shipping</span></div>
+                    <div class="qc-shipping-icon">🚚</div>
                     <div class="qc-shipping-details">
                         <span class="qc-shipping-title" id="qcShippingTitle">Standard Delivery</span>
                         <span class="qc-shipping-estimate" id="qcShippingEstimate">Estimated delivery: 2-4 days</span>
@@ -4338,14 +3259,16 @@
                     </div>
                 </div>
                 <p class="qc-free-shipping-note" id="qcFreeShippingNote" style="display: none;">
-                    <span class="material-icons" style="vertical-align: middle; font-size: 1rem; margin-right: 0.25rem;">celebration</span> Free shipping on orders above ₹999!
+                    🎉 Free shipping on orders above ₹999!
                 </p>
                 
                 <div class="qc-btn-row">
-                    <button class="qc-back-btn" onclick="goToStep(1)"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">arrow_back</span> Back</button>
+                    <button class="qc-back-btn" onclick="goToStep(1)">← Back</button>
                     <button class="qc-continue-btn" onclick="validateAndContinueToPayment()">
                         Continue to Payment
-                        <span class="material-icons" style="font-size: 18px; vertical-align: middle;">arrow_forward</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -4388,10 +3311,6 @@
                         <span>Shipping</span>
                         <span id="qcShippingCost">FREE</span>
                     </div>
-                    <div class="qc-summary-row qc-discount-row" id="qcDiscountRow" style="display: none;">
-                        <span>Discount <span id="qcDiscountCode" style="color: var(--flow-cyan); font-size: 0.8rem;"></span></span>
-                        <span id="qcDiscountAmount" style="color: #10B981;">-₹0</span>
-                    </div>
                     <div class="qc-summary-row qc-total">
                         <span>Total</span>
                         <span id="qcTotal">₹0</span>
@@ -4399,7 +3318,7 @@
                 </div>
 
                 <div class="qc-btn-row">
-                    <button class="qc-back-btn" onclick="goToStep(2)"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">arrow_back</span> Back</button>
+                    <button class="qc-back-btn" onclick="goToStep(2)">← Back</button>
                     <button class="qc-place-order-btn" id="qcPlaceOrder">
                         <span class="qc-btn-text">Pay Now</span>
                         <div class="qc-spinner"></div>
@@ -4407,7 +3326,10 @@
                 </div>
 
                 <div class="qc-secure">
-                    <span class="material-icons" style="font-size: 14px; vertical-align: middle;">lock</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
                     Secured by Razorpay • 256-bit SSL encryption
                 </div>
             </div>
@@ -4415,7 +3337,7 @@
             <!-- Success Step -->
             <div class="qc-content hidden" id="qcSuccess">
                 <div class="qc-success-content">
-                    <div class="qc-success-icon"><span class="material-icons">check_circle</span></div>
+                    <div class="qc-success-icon">✓</div>
                     <h3>Order Placed!</h3>
                     <p>Thank you for your order. We've sent a confirmation to your email.</p>
                     <div class="qc-order-number">
@@ -4432,7 +3354,7 @@
     <footer id="about">
         <div class="footer-content">
             <div class="footer-brand">
-                <a href="/" class="logo">
+                <a href="index.html" class="logo">
                     <img src="logo.png" alt="Flow" class="logo-img">
                 </a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
@@ -4440,33 +3362,33 @@
             <div class="footer-column">
                 <h4>Shop</h4>
                 <ul>
-                    <li><a href="/shop/">Products</a></li>
-                    <li><a href="/shop/">Bundles</a></li>
+                    <li><a href="flow-shop-2.html">Products</a></li>
+                    <li><a href="flow-shop-2.html">Bundles</a></li>
                     <li><a href="#" onclick="showComingSoonToast(event)">Subscription</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="/#about">About Us</a></li>
-                    <li><a href="/#ingredients">Science</a></li>
-                    <li><a href="/#about">Contact</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#ingredients">Science</a></li>
+                    <li><a href="index.html#about">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="/#faq">FAQ</a></li>
-                    <li><a href="/shipping-policy/">Shipping</a></li>
-                    <li><a href="/refund-policy/">Refund Policy</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="shipping-policy.html">Shipping</a></li>
+                    <li><a href="refund-policy.html">Refund Policy</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Legal</h4>
                 <ul>
-                    <li><a href="/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="/terms-conditions/">Terms & Conditions</a></li>
-                    <li><a href="/cookie-policy/">Cookie Policy</a></li>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
                 </ul>
             </div>
         </div>
@@ -4476,19 +3398,19 @@
                 <a href="mailto:contact@flowhydration.in">contact@flowhydration.in</a>
             </div>
             <div class="social-links">
-                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Instagram">
+                <a href="#" aria-label="Instagram">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="2" width="20" height="20" rx="5"/>
                         <circle cx="12" cy="12" r="4"/>
                         <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
                     </svg>
                 </a>
-                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Twitter">
+                <a href="#" aria-label="Twitter">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
-                <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="YouTube">
+                <a href="#" aria-label="YouTube">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
                         <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
@@ -4498,28 +3420,24 @@
         </div>
     </footer>
 
-    <!-- API Configuration -->
-    <script src="assets/js/config.js"></script>
     <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? ''
+            : 'https://api.flowhydration.in';
+        
         // Products State
         let products = [];
         
         // Filter State
-        let activeCategories = ['single', 'bundle']; // Multi-select: both selected by default (= all)
-        let activeFlavours = []; // Empty = all flavours (multi-select)
+        let activeCategory = 'all';
+        let activeFlavour = 'all';
         let activeSort = 'featured';
         
         // Cart State - synced with CustomerAuth
         let cart = [];
         const FREE_SHIPPING_THRESHOLD = 999;
         const SHIPPING_COST = 99;
-        
-        // Buy Now Session State
-        let isBuyNowSession = false;
-        
-        // Discount Code State
-        let appliedDiscount = null;
-        let publicDiscountCodes = []; // Loaded from API
 
         // DOM Elements
         const cartToggle = document.getElementById('cartToggle');
@@ -4560,127 +3478,11 @@
             updateAddToCartButtons();
         });
 
-        // Restore cart after Buy Now session is cancelled
-        function restoreCartAfterBuyNow() {
-            const backupCart = localStorage.getItem('flow_cart_backup');
-            if (backupCart && isBuyNowSession) {
-                localStorage.setItem('flow_cart', backupCart);
-                localStorage.removeItem('flow_cart_backup');
-                cart = JSON.parse(backupCart);
-                updateCartUI();
-                updateAddToCartButtons();
-                if (CustomerAuth.isLoggedIn()) {
-                    CustomerAuth.syncCartToServer();
-                }
-                isBuyNowSession = false;
-            }
-        }
-
         // Load products on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadProducts();
-            await initializeCart();
-            loadSavedDiscount();
-            loadPublicDiscountCodes();
-            initMobileMenu();
-            
-            // Remove error highlight on input
-            const qcEmailInput = document.getElementById('qcEmail');
-            const qcPhoneInput = document.getElementById('qcPhone');
-            if (qcEmailInput) {
-                qcEmailInput.addEventListener('input', () => qcEmailInput.classList.remove('error'));
-            }
-            if (qcPhoneInput) {
-                qcPhoneInput.addEventListener('input', () => qcPhoneInput.classList.remove('error'));
-            }
-            
-            // Check URL params
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // Check if redirected with cart=true to open cart
-            if (urlParams.get('cart') === 'true') {
-                // Remove the query param from URL without refresh
-                window.history.replaceState({}, '', window.location.pathname);
-                // Open cart drawer
-                setTimeout(() => openCart(), 100);
-            }
-            
-            // Check if redirected from Buy Now with checkout=true
-            if (urlParams.get('checkout') === 'true') {
-                // Track if this is a Buy Now session
-                if (urlParams.get('buynow') === 'true') {
-                    isBuyNowSession = true;
-                }
-                
-                // Get discount code from URL if passed
-                const discountCode = urlParams.get('discount');
-                
-                // Remove the query params from URL without refresh
-                window.history.replaceState({}, '', window.location.pathname);
-                
-                // Open checkout if user is logged in and cart has items
-                if (CustomerAuth.isLoggedIn() && cart.length > 0) {
-                    // Auto-apply discount code first, then open checkout
-                    if (discountCode) {
-                        await autoApplyDiscountCode(discountCode);
-                    }
-                    openQuickCheckout();
-                } else if (cart.length > 0) {
-                    // Store discount code to apply after login
-                    if (discountCode) {
-                        sessionStorage.setItem('flow_pending_discount', discountCode);
-                    }
-                    // Show login modal first
-                    CustomerAuth.showLoginModal();
-                }
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            initializeCart();
         });
-
-        // Mobile Menu Functions
-        function initMobileMenu() {
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const mobileMenuClose = document.querySelector('.mobile-menu-close');
-            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
-            const mobileMenuLinks = document.querySelectorAll('.mobile-nav-links a');
-
-            if (mobileMenuToggle && mobileMenu) {
-                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-            }
-            if (mobileMenuClose) {
-                mobileMenuClose.addEventListener('click', closeMobileMenu);
-            }
-            if (mobileMenuOverlay) {
-                mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-            }
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
-            });
-        }
-
-        function toggleMobileMenu() {
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
-            if (mobileMenu) {
-                mobileMenu.classList.toggle('active');
-            }
-            if (mobileMenuOverlay) {
-                mobileMenuOverlay.classList.toggle('active');
-            }
-            document.body.style.overflow = mobileMenu?.classList.contains('active') ? 'hidden' : '';
-        }
-
-        function closeMobileMenu() {
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
-            if (mobileMenu) {
-                mobileMenu.classList.remove('active');
-            }
-            if (mobileMenuOverlay) {
-                mobileMenuOverlay.classList.remove('active');
-            }
-            document.body.style.overflow = '';
-        }
 
         async function loadProducts() {
             const grid = document.querySelector('.products-grid');
@@ -4708,106 +3510,237 @@
             }
         }
 
+        // Known flavor colors mapping
+        const FLAVOR_COLORS = {
+            'original': '#00D4FF',
+            'lemonade': '#FFD93D',
+            'mango': '#FF9F43',
+            'berry': '#EE5A6F',
+            'citrus': '#7BD83A',
+            'tropical': '#FF6B9D',
+            'mint': '#2ED573',
+            'variety': '#00D4FF'
+        };
+
+        // Extract flavor from product name (e.g., "Flow Lemonade" -> { name, slug, color })
+        function extractFlavorFromName(productName) {
+            if (!productName) return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+            const name = productName.toLowerCase();
+            if (name.includes('lemonade')) return { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade };
+            if (name.includes('mango')) return { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango };
+            if (name.includes('original')) return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+            if (name.includes('berry')) return { name: 'Berry', slug: 'berry', color: FLAVOR_COLORS.berry };
+            if (name.includes('citrus')) return { name: 'Citrus', slug: 'citrus', color: FLAVOR_COLORS.citrus };
+            if (name.includes('tropical')) return { name: 'Tropical', slug: 'tropical', color: FLAVOR_COLORS.tropical };
+            if (name.includes('mint')) return { name: 'Mint', slug: 'mint', color: FLAVOR_COLORS.mint };
+            if (name.includes('variety')) return { name: 'Variety', slug: 'variety', color: FLAVOR_COLORS.variety };
+            return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+        }
+
+        // Get bundle flavors (for variety packs)
+        function getBundleFlavors() {
+            return [
+                { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original },
+                { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango },
+                { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade }
+            ];
+        }
+
+        // Get primary image URL from product media
+        function getProductImage(product) {
+            if (product.media && product.media.length > 0) {
+                const primaryMedia = product.media.find(m => m.isPrimary && m.type === 'image') || product.media.find(m => m.type === 'image');
+                return primaryMedia ? primaryMedia.url : null;
+            }
+            return null;
+        }
+
+        // Convert hex color to rgba
+        function hexToRgba(hex, alpha) {
+            if (!hex) return `rgba(0, 212, 255, ${alpha})`;
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (result) {
+                return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`;
+            }
+            return `rgba(0, 212, 255, ${alpha})`;
+        }
+
+        // Build product card HTML
+        function buildProductCard(product, pack, isBundle, isFeatured = false) {
+            const flavor = extractFlavorFromName(product.name);
+            const bundleFlavors = getBundleFlavors();
+            const imageUrl = getProductImage(product);
+            const uniqueId = `${product.slug}-${pack.size}`;
+            const displayName = `${product.name} — ${pack.label}`;
+            
+            // Badge logic
+            let badgeHtml = '';
+            const badge = product.badges && product.badges[0];
+            if (badge && badge.type === 'bestseller') {
+                badgeHtml = `<div class="product-badge bestseller">${badge.text}</div>`;
+            } else if (isBundle) {
+                badgeHtml = `<div class="product-badge new">Featured</div>`;
+            } else if (pack.savings) {
+                badgeHtml = `<div class="product-badge sale">${pack.savings}</div>`;
+            }
+
+            // Image section
+            let imageHtml = '';
+            if (imageUrl) {
+                imageHtml = `<img src="${imageUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain;" />`;
+            } else if (isBundle) {
+                imageHtml = `
+                    <div style="display: flex; gap: 8px; justify-content: center; align-items: flex-end;">
+                        ${bundleFlavors.map(f => `
+                            <div class="sachet-visual" style="width: 60px; height: 90px; background: linear-gradient(135deg, ${hexToRgba(f.color, 0.3)} 0%, ${hexToRgba(f.color, 0.1)} 100%);">
+                                <div class="sachet-content">
+                                    <div class="sachet-logo" style="font-size: 0.7rem;">Flow</div>
+                                    <div class="sachet-flavor" style="font-size: 0.5rem;">${f.name}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                const sachetStyle = `background: linear-gradient(135deg, ${hexToRgba(flavor.color, 0.3)} 0%, ${hexToRgba(flavor.color, 0.1)} 100%);`;
+                imageHtml = `
+                    <div class="sachet-visual" style="${sachetStyle}">
+                        <div class="sachet-content">
+                            <div class="sachet-logo">Flow</div>
+                            <div class="sachet-flavor">${flavor.name}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Meta info
+            const categoryLabel = isBundle ? 'Bundle' : (product.category ? product.category.charAt(0).toUpperCase() + product.category.slice(1) : 'Hydration');
+            const metaSecond = isBundle ? `${bundleFlavors.length} flavours` : flavor.name;
+            const description = product.shortDescription || (product.description ? product.description.slice(0, 100) + '...' : '');
+            const flavorSlug = isBundle ? '' : flavor.slug;
+
+            return `
+                <div class="product-card ${isFeatured ? 'featured bundle' : ''}" 
+                     data-slug="${product.slug}" 
+                     data-flavour="${flavorSlug}"
+                     data-pack="${pack.size}"
+                     data-category="${product.category || 'hydration'}"
+                     onclick="goToProduct('${product.slug}', '${flavorSlug}', ${pack.size})">
+                    ${badgeHtml}
+                    <div class="product-image">
+                        ${imageHtml}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${categoryLabel}</div>
+                        <h3 class="product-name">${displayName}</h3>
+                        <p class="product-desc">${description}</p>
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                </svg>
+                                ${pack.size} sachets
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                </svg>
+                                ${metaSecond}
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₹${pack.price.toLocaleString()}</span>
+                                ${pack.comparePrice ? `<span class="price-original">₹${pack.comparePrice.toLocaleString()}</span>` : ''}
+                            </div>
+                            <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${pack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${pack.price});">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderProducts() {
             const grid = document.querySelector('.products-grid');
             
-            if (products.length === 0) {
+            if (!products || products.length === 0) {
                 grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem;"><p style="color: var(--flow-gray);">No products available</p></div>`;
                 return;
             }
             
-            // Separate bundle products (variety packs) from single flavour products
-            const bundleProducts = products.filter(p => p.category === 'bundle');
-            const singleProducts = products.filter(p => p.category !== 'bundle');
-            
-            // Expand single products into all flavour × pack size combinations
+            // Build expanded list: one card per product per pack size
             const expandedProducts = [];
             
-            // Add bundle products first (they show as single featured cards)
-            bundleProducts.forEach(product => {
-                const pack = product.packSizes[0];
-                expandedProducts.push({
-                    ...product,
-                    displayName: product.name,
-                    selectedFlavour: null, // Bundle has multiple flavours
-                    selectedPack: pack,
-                    uniqueId: product.slug,
-                    isBundle: true
-                });
-            });
-            
-            // Get all unique pack sizes (sorted by size: 10, 20, 30)
-            const allPackSizes = [10, 20, 30];
-            
-            // Expand products grouped by pack size first, then by flavour
-            // This ensures: Original 10, Mango 10, Lemonade 10, Original 20, Mango 20, etc.
-            allPackSizes.forEach(packSize => {
-                singleProducts.forEach(product => {
-                    const flavours = product.flavours && product.flavours.length > 0 ? product.flavours : [{ name: 'Original', slug: 'original', color: '#00D4FF' }];
-                    const pack = product.packSizes.find(p => p.size === packSize);
-                    
-                    if (pack) {
-                        flavours.forEach(flavour => {
-                            expandedProducts.push({
-                                ...product,
-                                displayName: `Flow ${flavour.name} — ${pack.label}`,
-                                selectedFlavour: flavour,
-                                selectedPack: pack,
-                                uniqueId: `${product.slug}-${flavour.slug}-${pack.size}`,
-                                isBundle: false
-                            });
+            products.forEach(product => {
+                const isBundle = product.category === 'bundle';
+                const flavor = extractFlavorFromName(product.name);
+                
+                if (product.packSizes && product.packSizes.length > 0) {
+                    product.packSizes.forEach(pack => {
+                        expandedProducts.push({
+                            product,
+                            pack,
+                            isBundle,
+                            flavor,
+                            uniqueId: `${product.slug}-${pack.size}`
                         });
-                    }
-                });
+                    });
+                }
             });
             
-            // Update filter counts before filtering
+            // Update filter counts
             updateFilterCounts(expandedProducts);
             
             // Apply filters
-            let filteredProducts = expandedProducts;
+            let filteredProducts = [...expandedProducts];
             
-            // Category filter (multi-select)
-            if (activeCategories.length > 0 && activeCategories.length < 2) {
-                // Only filter if not all categories selected
-                filteredProducts = filteredProducts.filter(p => {
-                    if (p.isBundle) {
-                        return activeCategories.includes('bundle');
-                    } else {
-                        return activeCategories.includes('single');
-                    }
-                });
+            // Category filter
+            if (activeCategory === 'single') {
+                filteredProducts = filteredProducts.filter(p => !p.isBundle);
+            } else if (activeCategory === 'bundle') {
+                filteredProducts = filteredProducts.filter(p => p.isBundle);
             }
             
-            // Flavour filter (multi-select)
-            if (activeFlavours.length > 0) {
+            // Flavour filter
+            if (activeFlavour !== 'all') {
                 filteredProducts = filteredProducts.filter(p => {
-                    // For bundles, check if any of the flavours match
-                    if (p.isBundle && p.flavours) {
-                        return p.flavours.some(f => activeFlavours.includes(f.slug));
+                    if (p.isBundle) {
+                        // Bundles match all flavors (they contain all)
+                        return getBundleFlavors().some(f => f.slug === activeFlavour);
                     }
-                    // For single flavour products
-                    return p.selectedFlavour && activeFlavours.includes(p.selectedFlavour.slug);
+                    return p.flavor && p.flavor.slug === activeFlavour;
                 });
             }
             
             // Apply sorting
             switch (activeSort) {
                 case 'price-low':
-                    filteredProducts.sort((a, b) => a.selectedPack.price - b.selectedPack.price);
+                    filteredProducts.sort((a, b) => a.pack.price - b.pack.price);
                     break;
                 case 'price-high':
-                    filteredProducts.sort((a, b) => b.selectedPack.price - a.selectedPack.price);
+                    filteredProducts.sort((a, b) => b.pack.price - a.pack.price);
                     break;
                 case 'name-az':
-                    filteredProducts.sort((a, b) => a.displayName.localeCompare(b.displayName));
+                    filteredProducts.sort((a, b) => a.product.name.localeCompare(b.product.name));
                     break;
                 case 'name-za':
-                    filteredProducts.sort((a, b) => b.displayName.localeCompare(a.displayName));
+                    filteredProducts.sort((a, b) => b.product.name.localeCompare(a.product.name));
                     break;
                 case 'featured':
                 default:
-                    // Keep original order with bundles first
+                    // Bundles first, then by product order
+                    filteredProducts.sort((a, b) => {
+                        if (a.isBundle && !b.isBundle) return -1;
+                        if (!a.isBundle && b.isBundle) return 1;
+                        return 0;
+                    });
                     break;
             }
             
@@ -4820,159 +3753,35 @@
                         </svg>
                         <h3 style="color: var(--flow-white); margin-bottom: 0.5rem;">No products found</h3>
                         <p style="color: var(--flow-gray);">Try adjusting your filters</p>
-                        <button onclick="clearAllFilters();" style="margin-top: 1rem; background: var(--flow-cyan); color: var(--flow-dark); border: none; padding: 0.75rem 1.5rem; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer;">Clear Filters</button>
+                        <button onclick="setCategory('all'); setFlavour('all');" style="margin-top: 1rem; background: var(--flow-cyan); color: var(--flow-dark); border: none; padding: 0.75rem 1.5rem; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer;">Clear Filters</button>
                     </div>
                 `;
                 document.querySelector('.products-count strong').textContent = 0;
                 return;
             }
             
-            grid.innerHTML = filteredProducts.map((item, index) => {
-                const { selectedFlavour, selectedPack, displayName, uniqueId, isBundle } = item;
-                const isFeatured = index === 0 || isBundle;
-                const badge = item.badges && item.badges[0];
-                
-                // Get thumbnail image (isPrimary first, then first image)
-                const thumbnailImage = item.media && item.media.length > 0
-                    ? (item.media.find(m => m.isPrimary && m.type === 'image') || item.media.find(m => m.type === 'image'))
-                    : null;
-                
-                // Determine single badge: Bestseller > Featured > Price (only one badge shown)
-                let badgeHtml = '';
-                if (badge && badge.type === 'bestseller') {
-                    badgeHtml = `<div class="product-badge bestseller">${badge.text}</div>`;
-                } else if (isFeatured && isBundle) {
-                    badgeHtml = `<div class="product-badge new">Featured</div>`;
-                } else if (selectedPack.savings) {
-                    badgeHtml = `<div class="product-badge sale">${selectedPack.savings}</div>`;
+            // Pick one random bundle to be featured
+            const bundleItems = filteredProducts.filter(p => p.isBundle);
+            const featuredBundleId = bundleItems.length > 0 
+                ? bundleItems[Math.floor(Math.random() * bundleItems.length)].uniqueId 
+                : null;
+            
+            // Move featured card to first position
+            if (featuredBundleId) {
+                const featuredIndex = filteredProducts.findIndex(p => p.uniqueId === featuredBundleId);
+                if (featuredIndex > 0) {
+                    const [featuredItem] = filteredProducts.splice(featuredIndex, 1);
+                    filteredProducts.unshift(featuredItem);
                 }
-                
-                // Bundle card with multiple sachets
-                if (isBundle) {
-                    // Bundle thumbnail or sachet visuals
-                    const bundleImageHtml = thumbnailImage
-                        ? `<img src="${thumbnailImage.url}" alt="${displayName}" class="product-thumbnail-img">`
-                        : `<div style="display: flex; gap: 8px; justify-content: center; align-items: flex-end;">
-                            ${item.flavours.map(f => `
-                                <div class="sachet-visual" style="width: 60px; height: 90px; background: linear-gradient(135deg, ${hexToRgba(f.color, 0.3)} 0%, ${hexToRgba(f.color, 0.1)} 100%);">
-                                    <div class="sachet-content">
-                                        <div class="sachet-logo" style="font-size: 0.7rem;">Flow</div>
-                                        <div class="sachet-flavor" style="font-size: 0.5rem;">${f.name}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                           </div>`;
-                    
-                    return `
-                        <div class="product-card featured bundle" 
-                             data-slug="${item.slug}" 
-                             data-category="${item.category}"
-                             onclick="goToProduct('${item.slug}', '', ${selectedPack.size})">
-                            ${badgeHtml}
-                            <div class="product-image">
-                                ${bundleImageHtml}
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">Bundle</div>
-                                <h3 class="product-name">${displayName}</h3>
-                                <p class="product-desc">${item.shortDescription || ''}</p>
-                                <div class="product-meta">
-                                    <div class="meta-item">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2v20M2 12h20"/>
-                                        </svg>
-                                        ${selectedPack.size} sachets
-                                    </div>
-                                    <div class="meta-item">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                                        </svg>
-                                        ${item.flavours.length} flavours
-                                    </div>
-                                </div>
-                                <div class="product-footer">
-                                    <div class="product-price">
-                                        <span class="price-current">₹${selectedPack.price.toLocaleString()}</span>
-                                        ${selectedPack.comparePrice ? `<span class="price-original">₹${selectedPack.comparePrice.toLocaleString()}</span>` : ''}
-                                    </div>
-                                    <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price}, null, ${thumbnailImage ? `'${thumbnailImage.url}'` : 'null'});">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                                            <line x1="3" y1="6" x2="21" y2="6"/>
-                                            <path d="M16 10a4 4 0 01-8 0"/>
-                                        </svg>
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                // Single flavour card
-                const sachetStyle = selectedFlavour?.color 
-                    ? `background: linear-gradient(135deg, ${hexToRgba(selectedFlavour.color, 0.3)} 0%, ${hexToRgba(selectedFlavour.color, 0.1)} 100%);`
-                    : '';
-                
-                // Single product thumbnail or sachet visual
-                const singleImageHtml = thumbnailImage
-                    ? `<img src="${thumbnailImage.url}" alt="${displayName}" class="product-thumbnail-img">`
-                    : `<div class="sachet-visual" style="${sachetStyle}">
-                            <div class="sachet-content">
-                                <div class="sachet-logo">Flow</div>
-                                <div class="sachet-flavor">${selectedFlavour.name}</div>
-                            </div>
-                       </div>`;
-                
-                return `
-                    <div class="product-card" 
-                         data-slug="${item.slug}" 
-                         data-flavour="${selectedFlavour.slug}"
-                         data-pack="${selectedPack.size}"
-                         data-category="${item.category}"
-                         onclick="goToProduct('${item.slug}', '${selectedFlavour.slug}', ${selectedPack.size})">
-                        ${badgeHtml}
-                        <div class="product-image">
-                            ${singleImageHtml}
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</div>
-                            <h3 class="product-name">${displayName}</h3>
-                            <p class="product-desc">${item.shortDescription || item.description?.slice(0, 100) + '...' || ''}</p>
-                            <div class="product-meta">
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2v20M2 12h20"/>
-                                    </svg>
-                                    ${selectedPack.size} sachets
-                                </div>
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                                    </svg>
-                                    ${selectedFlavour.name}
-                                </div>
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    <span class="price-current">₹${selectedPack.price.toLocaleString()}</span>
-                                    ${selectedPack.comparePrice ? `<span class="price-original">₹${selectedPack.comparePrice.toLocaleString()}</span>` : ''}
-                                </div>
-                                <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${selectedPack.price}" data-image="${thumbnailImage ? thumbnailImage.url : ''}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${selectedPack.price}, '${selectedFlavour.name}', this.dataset.image || null);">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                                        <line x1="3" y1="6" x2="21" y2="6"/>
-                                        <path d="M16 10a4 4 0 01-8 0"/>
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+            }
+            
+            // Render product cards
+            grid.innerHTML = filteredProducts.map(item => {
+                const isFeatured = item.isBundle && item.uniqueId === featuredBundleId;
+                return buildProductCard(item.product, item.pack, item.isBundle, isFeatured);
             }).join('');
             
-            // Update product count with filtered total
+            // Update product count
             document.querySelector('.products-count strong').textContent = filteredProducts.length;
             
             // Re-bind add to cart button animations and update with quantities
@@ -4981,15 +3790,7 @@
         }
 
         function goToProduct(slug, flavour, packSize) {
-            window.location.href = `/product/?product=${slug}&flavour=${flavour}&pack=${packSize}`;
-        }
-
-        function hexToRgba(hex, alpha) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            if (result) {
-                return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`;
-            }
-            return `rgba(0, 212, 255, ${alpha})`;
+            window.location.href = `product.html?product=${slug}&flavour=${flavour}&pack=${packSize}`;
         }
 
         function bindAddToCartButtons() {
@@ -5008,74 +3809,22 @@
 
         // Filter Functions
         function setCategory(category) {
-            if (category === 'all') {
-                // Select all categories
-                activeCategories = ['single', 'bundle'];
-            } else {
-                // Toggle the category
-                const index = activeCategories.indexOf(category);
-                if (index > -1) {
-                    // Don't allow deselecting if it's the only one selected
-                    if (activeCategories.length > 1) {
-                        activeCategories.splice(index, 1);
-                    }
-                } else {
-                    activeCategories.push(category);
-                }
-            }
+            activeCategory = category;
             
             // Update UI
             document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => {
-                const cat = opt.dataset.category;
-                if (cat === 'all') {
-                    opt.classList.toggle('active', activeCategories.length === 2);
-                } else {
-                    opt.classList.toggle('active', activeCategories.includes(cat));
-                }
+                opt.classList.toggle('active', opt.dataset.category === category);
             });
             
             renderProducts();
         }
         
         function setFlavour(flavour) {
-            if (flavour === 'all') {
-                // Clear all selections (show all)
-                activeFlavours = [];
-            } else {
-                // Toggle the flavour
-                const index = activeFlavours.indexOf(flavour);
-                if (index > -1) {
-                    activeFlavours.splice(index, 1);
-                } else {
-                    activeFlavours.push(flavour);
-                }
-            }
+            activeFlavour = flavour;
             
             // Update UI
             document.querySelectorAll('#flavourFilters .filter-option').forEach(opt => {
-                const flav = opt.dataset.flavour;
-                if (flav === 'all') {
-                    opt.classList.toggle('active', activeFlavours.length === 0);
-                } else {
-                    opt.classList.toggle('active', activeFlavours.includes(flav));
-                }
-            });
-            
-            renderProducts();
-        }
-        
-        function clearAllFilters() {
-            // Reset categories to all
-            activeCategories = ['single', 'bundle'];
-            document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => {
-                opt.classList.add('active');
-            });
-            
-            // Reset flavours to all (empty array)
-            activeFlavours = [];
-            document.querySelectorAll('#flavourFilters .filter-option').forEach(opt => {
-                const flav = opt.dataset.flavour;
-                opt.classList.toggle('active', flav === 'all');
+                opt.classList.toggle('active', opt.dataset.flavour === flavour);
             });
             
             renderProducts();
@@ -5087,16 +3836,23 @@
         }
         
         function renderFlavourFilters() {
-            // Collect all unique flavours from products
+            // Collect all unique flavours from products by extracting from names
             const flavourMap = new Map();
             
             products.forEach(p => {
-                if (p.flavours && p.flavours.length > 0) {
-                    p.flavours.forEach(f => {
+                if (p.category === 'bundle') {
+                    // Add all bundle flavors
+                    getBundleFlavors().forEach(f => {
                         if (!flavourMap.has(f.slug)) {
-                            flavourMap.set(f.slug, { name: f.name, slug: f.slug, color: f.color });
+                            flavourMap.set(f.slug, f);
                         }
                     });
+                } else {
+                    // Extract flavor from product name
+                    const flavor = extractFlavorFromName(p.name);
+                    if (!flavourMap.has(flavor.slug)) {
+                        flavourMap.set(flavor.slug, flavor);
+                    }
                 }
             });
             
@@ -5105,12 +3861,12 @@
             const container = document.getElementById('flavourFilters');
             container.innerHTML = `
                 <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--flow-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Flavour</h3>
-                <div class="filter-option ${activeFlavours.length === 0 ? 'active' : ''}" data-flavour="all" onclick="setFlavour('all')">
+                <div class="filter-option ${activeFlavour === 'all' ? 'active' : ''}" data-flavour="all" onclick="setFlavour('all')">
                     <div class="filter-checkbox"></div>
                     <span class="filter-label">All Flavours</span>
                 </div>
                 ${flavours.map(f => `
-                    <div class="filter-option ${activeFlavours.includes(f.slug) ? 'active' : ''}" data-flavour="${f.slug}" onclick="setFlavour('${f.slug}')">
+                    <div class="filter-option ${activeFlavour === f.slug ? 'active' : ''}" data-flavour="${f.slug}" onclick="setFlavour('${f.slug}')">
                         <div class="filter-checkbox"></div>
                         <span class="filter-label" style="display: flex; align-items: center; gap: 0.5rem;">
                             <span style="width: 12px; height: 12px; border-radius: 50%; background: ${f.color || 'var(--flow-cyan)'}; flex-shrink: 0;"></span>
@@ -5125,7 +3881,9 @@
             // Count products by category
             const singleCount = expandedProducts.filter(p => !p.isBundle).length;
             const bundleCount = expandedProducts.filter(p => p.isBundle).length;
+            const allCount = expandedProducts.length;
             
+            document.getElementById('countAll').textContent = allCount;
             document.getElementById('countSingle').textContent = singleCount;
             document.getElementById('countBundle').textContent = bundleCount;
         }
@@ -5175,9 +3933,9 @@
             cartToastTitle.textContent = productName;
             cartToastText.textContent = quantity > 1 ? `Quantity: ${quantity} in cart` : 'Added to cart!';
             
-            // Update image - handle null, undefined, empty string, and 'null' string
-            if (image && image !== 'null' && image !== 'undefined' && image !== '') {
-                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}" onerror="this.parentElement.innerHTML='<div class=\\'sachet-mini\\'>Flow</div>'">`;
+            // Update image
+            if (image) {
+                cartToastImage.innerHTML = `<img src="${image}" alt="${productName}">`;
             } else {
                 // Use sachet visual as fallback
                 cartToastImage.innerHTML = '<div class="sachet-mini">Flow</div>';
@@ -5205,38 +3963,11 @@
         function updateCartUI() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            // Calculate shipping first (before discount) - no shipping if cart is empty
-            const shipping = (subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
-            const orderTotal = subtotal + shipping;
-            
-            // Calculate discount on cart total (round up to benefit customer)
-            let discountAmount = 0;
-            if (appliedDiscount && orderTotal > 0) {
-                if (appliedDiscount.type === 'percent') {
-                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
-                    // Apply max discount cap if specified
-                    if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
-                        discountAmount = appliedDiscount.maxDiscount;
-                    }
-                } else {
-                    discountAmount = appliedDiscount.value;
-                }
-                // Discount cannot exceed cart total
-                discountAmount = Math.min(discountAmount, orderTotal);
-            }
-            
-            const total = orderTotal - discountAmount;
+            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const total = subtotal + shipping;
 
             // Update cart count
             cartCount.textContent = totalItems;
-            
-            // Update mobile cart count
-            const mobileCartCount = document.getElementById('mobileCartCount');
-            if (mobileCartCount) {
-                mobileCartCount.textContent = totalItems;
-                mobileCartCount.style.display = totalItems > 0 ? 'flex' : 'none';
-            }
 
             // Update cart items
             if (cart.length === 0) {
@@ -5244,25 +3975,20 @@
                 cartFooter.style.display = 'none';
                 cartItems.innerHTML = '';
                 cartItems.appendChild(cartEmpty);
-                // Reset discount when cart is empty
-                appliedDiscount = null;
             } else {
                 cartEmpty.style.display = 'none';
                 cartFooter.style.display = 'block';
 
                 cartItems.innerHTML = cart.map(item => {
                     const itemId = item.id || item.productSlug;
-                    const imageHtml = item.image 
-                        ? `<img src="${item.image}" alt="${item.name}">`
-                        : `<div class="mini-sachet"></div>`;
                     return `
                     <div class="cart-item" data-product="${itemId}">
                         <div class="cart-item-image">
-                            ${imageHtml}
+                            <div class="mini-sachet"></div>
                         </div>
                         <div class="cart-item-details">
                             <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-variant">${item.flavour || 'Electrolyte Hydration'}</div>
+                            <div class="cart-item-variant">Electrolyte Hydration</div>
                             <div class="cart-item-actions">
                                 <div class="cart-item-qty">
                                     <button onclick="updateQuantity('${itemId}', -1)">−</button>
@@ -5279,231 +4005,18 @@
 
             // Update totals
             cartSubtotal.textContent = `₹${subtotal.toLocaleString()}`;
-            
-            // Update discount row
-            const discountRow = document.getElementById('discountRow');
-            const cartDiscountEl = document.getElementById('cartDiscount');
-            if (appliedDiscount && discountAmount > 0) {
-                discountRow.style.display = 'flex';
-                cartDiscountEl.textContent = `-₹${discountAmount.toLocaleString()}`;
-            } else {
-                discountRow.style.display = 'none';
-            }
-            
             cartShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
             cartTotal.textContent = `₹${total.toLocaleString()}`;
 
-            // Update shipping progress (based on subtotal, before discount)
+            // Update shipping progress
             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                shippingText.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> You\'ve unlocked <span>FREE shipping!</span>';
-                shippingText.classList.add('free-shipping');
+                shippingText.innerHTML = '🎉 You\'ve unlocked <span>FREE shipping!</span>';
                 shippingBar.style.width = '100%';
-                shippingBar.classList.add('complete');
             } else {
                 const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
                 shippingText.innerHTML = `Add <span>₹${remaining}</span> more for free shipping!`;
-                shippingText.classList.remove('free-shipping');
                 shippingBar.style.width = `${(subtotal / FREE_SHIPPING_THRESHOLD) * 100}%`;
-                shippingBar.classList.remove('complete');
             }
-        }
-        
-        // Discount Code Functions
-        async function applyDiscountCode() {
-            const input = document.getElementById('discountInput');
-            const errorEl = document.getElementById('discountError');
-            const appliedEl = document.getElementById('discountApplied');
-            const formSection = document.getElementById('discountFormSection');
-            const applyBtn = document.getElementById('discountApplyBtn');
-            const code = input.value.trim().toUpperCase();
-            
-            errorEl.style.display = 'none';
-            
-            if (!code) {
-                errorEl.textContent = 'Please enter a discount code';
-                errorEl.style.display = 'block';
-                return;
-            }
-            
-            // Calculate current subtotal for validation
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            // Disable button while validating
-            applyBtn.disabled = true;
-            applyBtn.textContent = '...';
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/discount-codes/validate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, orderTotal: subtotal })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    appliedDiscount = data.code;
-                    
-                    // Update UI
-                    document.getElementById('appliedCode').textContent = appliedDiscount.code;
-                    
-                    let discountText = appliedDiscount.type === 'percent' 
-                        ? `-${appliedDiscount.value}%` 
-                        : `-₹${appliedDiscount.value}`;
-                    if (appliedDiscount.maxDiscount && appliedDiscount.type === 'percent') {
-                        discountText += ` (max ₹${appliedDiscount.maxDiscount})`;
-                    }
-                    document.getElementById('appliedValue').textContent = discountText;
-                    
-                    formSection.style.display = 'none';
-                    document.getElementById('publicCodesSection')?.remove();
-                    appliedEl.style.display = 'flex';
-                    input.value = '';
-                    
-                    updateCartUI();
-                    showToast(`Discount code "${appliedDiscount.code}" applied!`);
-                } else {
-                    errorEl.textContent = data.message || 'Invalid discount code. Please try again.';
-                    errorEl.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error validating discount code:', error);
-                errorEl.textContent = 'Unable to validate code. Please try again.';
-                errorEl.style.display = 'block';
-            } finally {
-                applyBtn.disabled = false;
-                applyBtn.textContent = 'Apply';
-            }
-        }
-        
-        function removeDiscountCode() {
-            appliedDiscount = null;
-            
-            const appliedEl = document.getElementById('discountApplied');
-            const formSection = document.getElementById('discountFormSection');
-            
-            appliedEl.style.display = 'none';
-            formSection.style.display = 'flex';
-            
-            // Re-render public codes if available
-            renderPublicCodes();
-            
-            updateCartUI();
-            showToast('Discount code removed');
-        }
-        
-        // Auto-apply discount code from URL (no user input required)
-        async function autoApplyDiscountCode(code) {
-            if (!code) return;
-            
-            console.log('Auto-applying discount code:', code);
-            console.log('Cart:', cart);
-            
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            console.log('Subtotal for discount:', subtotal);
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/discount-codes/validate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code.toUpperCase(), orderTotal: subtotal })
-                });
-                
-                const data = await response.json();
-                console.log('Discount validation response:', data);
-                
-                if (data.success) {
-                    appliedDiscount = data.code;
-                    console.log('Applied discount set to:', appliedDiscount);
-                    
-                    // Update UI elements if they exist
-                    const appliedEl = document.getElementById('discountApplied');
-                    const formSection = document.getElementById('discountFormSection');
-                    const appliedCodeEl = document.getElementById('appliedCode');
-                    const appliedValueEl = document.getElementById('appliedValue');
-                    
-                    if (appliedCodeEl) appliedCodeEl.textContent = appliedDiscount.code;
-                    
-                    let discountText = appliedDiscount.type === 'percent' 
-                        ? `-${appliedDiscount.value}%` 
-                        : `-₹${appliedDiscount.value}`;
-                    if (appliedDiscount.maxDiscount && appliedDiscount.type === 'percent') {
-                        discountText += ` (max ₹${appliedDiscount.maxDiscount})`;
-                    }
-                    if (appliedValueEl) appliedValueEl.textContent = discountText;
-                    
-                    if (formSection) formSection.style.display = 'none';
-                    document.getElementById('publicCodesSection')?.remove();
-                    if (appliedEl) appliedEl.style.display = 'flex';
-                    
-                    updateCartUI();
-                    showToast(`Discount code "${appliedDiscount.code}" applied!`);
-                } else {
-                    console.log('Discount validation failed:', data.message);
-                }
-            } catch (error) {
-                console.error('Error auto-applying discount code:', error);
-            }
-        }
-        
-        // Load and display public discount codes
-        async function loadPublicDiscountCodes() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/discount-codes/public`);
-                const data = await response.json();
-                
-                if (data.success && data.codes.length > 0) {
-                    publicDiscountCodes = data.codes;
-                    renderPublicCodes();
-                }
-            } catch (error) {
-                console.error('Error loading public discount codes:', error);
-            }
-        }
-        
-        function renderPublicCodes() {
-            // Don't show if discount already applied
-            if (appliedDiscount) return;
-            
-            // Remove existing section if any
-            document.getElementById('publicCodesSection')?.remove();
-            
-            if (publicDiscountCodes.length === 0) return;
-            
-            const discountSection = document.querySelector('.discount-section');
-            const publicSection = document.createElement('div');
-            publicSection.id = 'publicCodesSection';
-            publicSection.className = 'public-codes-section';
-            publicSection.innerHTML = `
-                <p class="public-codes-label">Available Offers:</p>
-                <div class="public-codes-list">
-                    ${publicDiscountCodes.map(code => {
-                        const discountText = code.type === 'percent' 
-                            ? `${code.value}% off${code.maxDiscount ? ` (max ₹${code.maxDiscount})` : ''}`
-                            : `₹${code.value} off`;
-                        const minText = code.minOrderValue > 0 ? ` on orders above ₹${code.minOrderValue}` : '';
-                        return `
-                            <button class="public-code-chip" onclick="usePublicCode('${code.code}')">
-                                <span class="public-code-name">${code.code}</span>
-                                <span class="public-code-desc">${discountText}${minText}</span>
-                            </button>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-            discountSection.appendChild(publicSection);
-        }
-        
-        function usePublicCode(code) {
-            document.getElementById('discountInput').value = code;
-            applyDiscountCode();
-        }
-        
-        // Load saved discount on init
-        async function loadSavedDiscount() {
-            // Discount codes are no longer persisted in localStorage
-            // Users must re-apply discount codes each session
-            appliedDiscount = null;
         }
 
         // Add to Cart - integrated with CustomerAuth
@@ -5681,6 +4194,11 @@
         let qcSelectedLocation = null;
         let qcSelectedSavedAddress = null;
         let qcHasSavedAddresses = false;
+        
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : 'https://api.flowhydration.in';
 
         // Open Quick Checkout - requires authentication
         function openQuickCheckout() {
@@ -5727,7 +4245,7 @@
         });
         
         async function prefillCustomerData() {
-            // First use cached customer data for immediate UI (name, phone, email only)
+            // First use cached customer data for immediate UI
             let customer = CustomerAuth.getCustomer();
             
             // Pre-fill name if available
@@ -5748,44 +4266,32 @@
                 emailInput.value = customer.email;
             }
             
-            // Fetch fresh customer profile from server (includes addresses)
+            // Load saved addresses from cache first (if available)
+            if (customer && customer.addresses && customer.addresses.length > 0) {
+                loadSavedAddresses(customer);
+            }
+            
+            // Always refresh from server to get latest addresses
             try {
-                const token = CustomerAuth.getToken();
-                console.log('Fetching customer profile with token:', token ? 'present' : 'missing');
-                
-                const response = await fetch(`${API_BASE_URL}/api/customer/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const data = await response.json();
-                console.log('Profile API response:', data);
-                
-                if (data.success && data.customer) {
-                    const freshCustomer = data.customer;
+                const freshCustomer = await CustomerAuth.refreshCustomer();
+                if (freshCustomer) {
                     console.log('Loaded customer from server, addresses:', freshCustomer.addresses?.length || 0);
+                    loadSavedAddresses(freshCustomer);
                     
-                    // Update localStorage with fresh data
-                    localStorage.setItem('flow_customer', JSON.stringify(freshCustomer));
-                    
-                    // Update name/email fields if not already filled
+                    // Also update name/email if not filled
                     if (nameInput && !nameInput.value && freshCustomer.name) {
                         nameInput.value = freshCustomer.name;
                     }
                     if (emailInput && !emailInput.value && freshCustomer.email) {
                         emailInput.value = freshCustomer.email;
                     }
-                    
-                    // Load addresses
-                    loadSavedAddresses(freshCustomer);
-                } else {
-                    console.log('Profile API failed, using cached customer');
-                    loadSavedAddresses(customer || { addresses: [] });
                 }
             } catch (error) {
-                console.error('Failed to fetch customer profile from server:', error);
-                // Fallback to cached customer data
-                loadSavedAddresses(customer || { addresses: [] });
+                console.error('Failed to refresh customer data:', error);
+                // If refresh fails but we have cached data, use it
+                if (customer) {
+                    loadSavedAddresses(customer);
+                }
             }
         }
         
@@ -5928,321 +4434,25 @@
             updateShippingDeliveryTime(qcSelectedLocation.pincode);
         }
         
-        // Address Popup Variables
-        let popupMap = null;
-        let popupMarker = null;
-        let popupAutocomplete = null;
-        let popupSelectedLocation = null;
-        
         function showNewAddressForm() {
-            const customer = CustomerAuth.getCustomer();
-            const hasExistingAddresses = customer && customer.addresses && customer.addresses.length > 0;
+            const savedAddressesContainer = document.getElementById('qcSavedAddresses');
+            const newAddressForm = document.getElementById('qcNewAddressForm');
             
-            if (hasExistingAddresses) {
-                // Show popup modal for adding new address
-                openAddressPopup();
-            } else {
-                // No existing addresses - show inline form (original behavior)
-                const savedAddressesContainer = document.getElementById('qcSavedAddresses');
-                const newAddressForm = document.getElementById('qcNewAddressForm');
-                
-                if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
-                if (newAddressForm) newAddressForm.style.display = 'block';
-                
-                qcSelectedLocation = null;
-                qcSelectedSavedAddress = null;
-                document.getElementById('qcSelectedAddress').classList.remove('visible');
-                document.getElementById('qcHouseFloor').value = '';
-                
-                if (!qcMap && typeof google !== 'undefined' && google.maps) {
-                    initCheckoutMap();
-                }
+            // Hide saved addresses, show map form
+            if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+            if (newAddressForm) newAddressForm.style.display = 'block';
+            
+            // Reset selected location for new entry
+            qcSelectedLocation = null;
+            qcSelectedSavedAddress = null;
+            document.getElementById('qcSelectedAddress').classList.remove('visible');
+            document.getElementById('qcHouseFloor').value = '';
+            
+            // Initialize map if not already
+            if (!qcMap && typeof google !== 'undefined' && google.maps) {
+                initCheckoutMap();
             }
         }
-        
-        function openAddressPopup() {
-            const overlay = document.getElementById('addressPopupOverlay');
-            overlay.classList.add('visible');
-            document.body.style.overflow = 'hidden';
-            
-            // Reset popup state
-            popupSelectedLocation = null;
-            document.getElementById('popupSelectedAddress').classList.remove('visible');
-            document.getElementById('popupHouseFloor').value = '';
-            document.getElementById('popupAddressSearch').value = '';
-            document.getElementById('popupAddressError').style.display = 'none';
-            
-            // Initialize popup map with a delay to ensure container is visible
-            setTimeout(() => {
-                if (typeof google !== 'undefined' && google.maps) {
-                    if (!popupMap) {
-                        initPopupMap();
-                    } else {
-                        // Trigger resize if map already exists
-                        google.maps.event.trigger(popupMap, 'resize');
-                    }
-                }
-            }, 300);
-        }
-        
-        function closeAddressPopup() {
-            const overlay = document.getElementById('addressPopupOverlay');
-            overlay.classList.remove('visible');
-            document.body.style.overflow = '';
-        }
-        
-        function initPopupMap() {
-            const mapContainer = document.getElementById('popupMap');
-            if (!mapContainer || popupMap) return;
-            
-            const defaultCenter = { lat: 20.5937, lng: 78.9629 };
-            
-            popupMap = new google.maps.Map(mapContainer, {
-                center: defaultCenter,
-                zoom: 5,
-                styles: [
-                    { elementType: 'geometry', stylers: [{ color: '#0A1628' }] },
-                    { elementType: 'labels.text.stroke', stylers: [{ color: '#0A1628' }] },
-                    { elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
-                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2b47' }] },
-                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#00D4FF', lightness: -70 }] },
-                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }
-                ],
-                disableDefaultUI: true,
-                zoomControl: true,
-            });
-            
-            // Create marker
-            popupMarker = new google.maps.Marker({
-                map: popupMap,
-                draggable: true,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 10,
-                    fillColor: '#00D4FF',
-                    fillOpacity: 1,
-                    strokeWeight: 3,
-                    strokeColor: '#ffffff'
-                }
-            });
-            
-            // Setup autocomplete
-            const searchInput = document.getElementById('popupAddressSearch');
-            popupAutocomplete = new google.maps.places.Autocomplete(searchInput, {
-                componentRestrictions: { country: 'in' },
-                fields: ['formatted_address', 'geometry', 'address_components']
-            });
-            
-            popupAutocomplete.addListener('place_changed', () => {
-                const place = popupAutocomplete.getPlace();
-                if (place.geometry) {
-                    const location = place.geometry.location;
-                    popupMap.setCenter(location);
-                    popupMap.setZoom(17);
-                    popupMarker.setPosition(location);
-                    popupMarker.setVisible(true);
-                    updatePopupAddressFromPlace(place);
-                }
-            });
-            
-            // Marker drag event
-            popupMarker.addListener('dragend', () => {
-                const pos = popupMarker.getPosition();
-                reverseGeocodePopup(pos.lat(), pos.lng());
-            });
-            
-            // Map click event
-            popupMap.addListener('click', (e) => {
-                popupMarker.setPosition(e.latLng);
-                popupMarker.setVisible(true);
-                reverseGeocodePopup(e.latLng.lat(), e.latLng.lng());
-            });
-            
-            // Trigger resize to ensure map renders correctly
-            setTimeout(() => {
-                google.maps.event.trigger(popupMap, 'resize');
-                popupMap.setCenter(defaultCenter);
-            }, 100);
-        }
-        
-        function updatePopupAddressFromPlace(place) {
-            const addressComponents = place.address_components || [];
-            let city = '', state = '', pincode = '', country = 'India';
-            
-            addressComponents.forEach(comp => {
-                const types = comp.types;
-                if (types.includes('locality')) city = comp.long_name;
-                if (types.includes('administrative_area_level_1')) state = comp.long_name;
-                if (types.includes('postal_code')) pincode = comp.long_name;
-                if (types.includes('country')) country = comp.long_name;
-            });
-            
-            popupSelectedLocation = {
-                address: place.formatted_address,
-                city: city,
-                state: state,
-                pincode: pincode,
-                country: country,
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-            };
-            
-            document.getElementById('popupSelectedAddressText').textContent = place.formatted_address;
-            document.getElementById('popupCityDisplay').textContent = city || '-';
-            document.getElementById('popupStateDisplay').textContent = state || '-';
-            document.getElementById('popupPincodeDisplay').textContent = pincode || '-';
-            document.getElementById('popupCountryDisplay').textContent = country;
-            document.getElementById('popupSelectedAddress').classList.add('visible');
-            
-            document.getElementById('popupCity').value = city;
-            document.getElementById('popupState').value = state;
-            document.getElementById('popupPincode').value = pincode;
-            document.getElementById('popupAddress').value = place.formatted_address;
-            document.getElementById('popupLatitude').value = popupSelectedLocation.lat;
-            document.getElementById('popupLongitude').value = popupSelectedLocation.lng;
-        }
-        
-        function reverseGeocodePopup(lat, lng) {
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    updatePopupAddressFromPlace(results[0]);
-                }
-            });
-        }
-        
-        function useCurrentLocationPopup() {
-            if (!navigator.geolocation) {
-                showToast('Geolocation is not supported by your browser');
-                return;
-            }
-            
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    const pos = { lat, lng };
-                    
-                    if (popupMap) {
-                        popupMap.setCenter(pos);
-                        popupMap.setZoom(17);
-                        popupMarker.setPosition(pos);
-                        popupMarker.setVisible(true);
-                        reverseGeocodePopup(lat, lng);
-                    }
-                },
-                (error) => {
-                    showToast('Unable to get your location. Please search manually.');
-                }
-            );
-        }
-        
-        async function saveNewAddressFromPopup() {
-            const errorEl = document.getElementById('popupAddressError');
-            const errorTextEl = document.getElementById('popupAddressErrorText');
-            const saveBtn = document.getElementById('popupSaveAddressBtn');
-            
-            // Validate
-            if (!popupSelectedLocation || !popupSelectedLocation.address) {
-                errorTextEl.textContent = 'Please select a location on the map';
-                errorEl.style.display = 'flex';
-                return;
-            }
-            
-            const houseFloor = document.getElementById('popupHouseFloor').value.trim();
-            if (!houseFloor) {
-                errorTextEl.textContent = 'Please enter house/floor/building details';
-                errorEl.style.display = 'flex';
-                document.getElementById('popupHouseFloor').classList.add('error');
-                return;
-            }
-            
-            errorEl.style.display = 'none';
-            document.getElementById('popupHouseFloor').classList.remove('error');
-            
-            // Prepare address object
-            const newAddress = {
-                type: 'home',
-                houseFloor: houseFloor,
-                fullAddress: popupSelectedLocation.address,
-                formattedAddress: popupSelectedLocation.address,
-                city: popupSelectedLocation.city,
-                state: popupSelectedLocation.state,
-                pincode: popupSelectedLocation.pincode,
-                country: popupSelectedLocation.country || 'India',
-                latitude: popupSelectedLocation.lat,
-                longitude: popupSelectedLocation.lng,
-                isDefault: false
-            };
-            
-            // Save to backend
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<span class="material-icons" style="font-size: 18px; animation: spin 1s linear infinite;">sync</span> Saving...';
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/customer/addresses`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
-                    },
-                    body: JSON.stringify(newAddress)
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Update local customer data using the correct localStorage key
-                    const customer = CustomerAuth.getCustomer();
-                    if (customer) {
-                        customer.addresses = data.addresses || [...(customer.addresses || []), newAddress];
-                        localStorage.setItem('flow_customer', JSON.stringify(customer));
-                    }
-                    
-                    // Close popup and refresh saved addresses
-                    closeAddressPopup();
-                    showToast('Address saved successfully!');
-                    
-                    // Ensure saved addresses section is visible and map form is hidden
-                    const savedAddressesContainer = document.getElementById('qcSavedAddresses');
-                    const newAddressForm = document.getElementById('qcNewAddressForm');
-                    if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
-                    if (newAddressForm) newAddressForm.style.display = 'none';
-                    
-                    // Refresh the saved addresses list with updated customer data
-                    const updatedCustomer = CustomerAuth.getCustomer();
-                    loadSavedAddresses(updatedCustomer);
-                    
-                    // Auto-select the newly added address (last one)
-                    setTimeout(() => {
-                        const addresses = updatedCustomer?.addresses || [];
-                        if (addresses.length > 0) {
-                            selectSavedAddress(addresses.length - 1, addresses);
-                            const radio = document.querySelector(`input[name="savedAddress"][value="${addresses.length - 1}"]`);
-                            if (radio) radio.checked = true;
-                        }
-                    }, 150);
-                } else {
-                    errorTextEl.textContent = data.message || 'Failed to save address';
-                    errorEl.style.display = 'flex';
-                }
-            } catch (error) {
-                console.error('Error saving address:', error);
-                errorTextEl.textContent = 'Failed to save address. Please try again.';
-                errorEl.style.display = 'flex';
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<span class="material-icons" style="font-size: 18px;">save</span> Save Address';
-            }
-        }
-        
-        // Add event listener to remove error on input
-        document.addEventListener('DOMContentLoaded', () => {
-            const popupHouseInput = document.getElementById('popupHouseFloor');
-            if (popupHouseInput) {
-                popupHouseInput.addEventListener('input', () => popupHouseInput.classList.remove('error'));
-            }
-        });
         
         function showSavedAddresses() {
             const savedAddressesContainer = document.getElementById('qcSavedAddresses');
@@ -6348,9 +4558,6 @@
             const newAddressForm = document.getElementById('qcNewAddressForm');
             if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
             if (newAddressForm) newAddressForm.style.display = 'block';
-            
-            // Restore original cart if this was a Buy Now session that was cancelled
-            restoreCartAfterBuyNow();
         }
 
         quickCheckoutClose.addEventListener('click', closeQuickCheckout);
@@ -6362,42 +4569,6 @@
 
         // Navigate to step
         function goToStep(step) {
-            // Validate Step 1 before proceeding to Step 2
-            if (step === 2 && qcCurrentStep === 1) {
-                const emailInput = document.getElementById('qcEmail');
-                const phoneInput = document.getElementById('qcPhone');
-                const email = emailInput.value.trim();
-                const phone = phoneInput.value.trim();
-                
-                // Clear previous errors
-                emailInput.classList.remove('error');
-                phoneInput.classList.remove('error');
-                
-                let hasError = false;
-                
-                // Email validation
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!email || !emailRegex.test(email)) {
-                    emailInput.classList.add('error');
-                    if (!hasError) {
-                        emailInput.focus();
-                        hasError = true;
-                    }
-                }
-                
-                // Phone validation (at least 10 digits)
-                const phoneDigits = phone.replace(/\D/g, '');
-                if (!phone || phoneDigits.length < 10) {
-                    phoneInput.classList.add('error');
-                    if (!hasError) {
-                        phoneInput.focus();
-                        hasError = true;
-                    }
-                }
-                
-                if (hasError) return;
-            }
-            
             // Hide all steps
             document.getElementById('qcStep1').classList.add('hidden');
             document.getElementById('qcStep2').classList.add('hidden');
@@ -6708,37 +4879,10 @@
         // Update QC Summary
         function updateQCSummary() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const orderTotal = subtotal + qcShippingCost;
-            
-            // Calculate discount on order total (same logic as cart)
-            let discountAmount = 0;
-            if (appliedDiscount && orderTotal > 0) {
-                if (appliedDiscount.type === 'percent') {
-                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
-                    if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
-                        discountAmount = appliedDiscount.maxDiscount;
-                    }
-                } else {
-                    discountAmount = appliedDiscount.value;
-                }
-                discountAmount = Math.min(discountAmount, orderTotal);
-            }
-            
-            const total = orderTotal - discountAmount;
+            const total = subtotal + qcShippingCost;
 
             document.getElementById('qcSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
             document.getElementById('qcShippingCost').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
-            
-            // Show/hide discount row
-            const discountRow = document.getElementById('qcDiscountRow');
-            if (appliedDiscount && discountAmount > 0) {
-                discountRow.style.display = 'flex';
-                document.getElementById('qcDiscountCode').textContent = `(${appliedDiscount.code})`;
-                document.getElementById('qcDiscountAmount').textContent = `-₹${discountAmount.toLocaleString()}`;
-            } else {
-                discountRow.style.display = 'none';
-            }
-            
             document.getElementById('qcTotal').textContent = `₹${total.toLocaleString()}`;
         }
 
@@ -6809,8 +4953,7 @@
                     items,
                     shippingAddress,
                     shippingMethod,
-                    paymentMethod: 'razorpay',
-                    discountCode: appliedDiscount ? appliedDiscount.code : null
+                    paymentMethod: 'razorpay'
                 };
                 
                 // Initiate Razorpay payment
@@ -6923,19 +5066,6 @@
                                 CustomerAuth.saveLocalCart(cart);
                                 updateCartUI();
                                 
-                                // Clear applied discount and reset discount UI
-                                appliedDiscount = null;
-                                const discountAppliedEl = document.getElementById('discountApplied');
-                                const discountFormSection = document.getElementById('discountFormSection');
-                                if (discountAppliedEl) discountAppliedEl.style.display = 'none';
-                                if (discountFormSection) discountFormSection.style.display = 'flex';
-                                
-                                // Clear Buy Now backup if this was a Buy Now session
-                                if (isBuyNowSession) {
-                                    localStorage.removeItem('flow_cart_backup');
-                                    isBuyNowSession = false;
-                                }
-                                
                                 // Clear pending order
                                 localStorage.removeItem('flow_pending_order');
                                 
@@ -7021,28 +5151,6 @@
             }
         }
     </script>
-    
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav">
-        <a href="/" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
-        </a>
-        <a href="/shop/" class="nav-item active">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            <span>Shop</span>
-        </a>
-        <a href="javascript:void(0)" onclick="openCart()" class="nav-item cart-nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-            <span class="mobile-cart-count" id="mobileCartCount">0</span>
-            <span>Cart</span>
-        </a>
-        <a href="/profile/" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Profile</span>
-        </a>
-    </nav>
-    
     <script src="assets/js/customerAuth.js"></script>
 </body>
 </html>

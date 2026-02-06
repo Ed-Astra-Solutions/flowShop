@@ -3585,6 +3585,44 @@
         let selectedPackSize = null;
         let quantity = 1;
 
+        // Flavor color mapping (new API structure)
+        const FLAVOR_COLORS = {
+            'original': '#00D4FF',
+            'lemonade': '#FFD93D',
+            'mango': '#FF9F43',
+            'variety': '#00D4FF'
+        };
+
+        // Extract flavor from product name (e.g., "Flow Lemonade" -> {name: 'Lemonade', slug: 'lemonade', color: '#FFD93D'})
+        function extractFlavorFromName(productName) {
+            const name = productName.toLowerCase();
+            if (name.includes('lemonade')) {
+                return { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade };
+            } else if (name.includes('mango')) {
+                return { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango };
+            } else if (name.includes('variety') || name.includes('bundle')) {
+                return { name: 'Variety', slug: 'variety', color: FLAVOR_COLORS.variety };
+            } else {
+                return { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original };
+            }
+        }
+
+        // Get all 3 bundle flavors
+        function getBundleFlavors() {
+            return [
+                { name: 'Original', slug: 'original', color: FLAVOR_COLORS.original },
+                { name: 'Mango', slug: 'mango', color: FLAVOR_COLORS.mango },
+                { name: 'Lemonade', slug: 'lemonade', color: FLAVOR_COLORS.lemonade }
+            ];
+        }
+
+        // Get product image from media array
+        function getProductImage(product) {
+            if (!product.media || product.media.length === 0) return null;
+            const primary = product.media.find(m => m.isPrimary && m.type === 'image');
+            return primary ? primary.url : (product.media.find(m => m.type === 'image')?.url || null);
+        }
+
         // DOM Elements
         const qtyValue = document.getElementById('qtyValue');
 
@@ -3848,12 +3886,31 @@
             
             const isBundle = product.category === 'bundle';
             
-            // Set defaults or use URL params
+            // Set defaults or use URL params - extract flavor from product name (new API)
             if (isBundle) {
                 // For bundles, don't set a single selected flavour
                 selectedFlavour = null;
             } else {
-                selectedFlavour = product.flavours.find(f => f.slug === preselectedFlavour) || product.flavours[0];
+                // Extract flavor from product name since API no longer has flavours array
+                const extractedFlavour = extractFlavorFromName(product.name);
+                
+                // If URL has preselected flavour, try to match it
+                if (preselectedFlavour) {
+                    // Find product that matches the preselected flavour
+                    const matchingProduct = allProducts.find(p => {
+                        const f = extractFlavorFromName(p.name);
+                        return f.slug === preselectedFlavour && p.category !== 'bundle';
+                    });
+                    if (matchingProduct && matchingProduct.slug !== product.slug) {
+                        // Switch to that product
+                        product = matchingProduct;
+                        selectedFlavour = extractFlavorFromName(matchingProduct.name);
+                    } else {
+                        selectedFlavour = extractedFlavour;
+                    }
+                } else {
+                    selectedFlavour = extractedFlavour;
+                }
             }
             selectedPackSize = product.packSizes.find(p => p.size === parseInt(preselectedPack)) || product.packSizes[0];
             
@@ -4000,8 +4057,9 @@
             ` : '';
             
             // For bundles in "all" mode, show all flavours as included
-            if (isBundle && bundleViewMode === 'all' && product.flavours && product.flavours.length > 1) {
-                const flavoursHtml = product.flavours.map(f => `
+            if (isBundle && bundleViewMode === 'all') {
+                const bundleFlavors = getBundleFlavors();
+                const flavoursHtml = bundleFlavors.map(f => `
                     <div class="flavour-option selected" style="cursor: default;">
                         <div class="flavour-dot" style="background: ${f.color};"></div>
                         <span class="flavour-name">${f.name}</span>
@@ -4025,8 +4083,9 @@
                 return;
             }
             
-            // Find current flavour
-            const currentFlavourSlug = selectedFlavour?.slug || product.flavours[0]?.slug;
+            // Find current flavour - extract from current product name
+            const currentExtractedFlavour = extractFlavorFromName(product.name);
+            const currentFlavourSlug = selectedFlavour?.slug || currentExtractedFlavour.slug;
             
             const flavoursHtml = allFlavours.map(f => `
                 <div class="flavour-option${f.slug === currentFlavourSlug ? ' selected' : ''}" 
@@ -4038,9 +4097,11 @@
                 </div>
             `).join('');
             
+            const displayFlavourName = selectedFlavour?.name || currentExtractedFlavour.name || 'Original';
+            
             document.querySelector('.flavour-section').innerHTML = `
                 ${toggleHtml}
-                <div class="flavour-label">Flavour: <span>${selectedFlavour?.name || product.flavours[0]?.name || 'Original'}</span></div>
+                <div class="flavour-label">Flavour: <span>${displayFlavourName}</span></div>
                 <div class="flavour-options">${flavoursHtml}</div>
             `;
         }
@@ -4050,14 +4111,15 @@
             allProducts.forEach(p => {
                 // Exclude bundles from flavour switching
                 if (p.category === 'bundle') return;
-                if (p.flavours && p.flavours.length > 0) {
-                    p.flavours.forEach(f => {
-                        if (!allFlavours.find(af => af.slug === f.slug)) {
-                            allFlavours.push({
-                                ...f,
-                                productSlug: p.slug
-                            });
-                        }
+                
+                // Extract flavor from product name (new API structure)
+                const flavour = extractFlavorFromName(p.name);
+                
+                // Only add if not already in array
+                if (!allFlavours.find(af => af.slug === flavour.slug)) {
+                    allFlavours.push({
+                        ...flavour,
+                        productSlug: p.slug
                     });
                 }
             });
@@ -4082,7 +4144,7 @@
                     if (singleFlavourProduct) {
                         // Switch to the single flavour product
                         product = singleFlavourProduct;
-                        selectedFlavour = singleFlavourProduct.flavours[0];
+                        selectedFlavour = extractFlavorFromName(singleFlavourProduct.name);
                         selectedPackSize = singleFlavourProduct.packSizes[0];
                         
                         // Update URL without reload
@@ -4197,7 +4259,8 @@
                 const newProduct = allProducts.find(p => p.slug === targetProductSlug);
                 if (newProduct) {
                     product = newProduct;
-                    selectedFlavour = newProduct.flavours.find(f => f.slug === slug) || newProduct.flavours[0];
+                    // Extract flavor from product name (new API)
+                    selectedFlavour = extractFlavorFromName(newProduct.name);
                     
                     // Keep same pack size if available, otherwise use first
                     const samePackSize = newProduct.packSizes.find(p => p.size === selectedPackSize?.size);
@@ -4213,8 +4276,8 @@
                 }
             }
             
-            // Same product, just update flavour
-            selectedFlavour = product.flavours.find(f => f.slug === slug);
+            // Same product, just update flavour (extract from product name)
+            selectedFlavour = extractFlavorFromName(product.name);
             
             document.querySelectorAll('.flavour-option').forEach(o => o.classList.remove('selected'));
             document.querySelector(`.flavour-option[data-flavour="${slug}"]`)?.classList.add('selected');
@@ -4258,7 +4321,9 @@
         function updateVisuals() {
             const mainImage = document.querySelector('.main-image');
             const isBundle = product.category === 'bundle';
-            const displayFlavour = selectedFlavour || (product?.flavours && product.flavours[0]);
+            // Extract flavor from product name if no selectedFlavour
+            const extractedFlavour = extractFlavorFromName(product.name);
+            const displayFlavour = selectedFlavour || extractedFlavour;
             const flavourColor = displayFlavour?.color || '#00D4FF';
             
             // If viewing non-product views, re-render with updated color
@@ -4277,9 +4342,10 @@
             }
             
             // For bundles in 'all' mode, show all 3 sachets
-            if (isBundle && product.flavours && product.flavours.length > 1 && bundleViewMode === 'all') {
-                // Show multiple sachets for variety pack
-                const sachetsHtml = product.flavours.map(f => `
+            if (isBundle && bundleViewMode === 'all') {
+                // Show multiple sachets for variety pack using getBundleFlavors()
+                const bundleFlavors = getBundleFlavors();
+                const sachetsHtml = bundleFlavors.map(f => `
                     <div class="sachet-visual-large" style="width: 120px; height: 180px; box-shadow: 0 20px 50px ${hexToRgba(f.color, 0.3)};">
                         <div class="sachet-content-large">
                             <div class="sachet-logo-large" style="font-size: 1.2rem;">Flow</div>
@@ -4309,7 +4375,7 @@
                 }
             } else {
                 // Single flavour view - show single sachet (for regular products OR bundle in individual mode)
-                const displayFlavour = selectedFlavour || (product.flavours && product.flavours[0]);
+                // displayFlavour is already set above from extractFlavorFromName
                 
                 // Rebuild single sachet view
                 const sachetsContainer = mainImage.querySelector('div[style*="display: flex"]');
@@ -4359,7 +4425,9 @@
             document.querySelector(`.thumbnail[data-view="${view}"]`)?.classList.add('active');
             
             const mainImage = document.querySelector('.main-image');
-            const displayFlavour = selectedFlavour || (product?.flavours && product.flavours[0]);
+            // Extract flavor from product name if no selectedFlavour
+            const extractedFlavour = extractFlavorFromName(product.name);
+            const displayFlavour = selectedFlavour || extractedFlavour;
             const flavourColor = displayFlavour?.color || '#00D4FF';
             
             // Handle media views (media-0, media-1, media-2)
@@ -4687,7 +4755,8 @@
                 // For each product, create entries for different pack sizes
                 if (p.packSizes && p.packSizes.length > 0) {
                     p.packSizes.forEach(packSize => {
-                        const flavour = p.flavours && p.flavours[0];
+                        // Extract flavor from product name (new API)
+                        const flavour = extractFlavorFromName(p.name);
                         relatedItems.push({
                             product: p,
                             packSize: packSize,
@@ -4736,10 +4805,11 @@
                     imageHtml = `<img src="${firstImage.url}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">`;
                 } else {
                     // For bundles, show multiple small sachets
-                    if (isBundle && p.flavours && p.flavours.length > 1) {
+                    if (isBundle) {
+                        const bundleFlavors = getBundleFlavors();
                         imageHtml = `
                             <div style="display: flex; gap: 6px;">
-                                ${p.flavours.slice(0, 3).map(f => `
+                                ${bundleFlavors.slice(0, 3).map(f => `
                                     <div class="mini-sachet" style="width: 40px; height: 55px; box-shadow: 0 10px 25px ${hexToRgba(f.color, 0.25)};"></div>
                                 `).join('')}
                             </div>
@@ -4846,7 +4916,9 @@
             const targetProduct = allProducts.find(p => p.slug === productSlug);
             if (!targetProduct) return;
             
-            const targetFlavour = flavourSlug ? targetProduct.flavours?.find(f => f.slug === flavourSlug) : null;
+            // Extract flavor from product name or use flavourSlug if provided
+            const extractedFlavour = extractFlavorFromName(targetProduct.name);
+            const targetFlavour = flavourSlug ? (extractedFlavour.slug === flavourSlug ? extractedFlavour : null) : null;
             const uniqueId = targetFlavour 
                 ? `${productSlug}-${targetFlavour.slug}-${packSize}`
                 : `${productSlug}-${packSize}`;
@@ -4892,7 +4964,9 @@
             }
             
             const targetPackSize = targetProduct.packSizes.find(p => p.size === packSize);
-            const targetFlavour = flavourSlug ? targetProduct.flavours?.find(f => f.slug === flavourSlug) : null;
+            // Extract flavor from product name (new API)
+            const extractedFlavour = extractFlavorFromName(targetProduct.name);
+            const targetFlavour = flavourSlug ? (extractedFlavour.slug === flavourSlug ? extractedFlavour : null) : null;
             
             if (!targetPackSize) {
                 showToast('Pack size not found');
