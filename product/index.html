@@ -4214,17 +4214,12 @@
                 const savedAmount = originalPrice - p.price;
                 
                 let badge = '';
-                let savingsHtml = '';
                 let perUnitHtml = `<div class="variant-per-unit">₹${perUnit.toFixed(0)}/sachet</div>`;
                 
                 if (isPopular) {
                     badge = '<span class="variant-badge">Most Popular</span>';
-                    if (savingsPercent > 0) {
-                        savingsHtml = `<div class="variant-savings">Save ₹${savedAmount}</div>`;
-                    }
                 } else if (isBestValue && savingsPercent > 0) {
                     badge = '<span class="variant-badge best-value">Best Value</span>';
-                    savingsHtml = `<div class="variant-savings">Save ${savingsPercent}%</div>`;
                 }
                 
                 // Show original price strike-through for packs with savings
@@ -4242,7 +4237,6 @@
                         <div class="variant-name">${p.label}</div>
                         ${priceHtml}
                         ${perUnitHtml}
-                        ${savingsHtml}
                     </div>
                 `;
             }).join('');
