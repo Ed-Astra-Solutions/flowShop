@@ -4009,10 +4009,14 @@
                 ? Math.round((1 - priceData.price / priceData.comparePrice) * 100)
                 : 0;
             
+            // Get selected variant to check if it's Pack of 5
+            const selectedVariant = currentProduct?.variants?.find(v => v._id === selectedVariantId);
+            const isPack5 = selectedVariant?.title?.toLowerCase().includes('pack of 5');
+            
             priceSection.innerHTML = `
                 <span class="price-current">₹${priceData?.price?.toLocaleString() || '0'}</span>
-                ${priceData?.comparePrice ? `<span class="price-original">₹${priceData.comparePrice.toLocaleString()}</span>` : ''}
-                ${discount > 0 ? `<span class="price-discount">Save ${discount}%</span>` : ''}
+                ${!isPack5 && priceData?.comparePrice ? `<span class="price-original">₹${priceData.comparePrice.toLocaleString()}</span>` : ''}
+                ${!isPack5 && discount > 0 ? `<span class="price-discount">Save ${discount}%</span>` : ''}
             `;
         }
 
