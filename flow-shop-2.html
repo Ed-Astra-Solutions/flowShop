@@ -3651,7 +3651,7 @@
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-current">₹${pack.price.toLocaleString()}</span>
-                                ${pack.comparePrice ? `<span class="price-original">₹${pack.comparePrice.toLocaleString()}</span>` : ''}
+                                ${pack.size !== 5 && pack.comparePrice ? `<span class="price-original">₹${pack.comparePrice.toLocaleString()}</span>` : ''}
                             </div>
                             <button class="add-to-cart" data-product="${uniqueId}" data-name="${displayName}" data-price="${pack.price}" onclick="event.stopPropagation(); addToCart('${uniqueId}', '${displayName}', ${pack.price});">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
