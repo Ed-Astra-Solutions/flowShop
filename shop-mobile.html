@@ -2841,63 +2841,176 @@
             // Check if user is logged in
             if (!CustomerAuth.isLoggedIn()) {
                 CustomerAuth.showModal(() => {
-                    openCheckout();
+                    proceedToCheckout();
                 });
                 return;
             }
             
-            openCheckout();
+            proceedToCheckout();
         }
 
-        // ========== CHECKOUT FUNCTIONALITY ==========
-        let coCurrentStep = 1;
-        let coShippingCost = 99;
-        let coMap = null;
-        let coMarker = null;
-        let coAutocomplete = null;
-        let coSelectedLocation = null;
-        let coSelectedSavedAddress = null;
-        let coHasSavedAddresses = false;
-        let coDiscount = 0;
-        let coDiscountCode = null;
+        // ========== CHECKOUT FUNCTIONALITY (Desktop Implementation) ==========
+        let qcCurrentStep = 1;
+        let qcShippingCost = 99;
+        let qcMap = null;
+        let qcMarker = null;
+        let qcAutocomplete = null;
+        let qcSelectedLocation = null;
+        let qcSelectedSavedAddress = null;
+        let qcHasSavedAddresses = false;
+        const FREE_SHIPPING_THRESHOLD = 999;
 
-        // Load saved discount from product page cart
-        function loadSavedCartDiscount() {
-            const saved = localStorage.getItem('flow_cart_discount');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.code && typeof data.discount === 'number') {
-                        coDiscount = data.discount;
-                        coDiscountCode = data.code;
-                        
-                        const discountInput = document.getElementById('coDiscountCode');
-                        const discountRow = document.getElementById('coDiscountRow');
-                        const discountAmount = document.getElementById('coDiscountAmount');
-                        
-                        if (discountInput) discountInput.value = data.code;
-                        if (discountRow) discountRow.style.display = 'flex';
-                        if (discountAmount) discountAmount.textContent = '-₹' + coDiscount.toLocaleString();
-                    }
-                } catch (e) {
-                    console.log('Error loading saved discount:', e);
-                }
-            }
-        }
-
-        function openCheckout() {
+        
+        function proceedToCheckout() {
             closeCart();
             document.getElementById('checkoutOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // Reset to step 1
-            coCurrentStep = 1;
+            qcCurrentStep = 1;
             updateCheckoutStep();
-            
-            // Load saved discount from product page
-            loadSavedCartDiscount();
-            
             updateCheckoutSummary();
+            
+            // Clear any previous errors
+            const errorEl = document.getElementById('coAddressError');
+            if (errorEl) errorEl.style.display = 'none';
+            
+            // Pre-fill customer data if available
+            prefillCheckoutData();
+        }
+
+        async function prefillCheckoutData() {
+            // First use cached customer data
+            let customer = CustomerAuth.getCustomer();
+            
+            // Pre-fill phone
+            const phoneInput = document.getElementById('coPhone');
+            if (phoneInput && customer?.mobile) {
+                phoneInput.value = customer.mobile;
+            }
+            
+            // Pre-fill email if available
+            const emailInput = document.getElementById('coEmail');
+            if (emailInput && customer?.email) {
+                emailInput.value = customer.email;
+            }
+            
+            // Fetch fresh customer profile from server (includes addresses)
+            try {
+                const token = CustomerAuth.getToken();
+                const response = await fetch(`${API_BASE_URL}/api/customer/profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.customer) {
+                    const freshCustomer = data.customer;
+                    localStorage.setItem('flow_customer', JSON.stringify(freshCustomer));
+                    
+                    if (emailInput && !emailInput.value && freshCustomer.email) {
+                        emailInput.value = freshCustomer.email;
+                    }
+                    
+                    loadSavedAddresses(freshCustomer);
+                } else {
+                    loadSavedAddresses(customer || { addresses: [] });
+                }
+            } catch (error) {
+                console.error('Failed to fetch customer profile:', error);
+                loadSavedAddresses(customer || { addresses: [] });
+            }
+        }
+
+        function loadSavedAddresses(customer) {
+            const savedAddressesContainer = document.getElementById('coSavedAddresses');
+            const savedAddressesList = document.getElementById('coSavedAddressesList');
+            const newAddressForm = document.getElementById('coNewAddressForm');
+            
+            if (!savedAddressesList) return;
+            
+            savedAddressesList.innerHTML = '';
+            const addresses = customer?.addresses || [];
+            qcHasSavedAddresses = addresses.length > 0;
+            
+            if (qcHasSavedAddresses) {
+                if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
+                if (newAddressForm) newAddressForm.style.display = 'none';
+                
+                addresses.forEach((addr, index) => {
+                    const isDefault = addr.isDefault || index === 0;
+                    const addressItem = document.createElement('div');
+                    addressItem.className = 'address-card' + (isDefault ? ' selected' : '');
+                    
+                    addressItem.innerHTML = `
+                        <div class="address-card-header">
+                            <span class="address-type ${isDefault ? 'address-default' : ''}">
+                                ${isDefault ? '⭐ Default' : '📍 ' + (addr.type || 'Home')}
+                            </span>
+                        </div>
+                        <div class="address-text">
+                            ${addr.houseFloor ? addr.houseFloor + ', ' : ''}${addr.fullAddress || addr.formattedAddress || ''}
+                            ${addr.pincode ? ` - ${addr.pincode}` : ''}
+                        </div>
+                    `;
+                    
+                    addressItem.addEventListener('click', () => selectSavedAddress(index, addresses));
+                    savedAddressesList.appendChild(addressItem);
+                    
+                    if (isDefault) selectSavedAddress(index, addresses);
+                });
+            } else {
+                if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+                if (newAddressForm) newAddressForm.style.display = 'block';
+                
+                if (typeof google !== 'undefined' && google.maps && !qcMap) {
+                    setTimeout(initCheckoutMap, 100);
+                }
+            }
+            
+            updateShippingCost();
+        }
+
+        function selectSavedAddress(index, addresses) {
+            const addr = addresses[index];
+            if (!addr) return;
+            
+            document.querySelectorAll('.address-card').forEach((item, i) => {
+                item.classList.toggle('selected', i === index);
+            });
+            
+            qcSelectedSavedAddress = addr;
+            qcSelectedLocation = {
+                formatted: addr.fullAddress || addr.formattedAddress,
+                fullAddress: addr.fullAddress || (addr.houseFloor ? addr.houseFloor + ', ' + addr.formattedAddress : addr.formattedAddress),
+                houseFloor: addr.houseFloor || '',
+                city: addr.city || '',
+                state: addr.state || '',
+                pincode: addr.pincode || '',
+                country: addr.country || 'India',
+                lat: addr.lat || addr.coordinates?.lat,
+                lng: addr.lng || addr.coordinates?.lng
+            };
+            
+            document.getElementById('coCity').value = qcSelectedLocation.city;
+            document.getElementById('coState').value = qcSelectedLocation.state;
+            document.getElementById('coPincode').value = qcSelectedLocation.pincode;
+            document.getElementById('coLatitude').value = qcSelectedLocation.lat || '';
+            document.getElementById('coLongitude').value = qcSelectedLocation.lng || '';
+        }
+
+        function showNewAddressForm() {
+            const savedAddressesContainer = document.getElementById('coSavedAddresses');
+            const newAddressForm = document.getElementById('coNewAddressForm');
+            
+            if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
+            if (newAddressForm) newAddressForm.style.display = 'block';
+            
+            qcSelectedLocation = null;
+            qcSelectedSavedAddress = null;
+            document.getElementById('coSelectedAddress').classList.remove('show');
+            document.getElementById('coHouseFloor').value = '';
+            
+            if (!qcMap && typeof google !== 'undefined' && google.maps) {
+                initCheckoutMap();
+            }
             
             // Pre-fill customer data
             prefillCheckoutData();
@@ -2906,462 +3019,343 @@
         function closeCheckout() {
             document.getElementById('checkoutOverlay').classList.remove('active');
             document.body.style.overflow = '';
+            qcCurrentStep = 1;
             
             // Restore cart if this was a Buy Now session
             restoreCartAfterBuyNow();
         }
 
         function handleCheckoutBack() {
-            if (coCurrentStep === 1) {
+            if (qcCurrentStep === 1) {
                 closeCheckout();
             } else {
-                coCurrentStep--;
-                updateCheckoutStep();
+                goToStep(qcCurrentStep - 1);
             }
         }
 
         function handleCheckoutNext() {
-            if (coCurrentStep === 1) {
-                // Validate contact
-                const fullName = document.getElementById('coFullName').value;
-                const email = document.getElementById('coEmail').value;
-                const phone = document.getElementById('coPhone').value;
-                
-                if (!fullName || !email || !phone) {
-                    showToast('Please fill in all contact details');
-                    return;
-                }
-                
-                coCurrentStep = 2;
-                updateCheckoutStep();
-                
-                // Initialize map if needed
-                if (!coHasSavedAddresses && !coMap) {
-                    setTimeout(initCheckoutMap, 100);
-                }
-            } else if (coCurrentStep === 2) {
-                // Validate shipping
-                if (!validateShippingAddress()) {
-                    return;
-                }
-                
-                coCurrentStep = 3;
-                updateCheckoutStep();
-                updateCheckoutSummary();
-            } else if (coCurrentStep === 3) {
-                // Place order
+            if (qcCurrentStep === 1) {
+                goToStep(2);
+            } else if (qcCurrentStep === 2) {
+                validateAndContinueToPayment();
+            } else if (qcCurrentStep === 3) {
                 placeOrder();
             }
         }
 
-        function updateCheckoutStep() {
-            // Update progress dots
-            document.querySelectorAll('.checkout-step').forEach((step, index) => {
-                step.classList.remove('active', 'completed');
-                if (index + 1 === coCurrentStep) {
-                    step.classList.add('active');
-                } else if (index + 1 < coCurrentStep) {
-                    step.classList.add('completed');
+        function goToStep(step) {
+            // Validate Step 1 before proceeding
+            if (step === 2 && qcCurrentStep === 1) {
+                const emailInput = document.getElementById('coEmail');
+                const phoneInput = document.getElementById('coPhone');
+                const email = emailInput?.value?.trim();
+                const phone = phoneInput?.value?.trim();
+                
+                if (!email || !phone) {
+                    showToast('Please fill in all contact details');
+                    return;
                 }
-            });
-
-            // Update sections
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showToast('Please enter a valid email address');
+                    return;
+                }
+                
+                const phoneDigits = phone.replace(/\D/g, '');
+                if (phoneDigits.length < 10) {
+                    showToast('Please enter a valid phone number');
+                    return;
+                }
+            }
+            
+            // Hide all sections
             document.querySelectorAll('.checkout-section').forEach(section => {
                 section.classList.remove('active');
             });
-            document.getElementById(`checkoutStep${coCurrentStep}`)?.classList.add('active');
-
-            // Update footer button
-            const btn = document.getElementById('checkoutNextBtn');
-            const btnText = btn.querySelector('.btn-text');
-            const footer = document.getElementById('checkoutFooter');
             
-            footer.style.display = 'block';
+            // Show target section
+            document.getElementById(`checkoutStep${step}`)?.classList.add('active');
             
-            if (coCurrentStep === 1) {
-                btnText.textContent = 'Continue to Shipping';
-            } else if (coCurrentStep === 2) {
-                btnText.textContent = 'Continue to Payment';
-            } else if (coCurrentStep === 3) {
-                btnText.textContent = 'Pay Now';
-            }
-        }
-
-        async function prefillCheckoutData() {
-            let customer = CustomerAuth.getCustomer();
-            
-            if (customer?.name) {
-                document.getElementById('coFullName').value = customer.name;
-            }
-            if (customer?.email) {
-                document.getElementById('coEmail').value = customer.email;
-            }
-            if (customer?.mobile) {
-                document.getElementById('coPhone').value = customer.mobile;
-            }
-            
-            // Load saved addresses
-            if (customer?.addresses?.length > 0) {
-                loadCheckoutAddresses(customer);
-            }
-            
-            // Refresh from server
-            try {
-                const freshCustomer = await CustomerAuth.refreshCustomer();
-                if (freshCustomer) {
-                    loadCheckoutAddresses(freshCustomer);
-                    if (!document.getElementById('coFullName').value && freshCustomer.name) {
-                        document.getElementById('coFullName').value = freshCustomer.name;
-                    }
-                    if (!document.getElementById('coEmail').value && freshCustomer.email) {
-                        document.getElementById('coEmail').value = freshCustomer.email;
-                    }
+            // Update progress
+            document.querySelectorAll('.checkout-step').forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i + 1 < step) {
+                    s.classList.add('completed');
+                } else if (i + 1 === step) {
+                    s.classList.add('active');
                 }
-            } catch (error) {
-                console.error('Failed to refresh customer:', error);
-            }
-        }
-
-        function loadCheckoutAddresses(customer) {
-            const container = document.getElementById('coSavedAddresses');
-            const addBtn = document.getElementById('addNewAddressBtn');
-            const newForm = document.getElementById('coNewAddressForm');
-            
-            const addresses = customer?.addresses || [];
-            coHasSavedAddresses = addresses.length > 0;
-            
-            if (coHasSavedAddresses) {
-                container.style.display = 'flex';
-                addBtn.style.display = 'flex';
-                newForm.style.display = 'none';
-                
-                container.innerHTML = addresses.map((addr, index) => {
-                    const isDefault = addr.isDefault || index === 0;
-                    return `
-                        <div class="address-card ${isDefault ? 'selected' : ''}" onclick="selectCheckoutAddress(${index})">
-                            <div class="address-card-header">
-                                <span class="address-type">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        ${addr.type === 'work' ? '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>' : '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>'}
-                                    </svg>
-                                    ${addr.type || 'Home'}
-                                </span>
-                                ${isDefault ? '<span class="address-type address-default">Default</span>' : ''}
-                            </div>
-                            <div class="address-text">
-                                ${addr.houseFloor ? addr.houseFloor + ', ' : ''}${addr.fullAddress || addr.formattedAddress || addr.street || ''}
-                                ${addr.city ? ', ' + addr.city : ''}
-                                ${addr.pincode ? ' - ' + addr.pincode : ''}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-                // Pre-select default
-                const defaultIndex = addresses.findIndex(a => a.isDefault) || 0;
-                selectCheckoutAddress(defaultIndex);
-            } else {
-                container.style.display = 'none';
-                addBtn.style.display = 'none';
-                newForm.style.display = 'block';
-            }
-            
-            updateShippingCost();
-        }
-
-        function selectCheckoutAddress(index) {
-            const customer = CustomerAuth.getCustomer();
-            const addr = customer?.addresses?.[index];
-            if (!addr) return;
-            
-            coSelectedSavedAddress = addr;
-            
-            // Update UI
-            document.querySelectorAll('.address-card').forEach((card, i) => {
-                card.classList.toggle('selected', i === index);
             });
-            
-            // Store values
-            document.getElementById('coAddress').value = addr.fullAddress || addr.formattedAddress || '';
-            document.getElementById('coCity').value = addr.city || '';
-            document.getElementById('coState').value = addr.state || '';
-            document.getElementById('coPincode').value = addr.pincode || '';
-            document.getElementById('coHouseFloor').value = addr.houseFloor || '';
-            
-            updateShippingCost();
-        }
 
-        function showNewAddressForm() {
-            document.getElementById('addNewAddressBtn').style.display = 'none';
-            document.getElementById('coNewAddressForm').style.display = 'block';
-            coSelectedSavedAddress = null;
+            qcCurrentStep = step;
             
-            // Deselect saved addresses
-            document.querySelectorAll('.address-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Init map
-            if (!coMap) {
-                setTimeout(initCheckoutMap, 100);
+            // When going to step 2, update shipping
+            if (step === 2) {
+                setTimeout(() => {
+                    updateShippingCost();
+                    
+                    const newAddressForm = document.getElementById('coNewAddressForm');
+                    const isMapVisible = newAddressForm && newAddressForm.style.display !== 'none';
+                    
+                    if (isMapVisible && typeof google !== 'undefined' && google.maps && !qcMap) {
+                        initCheckoutMap();
+                    } else if (qcMap) {
+                        google.maps.event.trigger(qcMap, 'resize');
+                    }
+                }, 150);
             }
         }
 
+        function updateCheckoutStep() {
+            goToStep(qcCurrentStep);
+        }
+
+        // Google Maps Integration
         function initCheckoutMap() {
-            if (typeof google === 'undefined' || !google.maps) {
-                console.log('Waiting for Google Maps...');
-                setTimeout(initCheckoutMap, 500);
-                return;
+            const mapContainer = document.getElementById('coMap');
+            if (!mapContainer || qcMap) return;
+            
+            const defaultCenter = { lat: 20.5937, lng: 78.9629 };
+            
+            qcMap = new google.maps.Map(mapContainer, {
+                center: defaultCenter,
+                zoom: 5,
+                styles: [
+                    { elementType: 'geometry', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.stroke', stylers: [{ color: '#0A1628' }] },
+                    { elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
+                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2b47' }] },
+                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#00D4FF', lightness: -70 }] },
+                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }
+                ],
+                disableDefaultUI: true,
+                zoomControl: true
+            });
+            
+            qcMarker = new google.maps.Marker({
+                map: qcMap,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+            
+            qcMarker.addListener('dragend', function() {
+                const position = qcMarker.getPosition();
+                reverseGeocode(position.lat(), position.lng());
+            });
+            
+            qcMap.addListener('click', function(e) {
+                qcMarker.setPosition(e.latLng);
+                qcMarker.setVisible(true);
+                qcMap.panTo(e.latLng);
+                reverseGeocode(e.latLng.lat(), e.latLng.lng());
+            });
+            
+            const searchInput = document.getElementById('coAddressSearch');
+            if (searchInput && google.maps.places) {
+                qcAutocomplete = new google.maps.places.Autocomplete(searchInput, {
+                    componentRestrictions: { country: 'in' },
+                    fields: ['address_components', 'geometry', 'formatted_address']
+                });
+                
+                qcAutocomplete.bindTo('bounds', qcMap);
+                
+                qcAutocomplete.addListener('place_changed', function() {
+                    const place = qcAutocomplete.getPlace();
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        showToast('Please select a location from the suggestions');
+                        return;
+                    }
+                    
+                    const location = place.geometry.location;
+                    qcMap.setCenter(location);
+                    qcMap.setZoom(16);
+                    qcMarker.setPosition(location);
+                    qcMarker.setVisible(true);
+                    
+                    extractAddressComponents(place);
+                });
+            }
+        }
+        
+        function extractAddressComponents(place) {
+            let city = '', state = '', pincode = '', country = 'India';
+            
+            if (place.address_components) {
+                for (const component of place.address_components) {
+                    const types = component.types;
+                    
+                    if (types.includes('locality')) city = component.long_name;
+                    else if (types.includes('administrative_area_level_1')) state = component.long_name;
+                    else if (types.includes('postal_code')) pincode = component.long_name;
+                    else if (types.includes('country')) country = component.long_name;
+                    
+                    if (!city && types.includes('administrative_area_level_2')) {
+                        city = component.long_name;
+                    }
+                }
             }
             
-            const mapContainer = document.getElementById('checkoutMap');
-            if (!mapContainer) return;
+            qcSelectedLocation = {
+                formatted: place.formatted_address,
+                city: city,
+                state: state,
+                pincode: pincode,
+                country: country,
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
             
-            // Default to India center
-            const defaultLocation = { lat: 20.5937, lng: 78.9629 };
-            
-            coMap = new google.maps.Map(mapContainer, {
-                center: defaultLocation,
-                zoom: 5,
-                disableDefaultUI: true,
-                zoomControl: true,
-                styles: [
-                    { elementType: "geometry", stylers: [{ color: "#0d1a2d" }] },
-                    { elementType: "labels.text.stroke", stylers: [{ color: "#0d1a2d" }] },
-                    { elementType: "labels.text.fill", stylers: [{ color: "#94A3B8" }] },
-                    { featureType: "water", elementType: "geometry", stylers: [{ color: "#020817" }] },
-                    { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e3a5f" }] }
-                ]
-            });
-            
-            coMarker = new google.maps.Marker({
-                map: coMap,
-                draggable: true
-            });
-            
-            coMarker.addListener('dragend', function() {
-                const pos = coMarker.getPosition();
-                reverseGeocode(pos.lat(), pos.lng());
-            });
-            
-            // Setup autocomplete
-            const searchInput = document.getElementById('coAddressSearch');
-            coAutocomplete = new google.maps.places.Autocomplete(searchInput, {
-                componentRestrictions: { country: 'IN' },
-                fields: ['address_components', 'geometry', 'formatted_address']
-            });
-            
-            coAutocomplete.addListener('place_changed', function() {
-                const place = coAutocomplete.getPlace();
-                if (place.geometry) {
-                    const location = place.geometry.location;
-                    coMap.setCenter(location);
-                    coMap.setZoom(16);
-                    coMarker.setPosition(location);
-                    processPlaceResult(place);
+            updateSelectedAddressUI();
+        }
+        
+        function reverseGeocode(lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat, lng } }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    extractAddressComponents(results[0]);
+                    qcSelectedLocation.lat = lat;
+                    qcSelectedLocation.lng = lng;
                 }
             });
         }
-
+        
+        function updateSelectedAddressUI() {
+            if (!qcSelectedLocation) return;
+            
+            const errorEl = document.getElementById('coAddressError');
+            if (errorEl) errorEl.style.display = 'none';
+            
+            const selectedAddressDiv = document.getElementById('coSelectedAddress');
+            selectedAddressDiv.classList.add('show');
+            
+            document.getElementById('coSelectedAddressText').textContent = qcSelectedLocation.formatted;
+            document.getElementById('coCityDisplay').textContent = qcSelectedLocation.city || '-';
+            document.getElementById('coStateDisplay').textContent = qcSelectedLocation.state || '-';
+            document.getElementById('coPincodeDisplay').textContent = qcSelectedLocation.pincode || '-';
+            
+            document.getElementById('coAddress').value = qcSelectedLocation.formatted;
+            document.getElementById('coCity').value = qcSelectedLocation.city;
+            document.getElementById('coState').value = qcSelectedLocation.state;
+            document.getElementById('coPincode').value = qcSelectedLocation.pincode;
+            document.getElementById('coLatitude').value = qcSelectedLocation.lat;
+            document.getElementById('coLongitude').value = qcSelectedLocation.lng;
+        }
+        
         function useCurrentLocation() {
             if (!navigator.geolocation) {
-                showToast('Geolocation not supported');
+                showToast('Geolocation is not supported');
                 return;
             }
             
             showToast('Getting your location...');
             
             navigator.geolocation.getCurrentPosition(
-                (position) => {
+                function(position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     
-                    if (coMap) {
-                        const pos = { lat, lng };
-                        coMap.setCenter(pos);
-                        coMap.setZoom(16);
-                        coMarker.setPosition(pos);
+                    if (qcMap) {
+                        const location = new google.maps.LatLng(lat, lng);
+                        qcMap.setCenter(location);
+                        qcMap.setZoom(16);
+                        qcMarker.setPosition(location);
+                        qcMarker.setVisible(true);
+                        reverseGeocode(lat, lng);
                     }
-                    
-                    reverseGeocode(lat, lng);
                 },
-                (error) => {
-                    showToast('Could not get your location');
+                function(error) {
+                    showToast('Unable to get your location');
                 }
             );
         }
-
-        function reverseGeocode(lat, lng) {
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    processPlaceResult(results[0]);
-                }
-            });
-        }
-
-        function processPlaceResult(place) {
-            const components = place.address_components || [];
-            let city = '', state = '', pincode = '', country = '';
-            
-            components.forEach(c => {
-                if (c.types.includes('locality')) city = c.long_name;
-                if (c.types.includes('administrative_area_level_1')) state = c.long_name;
-                if (c.types.includes('postal_code')) pincode = c.long_name;
-                if (c.types.includes('country')) country = c.long_name;
-            });
-            
-            coSelectedLocation = {
-                formatted: place.formatted_address,
-                city, state, pincode, country,
-                lat: place.geometry?.location?.lat() || 0,
-                lng: place.geometry?.location?.lng() || 0
-            };
-            
-            // Update display
-            document.getElementById('coSelectedAddress').classList.add('show');
-            document.getElementById('coSelectedAddressText').textContent = place.formatted_address;
-            document.getElementById('coCityDisplay').textContent = city || '-';
-            document.getElementById('coStateDisplay').textContent = state || '-';
-            document.getElementById('coPincodeDisplay').textContent = pincode || '-';
-            
-            // Store hidden values
-            document.getElementById('coAddress').value = place.formatted_address;
-            document.getElementById('coCity').value = city;
-            document.getElementById('coState').value = state;
-            document.getElementById('coPincode').value = pincode;
-            document.getElementById('coLatitude').value = coSelectedLocation.lat;
-            document.getElementById('coLongitude').value = coSelectedLocation.lng;
-            
-            updateShippingCost();
-        }
-
-        function validateShippingAddress() {
-            const address = document.getElementById('coAddress').value;
-            const houseFloor = document.getElementById('coHouseFloor').value;
-            const pincode = document.getElementById('coPincode').value;
-            
+        
+        function validateAndContinueToPayment() {
             const errorEl = document.getElementById('coAddressError');
-            const errorText = document.getElementById('coAddressErrorText');
+            const houseFloorInput = document.getElementById('coHouseFloor');
             
-            if (!coSelectedSavedAddress && !address) {
-                errorText.textContent = 'Please select or enter a delivery address';
-                errorEl.classList.add('show');
-                return false;
+            if (errorEl) errorEl.style.display = 'none';
+            if (houseFloorInput) houseFloorInput.classList.remove('error');
+            
+            // Check if using saved address
+            if (qcSelectedSavedAddress) {
+                goToStep(3);
+                return;
             }
             
-            if (!coSelectedSavedAddress && !houseFloor) {
-                errorText.textContent = 'Please enter house/flat number';
-                errorEl.classList.add('show');
-                document.getElementById('coHouseFloor').classList.add('error');
-                return false;
+            // New address validation
+            const houseFloor = houseFloorInput?.value?.trim();
+            
+            if (!qcSelectedLocation || !qcSelectedLocation.formatted) {
+                if (errorEl) {
+                    errorEl.textContent = 'Please select a delivery location on the map';
+                    errorEl.style.display = 'block';
+                }
+                return;
             }
             
-            // Add houseFloor to coSelectedLocation if using new address
-            if (!coSelectedSavedAddress && coSelectedLocation) {
-                coSelectedLocation.houseFloor = houseFloor;
-                coSelectedLocation.fullAddress = houseFloor + ', ' + (coSelectedLocation.formatted || address);
+            if (!houseFloor) {
+                if (errorEl) {
+                    errorEl.textContent = 'Please enter your house/floor number';
+                    errorEl.style.display = 'block';
+                }
+                if (houseFloorInput) {
+                    houseFloorInput.classList.add('error');
+                    houseFloorInput.focus();
+                }
+                return;
             }
             
-            errorEl.classList.remove('show');
-            return true;
+            qcSelectedLocation.houseFloor = houseFloor;
+            qcSelectedLocation.fullAddress = houseFloor + ', ' + qcSelectedLocation.formatted;
+            
+            goToStep(3);
         }
 
         function updateShippingCost() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            coShippingCost = subtotal >= 999 ? 0 : 99;
             
-            const shippingText = document.getElementById('coShippingCostText');
-            const shippingEl = document.getElementById('coShipping');
-            
-            if (coShippingCost === 0) {
-                shippingText.textContent = 'FREE';
-                shippingText.classList.remove('paid');
-                if (shippingEl) shippingEl.textContent = 'FREE';
+            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+                qcShippingCost = 0;
             } else {
-                shippingText.textContent = '₹' + coShippingCost;
-                shippingText.classList.add('paid');
-                if (shippingEl) shippingEl.textContent = '₹' + coShippingCost;
+                qcShippingCost = 99;
             }
+            
+            updateCheckoutSummary();
         }
 
         function updateCheckoutSummary() {
-            const summaryItems = document.getElementById('coSummaryItems');
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const total = subtotal + coShippingCost - coDiscount;
+            const orderTotal = subtotal + qcShippingCost;
             
-            summaryItems.innerHTML = cart.map(item => `
-                <div class="summary-item">
-                    <div class="summary-item-image">
-                        ${item.image ? `<img src="${item.image}" alt="${item.name}">` : ''}
-                    </div>
-                    <div class="summary-item-info">
-                        <div class="summary-item-name">${item.name}</div>
-                        <div class="summary-item-qty">Qty: ${item.quantity}</div>
-                    </div>
-                    <div class="summary-item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
-                </div>
-            `).join('');
+            let discountAmount = 0;
+            if (appliedDiscount && orderTotal > 0) {
+                if (appliedDiscount.type === 'percent') {
+                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
+                    if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
+                        discountAmount = appliedDiscount.maxDiscount;
+                    }
+                } else {
+                    discountAmount = appliedDiscount.value;
+                }
+                discountAmount = Math.min(discountAmount, orderTotal);
+            }
             
-            document.getElementById('coSubtotal').textContent = '₹' + subtotal.toLocaleString();
-            document.getElementById('coTotal').textContent = '₹' + total.toLocaleString();
+            const total = orderTotal - discountAmount;
+
+            document.getElementById('coSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
+            document.getElementById('coShippingCost').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            document.getElementById('coTotal').textContent = `₹${total.toLocaleString()}`;
             
-            updateShippingCost();
+            const discountRow = document.getElementById('coDiscountRow');
+            if (appliedDiscount && discountAmount > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('coDiscountAmount').textContent = `-₹${discountAmount.toLocaleString()}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
         }
 
-        async function applyDiscount() {
-            const code = document.getElementById('coDiscountCode').value.trim().toUpperCase();
-            if (!code) {
-                showToast('Please enter a discount code');
-                return;
-            }
-            
-            try {
-                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const response = await fetch(`${API_BASE}/api/discount-codes/validate`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...CustomerAuth.getAuthHeaders()
-                    },
-                    body: JSON.stringify({ 
-                        code, 
-                        orderTotal: subtotal
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Handle API response - could be data.code.discountAmount or data.discount
-                    const discountInfo = data.code || data;
-                    coDiscount = Math.round(discountInfo.discountAmount || data.discount || 0);
-                    coDiscountCode = code;
-                    
-                    document.getElementById('coDiscountRow').style.display = 'flex';
-                    document.getElementById('coDiscountAmount').textContent = '-₹' + coDiscount.toLocaleString();
-                    document.getElementById('coDiscountCode').classList.remove('error');
-                    
-                    // Save to localStorage for persistence
-                    localStorage.setItem('flow_cart_discount', JSON.stringify({
-                        code: coDiscountCode,
-                        discount: coDiscount,
-                        type: discountInfo.type || 'fixed',
-                        value: discountInfo.value || coDiscount
-                    }));
-                    
-                    showToast('Discount applied!');
-                    updateCheckoutSummary();
-                } else {
-                    document.getElementById('coDiscountCode').classList.add('error');
-                    showToast(data.message || 'Invalid code');
-                }
-            } catch (error) {
-                console.error('Discount error:', error);
-                document.getElementById('coDiscountCode').classList.add('error');
-                showToast('Failed to apply discount');
-            }
-        }
 
         async function placeOrder() {
             const btn = document.getElementById('checkoutNextBtn');
@@ -3369,13 +3363,11 @@
             btn.disabled = true;
             
             try {
-                // Get customer info
                 const customer = CustomerAuth.getCustomer();
                 const phone = document.getElementById('coPhone')?.value || customer?.mobile || '';
                 const email = document.getElementById('coEmail')?.value || customer?.email || '';
-                const name = document.getElementById('coFullName')?.value || customer?.name || '';
+                const name = customer?.name || '';
                 
-                // Update customer email if it's new or changed
                 if (email && email !== customer?.email) {
                     try {
                         await CustomerAuth.updateProfile({ email: email });
@@ -3384,30 +3376,27 @@
                     }
                 }
                 
-                // Determine shipping method (only standard now)
                 const shippingMethod = 'standard';
                 
-                // Prepare shipping address for backend (matching backend schema)
                 const shippingAddress = {
                     fullName: name,
                     mobile: phone,
-                    houseFloor: coSelectedLocation?.houseFloor || document.getElementById('coHouseFloor')?.value || '',
-                    fullAddress: coSelectedLocation?.fullAddress || coSelectedLocation?.formatted || document.getElementById('coAddress')?.value || '',
+                    houseFloor: qcSelectedLocation?.houseFloor || document.getElementById('coHouseFloor')?.value || '',
+                    fullAddress: qcSelectedLocation?.fullAddress || qcSelectedLocation?.formatted || document.getElementById('coAddress')?.value || '',
                     landmark: '',
-                    city: coSelectedLocation?.city || document.getElementById('coCity')?.value || '',
-                    state: coSelectedLocation?.state || document.getElementById('coState')?.value || '',
-                    pincode: coSelectedLocation?.pincode || document.getElementById('coPincode')?.value || '',
+                    city: qcSelectedLocation?.city || document.getElementById('coCity')?.value || '',
+                    state: qcSelectedLocation?.state || document.getElementById('coState')?.value || '',
+                    pincode: qcSelectedLocation?.pincode || document.getElementById('coPincode')?.value || '',
                     location: {
                         type: 'Point',
                         coordinates: [
-                            coSelectedLocation?.lng || parseFloat(document.getElementById('coLongitude')?.value) || 0,
-                            coSelectedLocation?.lat || parseFloat(document.getElementById('coLatitude')?.value) || 0
+                            qcSelectedLocation?.lng || parseFloat(document.getElementById('coLongitude')?.value) || 0,
+                            qcSelectedLocation?.lat || parseFloat(document.getElementById('coLatitude')?.value) || 0
                         ]
                     },
-                    addressType: coSelectedSavedAddress?.type || 'home'
+                    addressType: qcSelectedSavedAddress?.type || 'home'
                 };
                 
-                // Prepare items for backend
                 const items = cart.map(item => ({
                     productId: item.id || item.productSlug,
                     productSlug: item.productSlug || item.id,
@@ -3418,25 +3407,24 @@
                     image: item.image || null
                 }));
                 
-                // Build order data for backend (always Razorpay)
                 const orderData = {
                     items,
                     shippingAddress,
                     shippingMethod,
                     paymentMethod: 'razorpay',
-                    discountCode: coDiscountCode
+                    discountCode: appliedDiscount ? appliedDiscount.code : null
                 };
                 
-                // First, get the Razorpay key from server
-                const keyResponse = await fetch(`${API_BASE}/api/orders/config/razorpay-key`);
+                // Get Razorpay key
+                const keyResponse = await fetch(`${API_BASE_URL}/api/orders/config/razorpay-key`);
                 const keyData = await keyResponse.json();
                 
                 if (!keyData.success || !keyData.key) {
                     throw new Error('Failed to initialize payment');
                 }
                 
-                // Create order on server
-                const response = await fetch(`${API_BASE}/api/orders/create`, {
+                // Create order
+                const response = await fetch(`${API_BASE_URL}/api/orders/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3455,7 +3443,6 @@
                     throw new Error('Payment initialization failed');
                 }
                 
-                // Store order info for verification
                 const pendingOrder = {
                     orderId: data.order.id,
                     orderNumber: data.order.orderNumber,
@@ -3463,7 +3450,6 @@
                 };
                 localStorage.setItem('flow_pending_order', JSON.stringify(pendingOrder));
                 
-                // Configure Razorpay Checkout options
                 const options = {
                     key: keyData.key,
                     amount: data.payment.amount,
@@ -3485,9 +3471,8 @@
                         }
                     },
                     handler: async function(response) {
-                        // Payment successful - verify on server
                         try {
-                            const verifyResponse = await fetch(`${API_BASE}/api/orders/verify-payment`, {
+                            const verifyResponse = await fetch(`${API_BASE_URL}/api/orders/verify-payment`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -3507,12 +3492,12 @@
                             btn.disabled = false;
                             
                             if (verifyData.success) {
-                                // Save address if it's a new one
+                                // Save address if new and checkbox checked
                                 const saveAddressCheckbox = document.getElementById('coSaveAddress');
                                 const shouldSaveAddress = saveAddressCheckbox ? saveAddressCheckbox.checked : true;
                                 
-                                if (!coSelectedSavedAddress && coSelectedLocation && shouldSaveAddress) {
-                                    // Save new address logic here if needed
+                                if (!qcSelectedSavedAddress && qcSelectedLocation && shouldSaveAddress) {
+                                    await saveNewAddress();
                                 }
                                 
                                 // Show success
@@ -3527,31 +3512,36 @@
                                 CustomerAuth.saveLocalCart(cart);
                                 updateCartUI();
                                 
-                                // Clear applied discount
-                                coDiscount = 0;
-                                coDiscountCode = null;
+                                // Clear discount
+                                appliedDiscount = null;
                                 
-                                // Clear Buy Now backup if this was a Buy Now session
+                                // Clear Buy Now backup
                                 if (isBuyNowSession) {
                                     localStorage.removeItem('flow_cart_backup');
                                     isBuyNowSession = false;
                                 }
                                 
-                                // Clear pending order
                                 localStorage.removeItem('flow_pending_order');
                             } else {
-                                showToast('Payment verification failed. Please contact support.');
+                                showToast('Payment verification failed. Contact support.');
                             }
                         } catch (error) {
                             console.error('Payment verification error:', error);
                             btn.classList.remove('loading');
                             btn.disabled = false;
-                            showToast('Payment verification failed. Please contact support.');
+                            showToast('Payment verification failed. Contact support.');
                         }
                     }
                 };
                 
                 const razorpay = new Razorpay(options);
+                
+                razorpay.on('payment.failed', function(response) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    showToast(`Payment failed: ${response.error.description || 'Please try again'}`);
+                });
+                
                 razorpay.open();
                 
             } catch (error) {
@@ -3562,21 +3552,61 @@
             }
         }
 
+        async function saveNewAddress() {
+            if (!qcSelectedLocation) {
+                console.log('No location selected, skipping address save');
+                return false;
+            }
+            
+            try {
+                const addressData = {
+                    type: 'home',
+                    houseFloor: qcSelectedLocation.houseFloor || '',
+                    formattedAddress: qcSelectedLocation.formatted || '',
+                    fullAddress: qcSelectedLocation.fullAddress || qcSelectedLocation.formatted || '',
+                    city: qcSelectedLocation.city || '',
+                    state: qcSelectedLocation.state || '',
+                    pincode: qcSelectedLocation.pincode || '',
+                    country: qcSelectedLocation.country || 'India',
+                    coordinates: {
+                        lat: qcSelectedLocation.lat || 0,
+                        lng: qcSelectedLocation.lng || 0
+                    },
+                    isDefault: !qcHasSavedAddresses
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/customer/addresses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    },
+                    body: JSON.stringify(addressData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    await CustomerAuth.refreshCustomer();
+                    return true;
+                } else {
+                    console.error('Failed to save address:', data.message);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Failed to save address:', error);
+                return false;
+            }
+        }
+
         function closeCheckoutSuccess() {
             document.getElementById('checkoutSuccess').classList.remove('show');
-            
-            // Clear the Buy Now backup since order was successful
             localStorage.removeItem('flow_cart_backup');
             isBuyNowSession = false;
-            
             closeCheckout();
-            
-            // Reset checkout state
-            coCurrentStep = 1;
-            coDiscount = 0;
-            coDiscountCode = null;
-            coSelectedSavedAddress = null;
-            coSelectedLocation = null;
+            qcCurrentStep = 1;
+            qcSelectedSavedAddress = null;
+            qcSelectedLocation = null;
         }
 
         function showToast(message) {
