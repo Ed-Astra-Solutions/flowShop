@@ -2263,22 +2263,11 @@
 
         // Track if this is a Buy Now session (single item checkout)
         let isBuyNowSession = false;
-        
-        // Discount tracking
-        let appliedDiscount = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             await loadProducts();
             await initializeCart();
-            
-            // Setup discount code input - clear error on input
-            const discountInput = document.getElementById('coDiscountCode');
-            if (discountInput) {
-                discountInput.addEventListener('input', () => {
-                    discountInput.classList.remove('error');
-                });
-            }
             
             // Check URL params
             const urlParams = new URLSearchParams(window.location.search);
@@ -2854,7 +2843,7 @@
             proceedToCheckout();
         }
 
-        // ========== CHECKOUT FUNCTIONALITY (Desktop Implementation) ==========
+        // ========== CHECKOUT FUNCTIONALITY ==========
         let qcCurrentStep = 1;
         let qcShippingCost = 99;
         let qcMap = null;
@@ -2863,9 +2852,9 @@
         let qcSelectedLocation = null;
         let qcSelectedSavedAddress = null;
         let qcHasSavedAddresses = false;
+        let appliedDiscount = null;
         const FREE_SHIPPING_THRESHOLD = 999;
 
-        
         function proceedToCheckout() {
             closeCart();
             document.getElementById('checkoutOverlay').classList.add('active');
@@ -2880,6 +2869,11 @@
             
             // Pre-fill customer data if available
             prefillCheckoutData();
+        }
+
+        // Alias for proceedToCheckout
+        function openCheckout() {
+            proceedToCheckout();
         }
 
         async function prefillCheckoutData() {
@@ -2934,6 +2928,7 @@
             const savedAddressesContainer = document.getElementById('coSavedAddresses');
             const savedAddressesList = document.getElementById('coSavedAddressesList');
             const newAddressForm = document.getElementById('coNewAddressForm');
+            const addNewBtn = document.getElementById('addNewAddressBtn');
             
             if (!savedAddressesList) return;
             
@@ -2944,6 +2939,7 @@
             if (qcHasSavedAddresses) {
                 if (savedAddressesContainer) savedAddressesContainer.style.display = 'flex';
                 if (newAddressForm) newAddressForm.style.display = 'none';
+                if (addNewBtn) addNewBtn.style.display = 'flex';
                 
                 addresses.forEach((addr, index) => {
                     const isDefault = addr.isDefault || index === 0;
@@ -2970,6 +2966,7 @@
             } else {
                 if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
                 if (newAddressForm) newAddressForm.style.display = 'block';
+                if (addNewBtn) addNewBtn.style.display = 'none';
                 
                 if (typeof google !== 'undefined' && google.maps && !qcMap) {
                     setTimeout(initCheckoutMap, 100);
@@ -3010,9 +3007,11 @@
         function showNewAddressForm() {
             const savedAddressesContainer = document.getElementById('coSavedAddresses');
             const newAddressForm = document.getElementById('coNewAddressForm');
+            const addNewBtn = document.getElementById('addNewAddressBtn');
             
             if (savedAddressesContainer) savedAddressesContainer.style.display = 'none';
             if (newAddressForm) newAddressForm.style.display = 'block';
+            if (addNewBtn) addNewBtn.style.display = 'none';
             
             qcSelectedLocation = null;
             qcSelectedSavedAddress = null;
@@ -3022,9 +3021,6 @@
             if (!qcMap && typeof google !== 'undefined' && google.maps) {
                 initCheckoutMap();
             }
-            
-            // Pre-fill customer data
-            prefillCheckoutData();
         }
 
         function closeCheckout() {
@@ -3117,10 +3113,22 @@
                     }
                 }, 150);
             }
+            
+            // Update button text
+            updateCheckoutStep();
         }
 
         function updateCheckoutStep() {
-            goToStep(qcCurrentStep);
+            const btn = document.getElementById('checkoutNextBtn');
+            const btnText = btn?.querySelector('.btn-text');
+            
+            if (qcCurrentStep === 1) {
+                if (btnText) btnText.textContent = 'Continue to Shipping';
+            } else if (qcCurrentStep === 2) {
+                if (btnText) btnText.textContent = 'Continue to Payment';
+            } else if (qcCurrentStep === 3) {
+                if (btnText) btnText.textContent = 'Pay Now';
+            }
         }
 
         // Google Maps Integration
@@ -3301,16 +3309,16 @@
             
             if (!qcSelectedLocation || !qcSelectedLocation.formatted) {
                 if (errorEl) {
-                    errorEl.textContent = 'Please select a delivery location on the map';
-                    errorEl.style.display = 'block';
+                    document.getElementById('coAddressErrorText').textContent = 'Please select a delivery location on the map';
+                    errorEl.style.display = 'flex';
                 }
                 return;
             }
             
             if (!houseFloor) {
                 if (errorEl) {
-                    errorEl.textContent = 'Please enter your house/floor number';
-                    errorEl.style.display = 'block';
+                    document.getElementById('coAddressErrorText').textContent = 'Please enter your house/floor number';
+                    errorEl.style.display = 'flex';
                 }
                 if (houseFloorInput) {
                     houseFloorInput.classList.add('error');
@@ -3334,27 +3342,31 @@
                 qcShippingCost = 99;
             }
             
+            const shippingCostText = document.getElementById('coShippingCostText');
+            if (shippingCostText) {
+                shippingCostText.textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            }
+            
             updateCheckoutSummary();
         }
 
         function updateCheckoutSummary() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const orderTotal = subtotal + qcShippingCost;
-            
             let discountAmount = 0;
-            if (appliedDiscount && orderTotal > 0) {
+            
+            if (appliedDiscount && subtotal > 0) {
                 if (appliedDiscount.type === 'percent') {
-                    discountAmount = Math.ceil(orderTotal * (appliedDiscount.value / 100));
+                    discountAmount = Math.ceil(subtotal * (appliedDiscount.value / 100));
                     if (appliedDiscount.maxDiscount && discountAmount > appliedDiscount.maxDiscount) {
                         discountAmount = appliedDiscount.maxDiscount;
                     }
                 } else {
                     discountAmount = appliedDiscount.value;
                 }
-                discountAmount = Math.min(discountAmount, orderTotal);
+                discountAmount = Math.min(discountAmount, subtotal);
             }
             
-            const total = orderTotal - discountAmount;
+            const total = subtotal + qcShippingCost - discountAmount;
 
             document.getElementById('coSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
             document.getElementById('coShipping').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
@@ -3366,6 +3378,23 @@
                 document.getElementById('coDiscountAmount').textContent = `-₹${discountAmount.toLocaleString()}`;
             } else {
                 discountRow.style.display = 'none';
+            }
+            
+            // Update summary items
+            const summaryItems = document.getElementById('coSummaryItems');
+            if (summaryItems) {
+                summaryItems.innerHTML = cart.map(item => `
+                    <div class="summary-item">
+                        <div class="summary-item-image">
+                            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : '<div class="sachet-mini"><span>Flow</span></div>'}
+                        </div>
+                        <div class="summary-item-info">
+                            <div class="summary-item-name">${item.name}</div>
+                            <div class="summary-item-qty">Qty: ${item.quantity}</div>
+                        </div>
+                        <div class="summary-item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
+                    </div>
+                `).join('');
             }
         }
         
@@ -3656,6 +3685,7 @@
 
         function closeCheckoutSuccess() {
             document.getElementById('checkoutSuccess').classList.remove('show');
+            document.getElementById('checkoutFooter').style.display = 'block';
             localStorage.removeItem('flow_cart_backup');
             isBuyNowSession = false;
             closeCheckout();
