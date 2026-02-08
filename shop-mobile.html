@@ -1985,7 +1985,9 @@
 
                 <!-- Saved Addresses -->
                 <div class="saved-addresses" id="coSavedAddresses" style="display: none;">
-                    <!-- Saved addresses populated here -->
+                    <div id="coSavedAddressesList">
+                        <!-- Saved addresses populated here -->
+                    </div>
                 </div>
 
                 <button class="add-new-address-btn" id="addNewAddressBtn" onclick="showNewAddressForm()" style="display: none;">
@@ -2261,6 +2263,9 @@
 
         // Track if this is a Buy Now session (single item checkout)
         let isBuyNowSession = false;
+        
+        // Discount tracking
+        let appliedDiscount = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
@@ -3120,7 +3125,7 @@
 
         // Google Maps Integration
         function initCheckoutMap() {
-            const mapContainer = document.getElementById('coMap');
+            const mapContainer = document.getElementById('checkoutMap');
             if (!mapContainer || qcMap) return;
             
             const defaultCenter = { lat: 20.5937, lng: 78.9629 };
@@ -3352,7 +3357,7 @@
             const total = orderTotal - discountAmount;
 
             document.getElementById('coSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
-            document.getElementById('coShippingCost').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
+            document.getElementById('coShipping').textContent = qcShippingCost === 0 ? 'FREE' : `₹${qcShippingCost}`;
             document.getElementById('coTotal').textContent = `₹${total.toLocaleString()}`;
             
             const discountRow = document.getElementById('coDiscountRow');
@@ -3363,7 +3368,49 @@
                 discountRow.style.display = 'none';
             }
         }
-
+        
+        async function applyDiscount() {
+            const discountInput = document.getElementById('coDiscountCode');
+            const code = discountInput?.value?.trim();
+            
+            if (!code) {
+                showToast('Please enter a discount code');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/discount-codes/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CustomerAuth.getToken()}`
+                    },
+                    body: JSON.stringify({ code })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.discountCode) {
+                    appliedDiscount = {
+                        code: data.discountCode.code,
+                        type: data.discountCode.discountType,
+                        value: data.discountCode.discountValue,
+                        maxDiscount: data.discountCode.maxDiscount || null
+                    };
+                    showToast(`Discount applied: ${appliedDiscount.type === 'percent' ? appliedDiscount.value + '%' : '₹' + appliedDiscount.value} off!`);
+                    updateCheckoutSummary();
+                    discountInput.disabled = true;
+                    discountInput.style.opacity = '0.6';
+                } else {
+                    discountInput.classList.add('error');
+                    showToast(data.message || 'Invalid discount code');
+                }
+            } catch (error) {
+                console.error('Discount validation error:', error);
+                discountInput.classList.add('error');
+                showToast('Failed to validate discount code');
+            }
+        }
 
         async function placeOrder() {
             const btn = document.getElementById('checkoutNextBtn');
