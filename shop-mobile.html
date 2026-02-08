@@ -2881,6 +2881,12 @@
             // First use cached customer data
             let customer = CustomerAuth.getCustomer();
             
+            // Pre-fill full name
+            const nameInput = document.getElementById('coFullName');
+            if (nameInput && customer?.name) {
+                nameInput.value = customer.name;
+            }
+            
             // Pre-fill phone
             const phoneInput = document.getElementById('coPhone');
             if (phoneInput && customer?.mobile) {
@@ -3046,12 +3052,14 @@
         function goToStep(step) {
             // Validate Step 1 before proceeding
             if (step === 2 && qcCurrentStep === 1) {
+                const nameInput = document.getElementById('coFullName');
                 const emailInput = document.getElementById('coEmail');
                 const phoneInput = document.getElementById('coPhone');
+                const name = nameInput?.value?.trim();
                 const email = emailInput?.value?.trim();
                 const phone = phoneInput?.value?.trim();
                 
-                if (!email || !phone) {
+                if (!name || !email || !phone) {
                     showToast('Please fill in all contact details');
                     return;
                 }
@@ -3366,7 +3374,7 @@
                 const customer = CustomerAuth.getCustomer();
                 const phone = document.getElementById('coPhone')?.value || customer?.mobile || '';
                 const email = document.getElementById('coEmail')?.value || customer?.email || '';
-                const name = customer?.name || '';
+                const name = document.getElementById('coFullName')?.value || customer?.name || '';
                 
                 if (email && email !== customer?.email) {
                     try {
