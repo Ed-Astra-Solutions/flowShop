@@ -2867,9 +2867,21 @@
             const errorEl = document.getElementById('coAddressError');
             if (errorEl) errorEl.style.display = 'none';
             
+            // Clear contact field error states
+            document.getElementById('coFullName')?.classList.remove('error');
+            document.getElementById('coEmail')?.classList.remove('error');
+            document.getElementById('coPhone')?.classList.remove('error');
+            
             // Pre-fill customer data if available
             prefillCheckoutData();
         }
+
+        // Clear error state on input
+        document.addEventListener('input', function(e) {
+            if (e.target.id === 'coFullName' || e.target.id === 'coEmail' || e.target.id === 'coPhone') {
+                e.target.classList.remove('error');
+            }
+        });
 
         // Alias for proceedToCheckout
         function openCheckout() {
@@ -3060,19 +3072,42 @@
                 const email = emailInput?.value?.trim();
                 const phone = phoneInput?.value?.trim();
                 
-                if (!name || !email || !phone) {
+                // Clear previous error states
+                nameInput?.classList.remove('error');
+                emailInput?.classList.remove('error');
+                phoneInput?.classList.remove('error');
+                
+                let hasError = false;
+                
+                // Check each field and add error class if empty
+                if (!name) {
+                    nameInput?.classList.add('error');
+                    hasError = true;
+                }
+                if (!email) {
+                    emailInput?.classList.add('error');
+                    hasError = true;
+                }
+                if (!phone) {
+                    phoneInput?.classList.add('error');
+                    hasError = true;
+                }
+                
+                if (hasError) {
                     showToast('Please fill in all contact details');
                     return;
                 }
                 
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
+                    emailInput?.classList.add('error');
                     showToast('Please enter a valid email address');
                     return;
                 }
                 
                 const phoneDigits = phone.replace(/\D/g, '');
                 if (phoneDigits.length < 10) {
+                    phoneInput?.classList.add('error');
                     showToast('Please enter a valid phone number');
                     return;
                 }
