@@ -2523,7 +2523,7 @@
                             <h3 class="product-name">${item.displayName}</h3>
                             <div class="product-price">
                                 <span class="price-current">₹${item.selectedPack.price.toLocaleString()}</span>
-                                ${item.selectedPack.comparePrice ? `<span class="price-original">₹${item.selectedPack.comparePrice.toLocaleString()}</span>` : ''}
+                                ${item.selectedPack.size !== 5 && item.selectedPack.comparePrice ? `<span class="price-original">₹${item.selectedPack.comparePrice.toLocaleString()}</span>` : ''}
                             </div>
                             ${buttonHtml}
                         </div>
@@ -3401,7 +3401,7 @@
                 };
                 
                 // Create Razorpay order
-                const orderResponse = await fetch(`${API_BASE}/api/orders/create`, {
+                const orderResponse = await fetch(`${API_BASE}/api/orders/create-payment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
