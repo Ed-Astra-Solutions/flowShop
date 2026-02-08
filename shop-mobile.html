@@ -3257,6 +3257,12 @@
                 return false;
             }
             
+            // Add houseFloor to coSelectedLocation if using new address
+            if (!coSelectedSavedAddress && coSelectedLocation) {
+                coSelectedLocation.houseFloor = houseFloor;
+                coSelectedLocation.fullAddress = houseFloor + ', ' + (coSelectedLocation.formatted || address);
+            }
+            
             errorEl.classList.remove('show');
             return true;
         }
@@ -3386,14 +3392,17 @@
                     fullName: name,
                     mobile: phone,
                     houseFloor: coSelectedLocation?.houseFloor || document.getElementById('coHouseFloor')?.value || '',
-                    fullAddress: coSelectedLocation?.fullAddress || coSelectedLocation?.formattedAddress || '',
+                    fullAddress: coSelectedLocation?.fullAddress || coSelectedLocation?.formatted || document.getElementById('coAddress')?.value || '',
                     landmark: '',
-                    city: coSelectedLocation?.city || '',
-                    state: coSelectedLocation?.state || '',
-                    pincode: coSelectedLocation?.pincode || '',
+                    city: coSelectedLocation?.city || document.getElementById('coCity')?.value || '',
+                    state: coSelectedLocation?.state || document.getElementById('coState')?.value || '',
+                    pincode: coSelectedLocation?.pincode || document.getElementById('coPincode')?.value || '',
                     location: {
                         type: 'Point',
-                        coordinates: [coSelectedLocation?.lng || 0, coSelectedLocation?.lat || 0]
+                        coordinates: [
+                            coSelectedLocation?.lng || parseFloat(document.getElementById('coLongitude')?.value) || 0,
+                            coSelectedLocation?.lat || parseFloat(document.getElementById('coLatitude')?.value) || 0
+                        ]
                     },
                     addressType: coSelectedSavedAddress?.type || 'home'
                 };
