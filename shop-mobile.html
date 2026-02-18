@@ -2396,7 +2396,9 @@
                     product.packSizes.forEach(pack => {
                         expandedProducts.push({
                             ...product,
-                            displayName: `${product.name} — ${pack.label}`,
+                            displayName: isBundle 
+                                ? `${product.name} — Pack of ${pack.size}` 
+                                : `${product.name} — ${pack.label}`,
                             selectedFlavour: isBundle ? null : flavor,
                             selectedPack: pack,
                             uniqueId: `${product.slug}-${pack.size}`,

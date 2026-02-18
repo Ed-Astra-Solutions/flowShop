@@ -1176,6 +1176,9 @@
         .review-avatar {
             width: 48px;
             height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            flex-shrink: 0;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
             display: flex;
@@ -1187,12 +1190,18 @@
             color: var(--flow-dark);
         }
 
+        .review-author-info {
+            min-width: 0;
+            flex: 1;
+        }
+
         .review-author-info h5 {
             font-family: 'Syne', sans-serif;
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--flow-white);
             margin-bottom: 2px;
+            word-break: break-word;
         }
 
         .review-author-info span {
@@ -1207,6 +1216,8 @@
             font-size: 0.75rem;
             color: var(--flow-cyan);
             margin-left: auto;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .review-verified svg {
@@ -4011,7 +4022,7 @@
                 return `<svg class="empty" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
             }).join('');
             
-            const initials = review.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            const initials = review.name.charAt(0).toUpperCase();
             
             return `
                 <div class="review-card">

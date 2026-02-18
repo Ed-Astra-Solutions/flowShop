@@ -491,6 +491,18 @@
             overflow: hidden;
         }
 
+        .product-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-thumbnail-img {
+            transform: scale(1.05);
+        }
+
         .product-image::before {
             content: '';
             position: absolute;
@@ -3571,7 +3583,9 @@
             const bundleFlavors = getBundleFlavors();
             const imageUrl = getProductImage(product);
             const uniqueId = `${product.slug}-${pack.size}`;
-            const displayName = `${product.name} — ${pack.label}`;
+            const displayName = isBundle 
+                ? `${product.name} — Pack of ${pack.size}` 
+                : `${product.name} — ${pack.label}`;
             
             // Badge logic
             let badgeHtml = '';
@@ -3587,7 +3601,7 @@
             // Image section
             let imageHtml = '';
             if (imageUrl) {
-                imageHtml = `<img src="${imageUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain;" />`;
+                imageHtml = `<img src="${imageUrl}" alt="${product.name}" class="product-thumbnail-img" />`;
             } else if (isBundle) {
                 imageHtml = `
                     <div style="display: flex; gap: 8px; justify-content: center; align-items: flex-end;">
@@ -3616,7 +3630,12 @@
             // Meta info
             const categoryLabel = isBundle ? 'Bundle' : (product.category ? product.category.charAt(0).toUpperCase() + product.category.slice(1) : 'Hydration');
             const metaSecond = isBundle ? `${bundleFlavors.length} flavours` : flavor.name;
-            const description = product.shortDescription || (product.description ? product.description.slice(0, 100) + '...' : '');
+            let description = product.shortDescription || (product.description ? product.description.slice(0, 100) + '...' : '');
+            if (isBundle && bundleFlavors.length > 0) {
+                const perFlavour = Math.floor(pack.size / bundleFlavors.length);
+                const flavourList = bundleFlavors.map(f => `${perFlavour} ${f.name}`).join(', ');
+                description = `${pack.size} sachets — ${flavourList}. The perfect way to try all flavours.`;
+            }
             const flavorSlug = isBundle ? '' : flavor.slug;
 
             return `

@@ -291,7 +291,7 @@
             border-radius: 24px;
             height: 500px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
             position: relative;
             overflow: hidden;
@@ -325,7 +325,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            z-index: 2;
+            z-index: 3;
         }
 
         .best-value-badge {
@@ -340,7 +340,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            z-index: 2;
+            z-index: 3;
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
         }
 
@@ -452,21 +452,17 @@
         .main-image .product-image-display {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             z-index: 2;
             border-radius: 16px;
-            max-width: 90%;
-            max-height: 90%;
         }
 
         .main-image video.product-video-display {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             z-index: 2;
             border-radius: 16px;
-            max-width: 90%;
-            max-height: 90%;
         }
 
         .thumbnail-video-indicator {
@@ -3833,19 +3829,14 @@
                 ? `<span class="product-badge">${product.badges[0].text}</span>` 
                 : '<span class="product-badge" style="display:none;"></span>';
             
-            // Check if current pack size is the best value
-            const bestValueBadge = getBestValueBadge();
-            
             if (media.type === 'video') {
                 mainImage.innerHTML = `
                     ${badge}
-                    ${bestValueBadge}
                     <video class="product-video-display" src="${media.url}" autoplay loop muted playsinline></video>
                 `;
             } else {
                 mainImage.innerHTML = `
                     ${badge}
-                    ${bestValueBadge}
                     <img class="product-image-display" src="${media.url}" alt="${media.alt || product.name}">
                 `;
             }
@@ -4293,7 +4284,7 @@
                     selectedPackSize = singleFlavourProduct.packSizes.find(p => p.size === size) || singleFlavourProduct.packSizes[0];
                 }
             } else {
-                selectedPackSize = product.packSizes.find(p => p.size === size);
+                selectedPackSize = product.packSizes.find(p => p.size === size) || product.packSizes[0];
             }
             
             document.querySelectorAll('.variant-option').forEach(o => o.classList.remove('selected'));
