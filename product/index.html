@@ -4053,17 +4053,18 @@
             // For bundles in "all" mode, show all flavours as included
             if (isBundle && bundleViewMode === 'all') {
                 const bundleFlavors = getBundleFlavors();
+                const perFlavour = Math.floor((selectedPackSize?.size || 30) / bundleFlavors.length);
                 const flavoursHtml = bundleFlavors.map(f => `
                     <div class="flavour-option selected" style="cursor: default;">
                         <div class="flavour-dot" style="background: ${f.color};"></div>
                         <span class="flavour-name">${f.name}</span>
-                        <span style="font-size: 0.75rem; color: var(--flow-gray); margin-left: 0.25rem;">×10</span>
+                        <span style="font-size: 0.75rem; color: var(--flow-gray); margin-left: 0.25rem;">×${perFlavour}</span>
                     </div>
                 `).join('');
                 
                 document.querySelector('.flavour-section').innerHTML = `
                     ${toggleHtml}
-                    <div class="flavour-label">Includes: <span>All 3 Flavours (10 each)</span></div>
+                    <div class="flavour-label">Includes: <span>All ${bundleFlavors.length} Flavours (${perFlavour} each)</span></div>
                     <div class="flavour-options">${flavoursHtml}</div>
                 `;
                 return;
@@ -4298,6 +4299,11 @@
             
             updatePriceDisplay();
             updateAddToCartPrice();
+            
+            // Update flavour section (bundle counts depend on pack size)
+            if (isBundle) {
+                renderFlavourSelector();
+            }
             
             // Refresh image display to show/hide best value badge
             if (productMedia.length > 0 && currentMainView.startsWith('media-')) {
