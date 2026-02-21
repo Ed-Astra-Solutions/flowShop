@@ -2121,7 +2121,7 @@
 
                 <!-- Discount Code -->
                 <div class="discount-row">
-                    <input type="text" class="form-input" id="coDiscountCode" placeholder="Discount code">
+                    <input type="text" class="form-input" id="coDiscountCode" placeholder="Discount code" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocapitalize="characters">
                     <button class="apply-discount-btn" onclick="applyDiscount()">Apply</button>
                 </div>
 
@@ -3456,17 +3456,18 @@
                 
                 const data = await response.json();
                 
-                if (data.success && data.discountCode) {
+                if (data.success && data.code) {
                     appliedDiscount = {
-                        code: data.discountCode.code,
-                        type: data.discountCode.discountType,
-                        value: data.discountCode.discountValue,
-                        maxDiscount: data.discountCode.maxDiscount || null
+                        code: data.code.code,
+                        type: data.code.type,
+                        value: data.code.value,
+                        maxDiscount: data.code.maxDiscount || null
                     };
                     showToast(`Discount applied: ${appliedDiscount.type === 'percent' ? appliedDiscount.value + '%' : '₹' + appliedDiscount.value} off!`);
                     updateCheckoutSummary();
                     discountInput.disabled = true;
                     discountInput.style.opacity = '0.6';
+                    discountInput.classList.remove('error');
                 } else {
                     discountInput.classList.add('error');
                     showToast(data.message || 'Invalid discount code');
