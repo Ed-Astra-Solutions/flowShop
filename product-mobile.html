@@ -1042,24 +1042,32 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(0, 212, 255, 0.1);
-            padding: 12px 16px;
+            padding: 10px 16px;
             z-index: 99;
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sticky-top-row {
+            display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
         }
 
         .sticky-price {
-            min-width: 80px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
         }
 
         .sticky-price .current {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
         }
 
         .sticky-price .original {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--flow-gray);
             text-decoration: line-through;
         }
@@ -1067,15 +1075,15 @@
         .quantity-control {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             background: rgba(0, 212, 255, 0.1);
             border-radius: 25px;
-            padding: 4px;
+            padding: 3px;
         }
 
         .qty-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: none;
             background: rgba(0, 212, 255, 0.2);
@@ -1093,14 +1101,20 @@
         }
 
         .qty-value {
-            min-width: 30px;
+            min-width: 26px;
             text-align: center;
+            font-size: 15px;
             font-weight: 600;
+        }
+
+        .sticky-btn-row {
+            display: flex;
+            gap: 10px;
         }
 
         .add-to-cart-btn {
             flex: 1;
-            padding: 14px 20px;
+            padding: 12px 16px;
             background: var(--gradient-flow);
             border: none;
             border-radius: 25px;
@@ -1124,15 +1138,16 @@
         }
 
         .buy-now-btn {
-            padding: 14px 16px;
+            flex: 1;
+            padding: 12px 16px;
             background: transparent;
             border: 2px solid var(--flow-cyan);
             border-radius: 25px;
             color: var(--flow-cyan);
             font-family: inherit;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
-            white-space: nowrap;
+            text-align: center;
         }
 
         .buy-now-btn:active {
@@ -1470,23 +1485,27 @@
 
     <!-- Sticky Bottom Bar -->
     <div class="sticky-bottom" id="stickyBottom" style="display: none;">
-        <div class="sticky-price">
-            <div class="current" id="stickyPrice">₹0</div>
-            <div class="original" id="stickyOriginal" style="display: none;"></div>
+        <div class="sticky-top-row">
+            <div class="sticky-price">
+                <div class="current" id="stickyPrice">₹0</div>
+                <div class="original" id="stickyOriginal" style="display: none;"></div>
+            </div>
+            <div class="quantity-control">
+                <button class="qty-btn" onclick="updateQty(-1)">−</button>
+                <span class="qty-value" id="qtyValue">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
+            </div>
         </div>
-        <div class="quantity-control">
-            <button class="qty-btn" onclick="updateQty(-1)">−</button>
-            <span class="qty-value" id="qtyValue">1</span>
-            <button class="qty-btn" onclick="updateQty(1)">+</button>
+        <div class="sticky-btn-row">
+            <button class="add-to-cart-btn" onclick="addToCart()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+                </svg>
+                Add to Cart
+            </button>
+            <button class="buy-now-btn" onclick="buyNow()">Buy Now</button>
         </div>
-        <button class="add-to-cart-btn" onclick="addToCart()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-            </svg>
-            Add
-        </button>
-        <button class="buy-now-btn" onclick="buyNow()">Buy Now</button>
     </div>
 
     <!-- Bottom Navigation -->
@@ -2208,9 +2227,7 @@
 
             const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
             const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
-            const uniqueId = selectedFlavour 
-                ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
-                : `${product.slug}-${selectedPackSize.size}`;
+            const uniqueId = `${product.slug}-${selectedPackSize.size}`;
 
             const cartItem = {
                 productId: product._id,
@@ -2224,9 +2241,9 @@
 
             if (typeof CustomerAuth !== 'undefined') {
                 CustomerAuth.addToCart(cartItem).then(() => {
-                    CustomerAuth.updateCartCount();
                     updateCartBadge();
                     showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+                    setTimeout(() => { window.location.href = '/shop/?cart=true'; }, 600);
                 });
             } else {
                 let cart = JSON.parse(localStorage.getItem('flow_cart') || '[]');
@@ -2244,6 +2261,7 @@
                 localStorage.setItem('flow_cart', JSON.stringify(cart));
                 updateCartBadge();
                 showToast(`${quantity} item${quantity > 1 ? 's' : ''} added to cart!`);
+                setTimeout(() => { window.location.href = '/shop/?cart=true'; }, 600);
             }
         }
 
@@ -2256,7 +2274,9 @@
             
             // Check if user is logged in first
             if (typeof CustomerAuth !== 'undefined' && !CustomerAuth.isLoggedIn()) {
-                CustomerAuth.showLoginModal();
+                CustomerAuth.showModal(() => {
+                    buyNow();
+                });
                 return;
             }
             
@@ -2268,9 +2288,7 @@
             // Build display name
             const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
             const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
-            const uniqueId = selectedFlavour 
-                ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
-                : `${product.slug}-${selectedPackSize.size}`;
+            const uniqueId = `${product.slug}-${selectedPackSize.size}`;
             
             // Create cart item for ONLY this product
             const buyNowItem = {
@@ -2321,9 +2339,7 @@
 
             const flavourName = targetFlavour ? targetFlavour.name : (targetProduct.category === 'bundle' ? 'Variety' : extractedFlavour.name);
             const displayName = `Flow ${flavourName} — ${targetPackSize.label}`;
-            const uniqueId = targetFlavour 
-                ? `${targetProduct.slug}-${targetFlavour.slug}-${targetPackSize.size}`
-                : `${targetProduct.slug}-${targetPackSize.size}`;
+            const uniqueId = `${targetProduct.slug}-${targetPackSize.size}`;
 
             const cartItem = {
                 productId: targetProduct._id,
