@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1672610040547647');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1672610040547647&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop — Flow Hydration</title>
@@ -3136,7 +3153,7 @@
             <!-- Step 1: Contact -->
             <div class="qc-content" id="qcStep1">
                 <div class="qc-header">
-                    <h3>📧 Contact Information</h3>
+                    <h3><span class="material-icons" style="font-size: 20px; vertical-align: middle; margin-right: 8px;">mail</span> Contact Information</h3>
                     <p>We'll send your order confirmation here</p>
                 </div>
                 <div class="qc-form">
@@ -3158,7 +3175,7 @@
             <!-- Step 2: Shipping with Google Maps -->
             <div class="qc-content hidden" id="qcStep2">
                 <div class="qc-header">
-                    <h3>📍 Delivery Address</h3>
+                    <h3><span class="material-icons" style="font-size: 20px; vertical-align: middle; margin-right: 8px;">location_on</span> Delivery Address</h3>
                     <p id="qcAddressHeaderText">Select your delivery address</p>
                 </div>
                 
@@ -3261,7 +3278,7 @@
                 
                 <!-- Shipping Info -->
                 <div class="qc-shipping-info-box" id="qcShippingInfoBox">
-                    <div class="qc-shipping-icon">🚚</div>
+                    <div class="qc-shipping-icon"><span class="material-icons">local_shipping</span></div>
                     <div class="qc-shipping-details">
                         <span class="qc-shipping-title" id="qcShippingTitle">Standard Delivery</span>
                         <span class="qc-shipping-estimate" id="qcShippingEstimate">Estimated delivery: 2-4 days</span>
@@ -3271,7 +3288,7 @@
                     </div>
                 </div>
                 <p class="qc-free-shipping-note" id="qcFreeShippingNote" style="display: none;">
-                    🎉 Free shipping on orders above ₹999!
+                    <span class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px;">celebration</span> Free shipping on orders above ₹999!
                 </p>
                 
                 <div class="qc-btn-row">
@@ -4029,7 +4046,7 @@
 
             // Update shipping progress
             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                shippingText.innerHTML = '🎉 You\'ve unlocked <span>FREE shipping!</span>';
+                shippingText.innerHTML = '<span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">celebration</span> You\'ve unlocked <span>FREE shipping!</span>';
                 shippingBar.style.width = '100%';
             } else {
                 const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
@@ -4070,6 +4087,17 @@
             
             updateCartUI();
             updateAddToCartButtons();
+            
+            // Meta Pixel: AddToCart
+            if (typeof fbq === 'function') {
+                fbq('track', 'AddToCart', {
+                    content_name: name,
+                    content_ids: [productId],
+                    content_type: 'product',
+                    value: price,
+                    currency: 'INR'
+                });
+            }
             
             // Show cart toast with image
             const cartItem = cart.find(item => item.id === productId || item.productSlug === productId);
@@ -4243,6 +4271,19 @@
             quickCheckoutOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             updateQCSummary();
+            
+            // Meta Pixel: InitiateCheckout
+            if (typeof fbq === 'function') {
+                const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const contentIds = cart.map(item => item.id || item.productSlug);
+                fbq('track', 'InitiateCheckout', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    num_items: cart.reduce((sum, item) => sum + item.quantity, 0),
+                    value: cartTotal,
+                    currency: 'INR'
+                });
+            }
             
             // Clear any previous errors
             const errorEl = document.getElementById('qcAddressError');
@@ -4539,7 +4580,7 @@
                 qcShippingCost = 0;
                 if (freeShippingNote) {
                     freeShippingNote.style.display = 'block';
-                    freeShippingNote.textContent = '🎉 You qualify for FREE shipping!';
+                    freeShippingNote.innerHTML = '<span class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px;">celebration</span> You qualify for FREE shipping!';
                 }
             } else {
                 qcShippingCost = 99;
@@ -4608,6 +4649,18 @@
             });
 
             qcCurrentStep = step;
+            
+            // Meta Pixel: AddPaymentInfo when reaching payment step
+            if (step === 3 && typeof fbq === 'function') {
+                const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const contentIds = cart.map(item => item.id || item.productSlug);
+                fbq('track', 'AddPaymentInfo', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    value: cartTotal,
+                    currency: 'INR'
+                });
+            }
             
             // When going to step 2, update shipping info
             if (step === 2) {
@@ -5066,6 +5119,20 @@
                             btn.classList.remove('loading');
                             
                             if (verifyData.success) {
+                                // Meta Pixel: Purchase
+                                if (typeof fbq === 'function') {
+                                    const purchaseTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                                    const contentIds = cart.map(item => item.id || item.productSlug);
+                                    fbq('track', 'Purchase', {
+                                        content_ids: contentIds,
+                                        content_type: 'product',
+                                        num_items: cart.reduce((sum, item) => sum + item.quantity, 0),
+                                        value: purchaseTotal,
+                                        currency: 'INR',
+                                        order_id: pendingOrder.orderNumber
+                                    });
+                                }
+                                
                                 // Save address if it's a new one
                                 const saveAddressCheckbox = document.getElementById('qcSaveAddress');
                                 const shouldSaveAddress = saveAddressCheckbox ? saveAddressCheckbox.checked : true;

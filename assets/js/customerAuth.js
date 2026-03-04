@@ -578,6 +578,11 @@ const CustomerAuth = (function() {
             currentMobile = mobile;
             isNewCustomer = result.isNewCustomer;
             
+            // Meta Pixel: Lead event
+            if (typeof fbq === 'function') {
+                fbq('track', 'Lead', { content_name: 'OTP Sent', content_category: 'Authentication' });
+            }
+            
             // Dev mode - show OTP in console
             if (result.otp) {
                 console.log(`[DEV] OTP: ${result.otp}`);
@@ -675,6 +680,11 @@ const CustomerAuth = (function() {
     
     function handleLoginSuccess(customer) {
         closeModal();
+        
+        // Meta Pixel: CompleteRegistration event
+        if (typeof fbq === 'function') {
+            fbq('track', 'CompleteRegistration', { content_name: 'Login/Signup', status: true });
+        }
         
         // Update UI
         updateAuthUI();

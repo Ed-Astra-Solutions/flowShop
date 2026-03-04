@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1672610040547647');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1672610040547647&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#020817">
@@ -2596,6 +2613,17 @@
             updateCartUI();
             renderProducts();
             showToast('Added to cart');
+            
+            // Meta Pixel: AddToCart
+            if (typeof fbq === 'function') {
+                fbq('track', 'AddToCart', {
+                    content_name: name,
+                    content_ids: [id],
+                    content_type: 'product',
+                    value: price,
+                    currency: 'INR'
+                });
+            }
         }
 
         // Add to cart from product grid
@@ -2635,6 +2663,17 @@
             
             // Show cart toast with product image
             showCartToast(name, qty, decodedImage);
+            
+            // Meta Pixel: AddToCart
+            if (typeof fbq === 'function') {
+                fbq('track', 'AddToCart', {
+                    content_name: name,
+                    content_ids: [id],
+                    content_type: 'product',
+                    value: price,
+                    currency: 'INR'
+                });
+            }
             
             // Open the cart drawer
             openCart();
@@ -2849,6 +2888,19 @@
             qcCurrentStep = 1;
             updateCheckoutStep();
             updateCheckoutSummary();
+            
+            // Meta Pixel: InitiateCheckout
+            if (typeof fbq === 'function') {
+                const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const contentIds = cart.map(item => item.productId || item.productSlug);
+                fbq('track', 'InitiateCheckout', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    num_items: cart.reduce((sum, item) => sum + item.quantity, 0),
+                    value: cartTotal,
+                    currency: 'INR'
+                });
+            }
             
             // Clear any previous errors
             const errorEl = document.getElementById('coAddressError');
@@ -3119,6 +3171,18 @@
             });
 
             qcCurrentStep = step;
+            
+            // Meta Pixel: AddPaymentInfo when reaching payment step
+            if (step === 3 && typeof fbq === 'function') {
+                const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const contentIds = cart.map(item => item.productId || item.productSlug);
+                fbq('track', 'AddPaymentInfo', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    value: cartTotal,
+                    currency: 'INR'
+                });
+            }
             
             // When going to step 2, update shipping
             if (step === 2) {
@@ -3599,6 +3663,20 @@
                             btn.disabled = false;
                             
                             if (verifyData.success) {
+                                // Meta Pixel: Purchase
+                                if (typeof fbq === 'function') {
+                                    const purchaseTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                                    const contentIds = cart.map(item => item.productId || item.productSlug);
+                                    fbq('track', 'Purchase', {
+                                        content_ids: contentIds,
+                                        content_type: 'product',
+                                        num_items: cart.reduce((sum, item) => sum + item.quantity, 0),
+                                        value: purchaseTotal,
+                                        currency: 'INR',
+                                        order_id: pendingOrder.orderNumber
+                                    });
+                                }
+                                
                                 // Save address if new and checkbox checked
                                 const saveAddressCheckbox = document.getElementById('coSaveAddress');
                                 const shouldSaveAddress = saveAddressCheckbox ? saveAddressCheckbox.checked : true;
