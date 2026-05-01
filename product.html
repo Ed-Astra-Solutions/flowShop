@@ -45,7 +45,7 @@
     try {
       const res = await fetch(`${API_BASE}/api/products/${slug}`);
       const data = await res.json();
-      product = data.product || data;
+      product = data.data || data.product || data;
       if (!product?.slug) throw new Error('Not found');
       selectedFlavour = product.flavours?.[0] || '';
       render();

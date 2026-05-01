@@ -170,7 +170,7 @@
     try {
       const res = await fetch(`${API_BASE}/api/products`);
       const data = await res.json();
-      const products = (data.products || data || []).filter(p => p.isActive !== false).slice(0, 6);
+      const products = (data.data || data.products || []).filter(p => p.isActive !== false).slice(0, 6);
       if (!products.length) {
         grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h2>Coming soon</h2><p>Our line is launching shortly.</p></div>';
         return;
@@ -207,7 +207,7 @@
     try {
       const res = await fetch(`${API_BASE}/api/products/reviews/all`);
       const data = await res.json();
-      const reviews = data.reviews || [];
+      const reviews = data.data || data.reviews || [];
       if (!reviews.length) return;
       const top = reviews.find(r => r.rating === 5) || reviews[0];
       const text = (top.content || top.text || '').replace(/^"+|"+$/g, '');
