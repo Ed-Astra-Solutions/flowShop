@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow Hydration — Precision Electrolytes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@300;400;500&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-alt: #ebe6dc;
+    --paper: #faf8f3;
+    --ink: #0a0a0a;
+    --ink-soft: #1c1c1c;
+    --muted: #6b6660;
+    --line: #d8d2c4;
+    --accent: #0033ff;       /* electric ultramarine */
+    --accent-soft: #c5d4ff;
+    --aqua: #00d4ff;
+    --salt: #fff;
+    --warn: #ff4d1f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter Tight', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .display { font-family: 'Fraunces', serif; font-weight: 300; letter-spacing: -0.03em; line-height: 0.92; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-weight: 400; }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  /* ─────────── Grain overlay ─────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─────────── Marquee ticker ─────────── */
+  .ticker {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 10px 0;
+    overflow: hidden;
+    border-bottom: 1px solid var(--ink);
+    position: relative; z-index: 50;
+  }
+  .ticker-track {
+    display: flex;
+    gap: 60px;
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+    width: max-content;
+  }
+  .ticker-track span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 60px;
+  }
+  .ticker-track span::after {
+    content: '✦';
+    color: var(--aqua);
+  }
+  @keyframes scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─────────── Nav ─────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(244, 241, 234, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+    padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.04em;
+    font-style: italic;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    color: var(--ink); text-decoration: none;
+    font-size: 13px; letter-spacing: 0.02em;
+    position: relative; padding: 4px 0;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 0; height: 1px; background: var(--ink);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cart {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border: 1px solid var(--ink);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.25s ease;
+  }
+  .nav-cart:hover { background: var(--ink); color: var(--bg); }
+
+  /* ─────────── Hero ─────────── */
+  .hero {
+    padding: 60px 32px 80px;
+    position: relative;
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .hero-meta {
+    grid-column: 1 / -1;
+    display: flex; justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 20px;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta-item .label { color: var(--muted); }
+  .hero-meta-item .value { font-size: 13px; }
+
+  .hero-title {
+    font-size: clamp(80px, 16vw, 240px);
+    font-weight: 300;
+    color: var(--ink);
+    position: relative;
+  }
+  .hero-title .word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  .hero-title .inner {
+    display: inline-block;
+    animation: rise 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .hero-title .word:nth-child(2) .inner { animation-delay: 0.1s; }
+  .hero-title .word:nth-child(3) .inner { animation-delay: 0.2s; }
+  @keyframes rise {
+    from { transform: translateY(110%); }
+    to { transform: translateY(0); }
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 300;
+    font-variation-settings: "SOFT" 100;
+  }
+
+  .hero-side {
+    padding-bottom: 40px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .hero-tag {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted);
+  }
+  .hero-tag .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .hero-desc {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 380px;
+  }
+  .hero-cta {
+    display: flex; gap: 12px; align-items: center;
+    margin-top: 8px;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--accent);
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+  }
+  .btn-primary span { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; }
+  .btn-primary:hover::before { transform: translateY(0); }
+  .btn-primary:hover { color: var(--bg); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .btn-secondary:hover { background: var(--ink); color: var(--bg); }
+
+  /* Hero molecule visual */
+  .molecule {
+    position: absolute;
+    right: 6%;
+    top: 22%;
+    width: 320px;
+    height: 320px;
+    pointer-events: none;
+  }
+  .molecule svg { width: 100%; height: 100%; }
+  .molecule .orbit { animation: spin 30s linear infinite; transform-origin: center; }
+  .molecule .orbit-r { animation: spin 22s linear infinite reverse; transform-origin: center; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─────────── Stats strip ─────────── */
+  .stats {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 80px 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    position: relative;
+  }
+  .stats::before {
+    content: '';
+    position: absolute; top: 0; left: 32px; right: 32px;
+    height: 1px; background: rgba(255,255,255,0.15);
+  }
+  .stat .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(60px, 7vw, 110px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .stat .num em {
+    font-style: italic;
+    color: var(--aqua);
+    font-variation-settings: "SOFT" 100;
+  }
+  .stat .lab {
+    margin-top: 16px;
+    color: rgba(255,255,255,0.6);
+    max-width: 220px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .stat .tag {
+    color: var(--aqua);
+    margin-bottom: 12px;
+  }
+
+  /* ─────────── Section header pattern ─────────── */
+  .section-head {
+    padding: 100px 32px 40px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    align-items: end;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .section-head h2 em {
+    font-style: italic;
+    color: var(--accent);
+    font-variation-settings: "SOFT" 100;
+  }
+
+  /* ─────────── Products ─────────── */
+  .products {
+    padding: 60px 32px 120px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .product {
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border: 1px solid var(--line);
+    min-height: 460px;
+    display: flex; flex-direction: column;
+  }
+  .product:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+  .product-tag {
+    position: absolute; top: 24px; right: 24px;
+    background: var(--accent);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .product-tag.lime { background: #b8e62b; color: var(--ink); }
+  .product-tag.orange { background: var(--warn); color: white; }
+  .product-visual {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    margin: 20px 0;
+    position: relative;
+  }
+  .sachet {
+    width: 130px;
+    height: 200px;
+    border-radius: 8px 8px 4px 4px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.3);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .product:hover .sachet { transform: rotate(-4deg) translateY(-8px); }
+  .sachet::before {
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    width: 60%; height: 16px;
+    background: rgba(0,0,0,0.15);
+    transform: translateX(-50%);
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+  }
+  .sachet::after {
+    content: 'FLOW';
+    position: absolute; bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+  .sachet-1 { background: linear-gradient(135deg, #0033ff 0%, #00d4ff 100%); }
+  .sachet-2 { background: linear-gradient(135deg, #ff4d1f 0%, #ffb347 100%); }
+  .sachet-3 { background: linear-gradient(135deg, #2d8b3e 0%, #b8e62b 100%); }
+
+  .product-info {
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    display: flex; justify-content: space-between; align-items: end;
+  }
+  .product-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .product-flavor {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .product-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+  }
+  .product-price s { color: var(--muted); margin-right: 8px; font-size: 13px; }
+
+  /* ─────────── Science (DARK section) ─────────── */
+  .science {
+    background: #0a0a0a;
+    color: var(--bg);
+    padding: 120px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .science::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+  .science-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    margin-bottom: 80px;
+    position: relative;
+    align-items: end;
+  }
+  .science-head .num { color: rgba(255,255,255,0.4); }
+  .science-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .science-head h2 em {
+    font-style: italic;
+    color: var(--aqua);
+    font-variation-settings: "SOFT" 100;
+  }
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    border-left: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+  }
+  .ingredient {
+    padding: 32px;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    display: flex; flex-direction: column;
+    gap: 16px;
+    min-height: 320px;
+    position: relative;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+  .ingredient:hover { background: rgba(0, 212, 255, 0.05); }
+  .ing-symbol {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--aqua);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100;
+  }
+  .ing-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .ing-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin-top: auto;
+  }
+  .ing-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+  .ing-num {
+    position: absolute;
+    top: 32px; right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ─────────── Benefits (back to light) ─────────── */
+  .benefits {
+    padding: 60px 32px 120px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    margin: 0 32px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+    margin-top: 60px;
+    margin-bottom: 80px;
+    padding: 0;
+  }
+  .benefit {
+    background: var(--bg);
+    padding: 56px 48px;
+    display: flex; flex-direction: column;
+    gap: 24px;
+    transition: background 0.3s ease;
+    min-height: 280px;
+  }
+  .benefit:hover { background: var(--paper); }
+  .benefit-head { display: flex; align-items: start; justify-content: space-between; }
+  .benefit-icon {
+    width: 56px; height: 56px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+  }
+  .benefit:hover .benefit-icon {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    transform: rotate(45deg);
+  }
+  .benefit-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .benefit-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-top: auto;
+  }
+  .benefit-title em { font-style: italic; color: var(--accent); font-variation-settings: "SOFT" 100; }
+  .benefit-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 360px;
+  }
+
+  /* ─────────── How it works ─────────── */
+  .how {
+    padding: 100px 32px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .how-grid {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .step {
+    padding: 48px 32px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 24px;
+    position: relative;
+    min-height: 340px;
+  }
+  .step:last-child { border-right: none; }
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 88px;
+    line-height: 1;
+    color: var(--ink);
+    font-variation-settings: "SOFT" 100;
+  }
+  .step-num em { color: var(--accent); }
+  .step-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-top: auto;
+  }
+  .step-desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ─────────── Testimonial ─────────── */
+  .testimonials {
+    padding: 120px 32px;
+    text-align: center;
+    position: relative;
+  }
+  .quote {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(32px, 4.5vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 1100px;
+    margin: 40px auto 0;
+  }
+  .quote em { font-style: italic; color: var(--accent); font-variation-settings: "SOFT" 100; }
+  .quote::before, .quote::after {
+    content: '"';
+    color: var(--accent);
+    font-style: italic;
+  }
+  .author {
+    margin-top: 40px;
+    display: flex; justify-content: center; align-items: center; gap: 16px;
+    color: var(--muted);
+  }
+  .author .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* ─────────── FAQ ─────────── */
+  .faq {
+    padding: 100px 32px 120px;
+    border-top: 1px solid var(--line);
+  }
+  .faq-grid {
+    margin-top: 60px;
+    max-width: 1000px;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+    cursor: pointer;
+    transition: padding 0.3s ease;
+  }
+  .faq-item summary {
+    list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    font-size: 28px;
+    color: var(--accent);
+    transition: transform 0.3s ease;
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 300;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-answer {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 760px;
+  }
+
+  /* ─────────── CTA ─────────── */
+  .cta {
+    background: var(--accent);
+    color: white;
+    padding: 140px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(0, 212, 255, 0.4), transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.2), transparent 50%);
+  }
+  .cta-content { position: relative; z-index: 1; }
+  .cta h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(56px, 9vw, 140px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+  }
+  .cta h3 em { font-style: italic; color: var(--aqua); font-variation-settings: "SOFT" 100; }
+  .cta p {
+    margin: 32px auto 40px;
+    max-width: 540px;
+    color: rgba(255,255,255,0.85);
+    font-size: 17px;
+  }
+  .cta .btn-primary {
+    background: white; color: var(--ink);
+  }
+  .cta .btn-primary::before { background: var(--ink); }
+  .cta .btn-primary:hover span { color: white; }
+
+  /* ─────────── Footer ─────────── */
+  footer {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 80px 32px 32px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+  }
+  .footer-brand .logo { color: var(--bg); margin-bottom: 24px; }
+  .footer-brand p { color: rgba(255,255,255,0.5); max-width: 280px; font-size: 14px; line-height: 1.6; }
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col a {
+    color: var(--bg);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--aqua); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 32px;
+    display: flex; justify-content: space-between;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .mega-mark {
+    margin-top: 60px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(120px, 22vw, 360px);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: rgba(255,255,255,0.04);
+    pointer-events: none;
+    user-select: none;
+    text-align: center;
+    font-variation-settings: "SOFT" 100;
+  }
+
+  /* ─────────── Responsive ─────────── */
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .section-head, .science-head { grid-template-columns: 1fr; gap: 24px; }
+    .products { grid-template-columns: 1fr; }
+    .ingredients-grid { grid-template-columns: repeat(2, 1fr); }
+    .benefits { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .step { border-right: none; border-bottom: 1px solid var(--line); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .molecule { display: none; }
+  }
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: 1fr; }
+    .ingredients-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    nav { padding: 14px 20px; }
+    .hero, .products, .science, .how, .testimonials, .faq, .cta { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Free shipping on orders over ₹999</span>
+    <span>5 essential electrolytes</span>
+    <span>Zero added sugar</span>
+    <span>Pan-India delivery</span>
+    <span>Trusted by 10,000+ athletes</span>
+    <span>Free shipping on orders over ₹999</span>
+    <span>5 essential electrolytes</span>
+    <span>Zero added sugar</span>
+    <span>Pan-India delivery</span>
+    <span>Trusted by 10,000+ athletes</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="logo">flow<span style="font-style:normal; color:var(--accent);">.</span></div>
+  <div class="nav-links">
+    <a href="#shop">Shop</a>
+    <a href="#science">Science</a>
+    <a href="#benefits">Benefits</a>
+    <a href="#how">Protocol</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <button class="nav-cart">Cart (0)</button>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">Vol. 01 / Series 26</span>
+      <span class="value mono" style="color:var(--muted);">Bengaluru, India</span>
+    </div>
+    <div class="hero-meta-item" style="text-align:right;">
+      <span class="label">Issue №</span>
+      <span class="value mono" style="color:var(--muted);">— precision hydration</span>
+    </div>
+  </div>
+
+  <h1 class="display hero-title">
+    <span class="word"><span class="inner">Find</span></span><br/>
+    <span class="word"><span class="inner">your <em>flow</em>.</span></span>
+  </h1>
+
+  <div class="molecule" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <defs>
+        <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#0033ff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="90" fill="url(#g1)"/>
+      <g class="orbit" stroke="#0033ff" stroke-width="0.5" fill="none" opacity="0.4">
+        <ellipse cx="100" cy="100" rx="80" ry="30"/>
+      </g>
+      <g class="orbit-r" stroke="#0033ff" stroke-width="0.5" fill="none" opacity="0.4">
+        <ellipse cx="100" cy="100" rx="80" ry="30" transform="rotate(60 100 100)"/>
+      </g>
+      <g class="orbit" stroke="#0033ff" stroke-width="0.5" fill="none" opacity="0.4">
+        <ellipse cx="100" cy="100" rx="80" ry="30" transform="rotate(120 100 100)"/>
+      </g>
+      <circle cx="100" cy="100" r="6" fill="#0033ff"/>
+      <circle cx="180" cy="100" r="3" fill="#00d4ff"/>
+      <circle cx="20" cy="100" r="3" fill="#00d4ff"/>
+      <circle cx="140" cy="170" r="3" fill="#00d4ff"/>
+      <circle cx="60" cy="30" r="3" fill="#00d4ff"/>
+    </svg>
+  </div>
+
+  <div class="hero-side">
+    <div class="hero-tag mono"><span class="dot"></span>PAN-INDIA · NEXT-DAY IN BLR</div>
+    <p class="hero-desc">Five essential electrolytes. Zero added sugar. A precision-engineered formula built for athletes, founders, and anyone who refuses to run on fumes.</p>
+    <div class="hero-cta">
+      <a href="#shop" class="btn-primary"><span>Shop now →</span></a>
+      <a href="#science" class="btn-secondary">The science</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+  <div class="stat">
+    <div class="tag label">01</div>
+    <div class="num"><em>5</em></div>
+    <div class="lab">Key electrolytes precisely dosed for absorption</div>
+  </div>
+  <div class="stat">
+    <div class="tag label">02</div>
+    <div class="num"><em>0</em>g</div>
+    <div class="lab">Added sugar, zero artificial sweeteners</div>
+  </div>
+  <div class="stat">
+    <div class="tag label">03</div>
+    <div class="num"><em>300</em>+</div>
+    <div class="lab">Biochemical reactions powered by magnesium alone</div>
+  </div>
+  <div class="stat">
+    <div class="tag label">04</div>
+    <div class="num"><em>100</em>%</div>
+    <div class="lab">Clean formula, third-party tested for purity</div>
+  </div>
+</section>
+
+<!-- Section: Shop -->
+<div id="shop" class="section-head">
+  <div class="num">§ 01 — The Range</div>
+  <h2>Our<br/><em>best sellers.</em></h2>
+</div>
+
+<section class="products">
+  <div class="product">
+    <div class="product-tag">Bestseller</div>
+    <div class="product-visual"><div class="sachet sachet-1"></div></div>
+    <div class="product-info">
+      <div>
+        <div class="product-name">Pacific Blue</div>
+        <div class="product-flavor">Lemon · Lime — 30 sachets</div>
+      </div>
+      <div class="product-price"><s>₹1499</s>₹1199</div>
+    </div>
+  </div>
+  <div class="product">
+    <div class="product-tag orange">New</div>
+    <div class="product-visual"><div class="sachet sachet-2"></div></div>
+    <div class="product-info">
+      <div>
+        <div class="product-name">Solar Citrus</div>
+        <div class="product-flavor">Orange · Mango — 30 sachets</div>
+      </div>
+      <div class="product-price">₹1199</div>
+    </div>
+  </div>
+  <div class="product">
+    <div class="product-tag lime">Limited</div>
+    <div class="product-visual"><div class="sachet sachet-3"></div></div>
+    <div class="product-info">
+      <div>
+        <div class="product-name">Green Reset</div>
+        <div class="product-flavor">Cucumber · Mint — 30 sachets</div>
+      </div>
+      <div class="product-price">₹1299</div>
+    </div>
+  </div>
+</section>
+
+<!-- Science (DARK) -->
+<section id="science" class="science">
+  <div class="science-head">
+    <div class="num mono">§ 02 — Composition</div>
+    <h2>The exact <em>chemistry</em><br/>that makes it work.</h2>
+  </div>
+
+  <div class="ingredients-grid">
+    <div class="ingredient">
+      <div class="ing-num">01 / 05</div>
+      <div class="ing-symbol">Na</div>
+      <div class="ing-name">Sodium Chloride</div>
+      <div class="ing-title">Fluid balance &amp; nerve conduction</div>
+      <div class="ing-desc">Primary extracellular ion. Maintains blood pressure and cellular hydration.</div>
+    </div>
+    <div class="ingredient">
+      <div class="ing-num">02 / 05</div>
+      <div class="ing-symbol">K</div>
+      <div class="ing-name">Potassium Chloride</div>
+      <div class="ing-title">Cardiac rhythm &amp; muscle contraction</div>
+      <div class="ing-desc">Critical for heart function and neuromuscular signaling under stress.</div>
+    </div>
+    <div class="ingredient">
+      <div class="ing-num">03 / 05</div>
+      <div class="ing-symbol">Mg</div>
+      <div class="ing-name">Magnesium Lactate</div>
+      <div class="ing-title">Powers 300+ reactions in your body</div>
+      <div class="ing-desc">Cofactor for energy production. Prevents cramps, aids recovery.</div>
+    </div>
+    <div class="ingredient">
+      <div class="ing-num">04 / 05</div>
+      <div class="ing-symbol">Ca</div>
+      <div class="ing-name">Calcium Carbonate</div>
+      <div class="ing-title">Cell membrane &amp; muscle stability</div>
+      <div class="ing-desc">Stabilises cell membranes. Essential for nerve signaling and bone health.</div>
+    </div>
+    <div class="ingredient">
+      <div class="ing-num">05 / 05</div>
+      <div class="ing-symbol">Cit</div>
+      <div class="ing-name">Trisodium Citrate</div>
+      <div class="ing-title">Buffers lactic acid for endurance</div>
+      <div class="ing-desc">Maintains optimal pH during intense activity. Smoother performance.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits -->
+<div id="benefits" class="section-head">
+  <div class="num">§ 03 — Why it matters</div>
+  <h2>Beyond<br/><em>plain water.</em></h2>
+</div>
+
+<section class="benefits">
+  <div class="benefit">
+    <div class="benefit-head">
+      <div class="benefit-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>
+      </div>
+      <div class="benefit-num">01</div>
+    </div>
+    <h3 class="benefit-title">Optimal<br/><em>fluid balance.</em></h3>
+    <p class="benefit-desc">Precise mineral ratios maintain cellular hydration so your systems run at peak under any load.</p>
+  </div>
+  <div class="benefit">
+    <div class="benefit-head">
+      <div class="benefit-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+      </div>
+      <div class="benefit-num">02</div>
+    </div>
+    <h3 class="benefit-title">Nerve &amp; muscle<br/><em>fired up.</em></h3>
+    <p class="benefit-desc">Essential electrolytes support smooth signal transmission and crisp muscle response, set after set.</p>
+  </div>
+  <div class="benefit">
+    <div class="benefit-head">
+      <div class="benefit-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="benefit-num">03</div>
+    </div>
+    <h3 class="benefit-title">Endurance,<br/><em>extended.</em></h3>
+    <p class="benefit-desc">Lactic acid buffering keeps you in the zone longer with measurably reduced perceived fatigue.</p>
+  </div>
+  <div class="benefit">
+    <div class="benefit-head">
+      <div class="benefit-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <div class="benefit-num">04</div>
+    </div>
+    <h3 class="benefit-title">A formula<br/>you can <em>read.</em></h3>
+    <p class="benefit-desc">No sugar bombs, no artificial colors, no mystery actives. Just functional hydration that makes sense.</p>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="how">
+  <div class="section-head" style="padding:0 0 40px; border:none;">
+    <div class="num">§ 04 — Protocol</div>
+    <h2>Three steps.<br/><em>Total ritual.</em></h2>
+  </div>
+
+  <div class="how-grid">
+    <div class="step">
+      <div class="step-num"><em>01</em></div>
+      <h4 class="step-title">Tear the sachet</h4>
+      <p class="step-desc">A single-serve dose, perfectly portioned for one bottle and one body.</p>
+    </div>
+    <div class="step">
+      <div class="step-num"><em>02</em></div>
+      <h4 class="step-title">Add to 500ml water</h4>
+      <p class="step-desc">Cold water dissolves cleanly. Stir, shake, or swirl until clear.</p>
+    </div>
+    <div class="step">
+      <div class="step-num"><em>03</em></div>
+      <h4 class="step-title">Find your flow</h4>
+      <p class="step-desc">Pre-workout, mid-meeting, post-flight, hangover, heatwave — same protocol.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonial -->
+<section class="testimonials">
+  <div class="label" style="color:var(--muted);">Trusted by 10,000+</div>
+  <p class="quote">I switched from sugary sports drinks and never looked back. Flow is the only thing that gets me through a 90-minute training block in <em>Bangalore heat.</em></p>
+  <div class="author">
+    <span class="dot"></span>
+    <span class="mono" style="font-size:12px; letter-spacing:0.15em; text-transform:uppercase;">Aarav K. — Triathlete, Bengaluru</span>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq">
+  <div class="section-head" style="padding:0 0 40px; border:none;">
+    <div class="num">§ 05 — Questions</div>
+    <h2>Everything<br/><em>you'd ask.</em></h2>
+  </div>
+  <div class="faq-grid">
+    <details class="faq-item">
+      <summary>What exactly is in a Flow sachet?</summary>
+      <div class="faq-answer">A precise blend of sodium, potassium, magnesium, calcium and trisodium citrate, with 6.9g of glucose for fast absorption. Zero artificial sweeteners, zero added colors.</div>
+    </details>
+    <details class="faq-item">
+      <summary>How and when should I drink it?</summary>
+      <div class="faq-answer">One sachet in 500ml cold water. Stir until dissolved. Drink before, during, or after activity — or any time you need to upgrade plain water.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Does Flow contain sugar?</summary>
+      <div class="faq-answer">6.9g of glucose per sachet, used purely to drive electrolyte absorption (the sodium-glucose co-transport mechanism). No artificial sweeteners.</div>
+    </details>
+    <details class="faq-item">
+      <summary>How fast is delivery in India?</summary>
+      <div class="faq-answer">Bengaluru: 1–2 business days. Rest of India: 2–4 business days via Shadowfax. Pan-India coverage.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Can I get a refund?</summary>
+      <div class="faq-answer">Yes — for damaged or defective items, contact us within 48 hours of delivery with photos. Full policy on the Refunds page.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Is Flow suitable for everyone?</summary>
+      <div class="faq-answer">Designed for adults. If you're pregnant, nursing, or on medication, please check with your doctor first. Not recommended for children.</div>
+    </details>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-content">
+    <h3>Find your<br/><em>flow.</em></h3>
+    <p>Subscribe and save 15%. Skip, swap, or cancel anytime. Free shipping on every order.</p>
+    <a href="#shop" class="btn-primary"><span>Start your subscription →</span></a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">flow<span style="font-style:normal; color:var(--aqua);">.</span></div>
+      <p>Clean hydration, precision-engineered. Built in Bengaluru. Shipped pan-India.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">Sachets</a></li>
+        <li><a href="#">Bundles</a></li>
+        <li><a href="#">Subscribe</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Science</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Refunds</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mega-mark">flow.</div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Podium Performance LLP</span>
+    <span>contact@flowhydration.in</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout — Flow Hydration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@300;400;500&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="stylesheet" href="assets/css/customerAuth.css" />
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+<div id="siteHeader"></div>
+
+<main class="page-wrap">
+  <span class="label" style="color: var(--muted);">— Checkout</span>
+  <h1 class="page-title">Almost <em>flowing.</em></h1>
+  <p class="page-sub">Confirm your details. Secure payment via Razorpay.</p>
+
+  <div id="checkoutRoot"></div>
+</main>
+
+<div id="siteFooter"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/customerAuth.js"></script>
+<script src="assets/js/common.js"></script>
+<script>
+  FlowSite.renderNav();
+  FlowSite.renderFooter();
+
+  const root = document.getElementById('checkoutRoot');
+  let cart = [];
+  let discount = JSON.parse(localStorage.getItem('flow_discount') || 'null');
+  let savedAddresses = [];
+  let selectedAddressId = null;
+
+  async function init() {
+    cart = await CustomerAuth.initCart();
+    if (!cart.length) {
+      root.innerHTML = `<div class="empty-state"><h2>Cart is empty.</h2><p>Add items before checking out.</p><a href="shop.html" class="btn-primary"><span>Shop →</span></a></div>`;
+      return;
+    }
+
+    if (!CustomerAuth.isLoggedIn()) {
+      CustomerAuth.showModal(() => init());
+      root.innerHTML = `<div class="empty-state"><h2>Sign in to continue</h2><p>We use your mobile to send order updates.</p><button class="btn-primary" onclick="CustomerAuth.showModal(()=>location.reload())"><span>Sign in →</span></button></div>`;
+      return;
+    }
+
+    try {
+      const data = await FlowSite.api('/api/customer/addresses');
+      savedAddresses = data.addresses || [];
+      const def = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
+      if (def) selectedAddressId = def._id;
+    } catch (e) { console.error(e); }
+
+    render();
+  }
+  init();
+
+  function subtotal() { return cart.reduce((s, i) => s + i.price * i.quantity, 0); }
+  function discountValue() { return discount?.amount || 0; }
+  function shipping(sub) { return sub >= 999 ? 0 : 49; }
+
+  function render() {
+    const customer = CustomerAuth.getCustomer() || {};
+    const sub = subtotal();
+    const disc = discountValue();
+    const ship = shipping(sub);
+    const total = Math.max(0, sub - disc) + ship;
+
+    root.innerHTML = `
+      <div class="checkout-grid">
+        <div>
+          <div class="form-section">
+            <h3>Contact</h3>
+            <div class="field-row">
+              <div class="field"><label>Full name</label><input id="fName" value="${customer.name || ''}" /></div>
+              <div class="field"><label>Mobile</label><input id="fMobile" value="${customer.mobile || ''}" /></div>
+            </div>
+            <div class="field"><label>Email (for invoice)</label><input id="fEmail" type="email" value="${customer.email || ''}" /></div>
+          </div>
+
+          <div class="form-section">
+            <h3>Shipping address</h3>
+            <div id="addressList">${renderAddressList()}</div>
+
+            <details id="newAddressWrap" ${savedAddresses.length === 0 ? 'open' : ''} style="margin-top:16px;">
+              <summary style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);">+ Add new address</summary>
+              <div style="margin-top:20px;">
+                <div class="field"><label>Address line</label><input id="aAddress" placeholder="House / Street / Area" /></div>
+                <div class="field-row">
+                  <div class="field"><label>House / Floor</label><input id="aHouse" /></div>
+                  <div class="field"><label>Landmark</label><input id="aLandmark" /></div>
+                </div>
+                <div class="field-row">
+                  <div class="field"><label>City</label><input id="aCity" /></div>
+                  <div class="field"><label>State</label><input id="aState" /></div>
+                </div>
+                <div class="field-row">
+                  <div class="field"><label>Pincode</label><input id="aPincode" inputmode="numeric" maxlength="6" /></div>
+                  <div class="field"><label>Type</label>
+                    <select id="aType"><option value="home">Home</option><option value="work">Work</option><option value="other">Other</option></select>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="form-section">
+            <h3>Payment</h3>
+            <p style="color: var(--muted); font-size: 14px;">Secured by Razorpay · UPI · Cards · Netbanking · Wallets · 256-bit SSL</p>
+          </div>
+        </div>
+
+        <aside class="summary">
+          <h3>Order summary</h3>
+          ${cart.map(it => `<div class="summary-row"><span>${it.name}${it.flavour ? ` · ${it.flavour}` : ''} × ${it.quantity}</span><span>${FlowSite.fmt(it.price * it.quantity)}</span></div>`).join('')}
+          <div class="summary-row muted"><span>Subtotal</span><span>${FlowSite.fmt(sub)}</span></div>
+          ${disc ? `<div class="summary-row muted"><span>Discount</span><span>− ${FlowSite.fmt(disc)}</span></div>` : ''}
+          <div class="summary-row muted"><span>Shipping</span><span>${ship === 0 ? 'Free' : FlowSite.fmt(ship)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${FlowSite.fmt(total)}</span></div>
+          <button class="btn-primary" id="placeOrder"><span>Pay ${FlowSite.fmt(total)} →</span></button>
+        </aside>
+      </div>
+    `;
+
+    document.getElementById('addressList').addEventListener('click', e => {
+      const card = e.target.closest('.address-card'); if (!card) return;
+      selectedAddressId = card.dataset.id;
+      document.querySelectorAll('.address-card').forEach(c => c.classList.toggle('selected', c.dataset.id === selectedAddressId));
+    });
+
+    document.getElementById('placeOrder').addEventListener('click', placeOrder);
+  }
+
+  function renderAddressList() {
+    if (!savedAddresses.length) return `<p style="color:var(--muted);font-size:14px;">No saved addresses yet — fill the form below.</p>`;
+    return savedAddresses.map(a => `
+      <div class="address-card ${a._id === selectedAddressId ? 'selected' : ''}" data-id="${a._id}">
+        <div class="head">
+          <span class="name">${CustomerAuth.getCustomer()?.name || ''}</span>
+          <span class="type">${a.type || 'home'}${a.isDefault ? ' · default' : ''}</span>
+        </div>
+        <div class="body">${[a.houseFloor, a.fullAddress || a.formattedAddress, a.landmark, a.city, a.state, a.pincode].filter(Boolean).join(', ')}</div>
+      </div>
+    `).join('');
+  }
+
+  async function placeOrder() {
+    const btn = document.getElementById('placeOrder');
+    btn.disabled = true;
+    try {
+      const name = document.getElementById('fName').value.trim();
+      const mobile = document.getElementById('fMobile').value.trim();
+      const email = document.getElementById('fEmail').value.trim();
+      if (!name || !mobile) throw new Error('Name and mobile are required');
+
+      // Build shipping address
+      let shippingAddress;
+      const sel = savedAddresses.find(a => a._id === selectedAddressId);
+      if (sel) {
+        shippingAddress = {
+          fullName: name, mobile,
+          houseFloor: sel.houseFloor || '',
+          fullAddress: sel.fullAddress || sel.formattedAddress || '',
+          landmark: sel.landmark || '',
+          city: sel.city, state: sel.state, pincode: sel.pincode,
+          location: { type: 'Point', coordinates: sel.coordinates ? [sel.coordinates.lng || 0, sel.coordinates.lat || 0] : [0, 0] },
+          addressType: sel.type || 'home'
+        };
+      } else {
+        const addr = document.getElementById('aAddress').value.trim();
+        const city = document.getElementById('aCity').value.trim();
+        const state = document.getElementById('aState').value.trim();
+        const pincode = document.getElementById('aPincode').value.trim();
+        if (!addr || !city || !state || !pincode) throw new Error('Please fill the address fields');
+        shippingAddress = {
+          fullName: name, mobile,
+          houseFloor: document.getElementById('aHouse').value.trim(),
+          fullAddress: addr,
+          landmark: document.getElementById('aLandmark').value.trim(),
+          city, state, pincode,
+          location: { type: 'Point', coordinates: [0, 0] },
+          addressType: document.getElementById('aType').value
+        };
+        // Save it for next time
+        FlowSite.api('/api/customer/addresses', {
+          method: 'POST',
+          body: JSON.stringify({ type: shippingAddress.addressType, fullAddress: addr, houseFloor: shippingAddress.houseFloor, landmark: shippingAddress.landmark, city, state, pincode })
+        }).catch(() => {});
+      }
+
+      // Update email if changed
+      if (email && email !== CustomerAuth.getCustomer()?.email) {
+        try { await CustomerAuth.updateProfile({ email }); } catch (e) {}
+      }
+
+      const items = cart.map(it => ({
+        productId: it.productId || it.productSlug,
+        productSlug: it.productSlug || it.productId,
+        name: it.name, price: it.price, quantity: it.quantity,
+        flavour: it.flavour || null, image: it.image || null
+      }));
+
+      const orderData = { items, shippingAddress, shippingMethod: 'standard', paymentMethod: 'razorpay' };
+      if (discount?.code) orderData.discountCode = discount.code;
+
+      const keyData = await fetch(`${API_BASE}/api/orders/config/razorpay-key`).then(r => r.json());
+      if (!keyData.success || !keyData.key) throw new Error('Failed to initialize payment');
+
+      const created = await fetch(`${API_BASE}/api/orders/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...CustomerAuth.getAuthHeaders() },
+        body: JSON.stringify(orderData)
+      }).then(r => r.json());
+
+      if (!created.success) throw new Error(created.message || 'Failed to create order');
+      if (!created.payment?.razorpayOrderId) throw new Error('Payment not initialized');
+
+      const pending = { orderId: created.order.id, orderNumber: created.order.orderNumber, razorpayOrderId: created.payment.razorpayOrderId };
+      localStorage.setItem('flow_pending_order', JSON.stringify(pending));
+
+      const rzp = new Razorpay({
+        key: keyData.key,
+        amount: created.payment.amount,
+        currency: created.payment.currency,
+        name: created.payment.name,
+        description: created.payment.description,
+        order_id: created.payment.razorpayOrderId,
+        prefill: created.payment.prefill,
+        notes: created.payment.notes,
+        theme: { color: '#0033ff' },
+        modal: { ondismiss: () => { btn.disabled = false; FlowSite.toast('Payment cancelled'); } },
+        handler: async (resp) => {
+          try {
+            const v = await fetch(`${API_BASE}/api/orders/verify-payment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', ...CustomerAuth.getAuthHeaders() },
+              body: JSON.stringify({
+                razorpayOrderId: resp.razorpay_order_id,
+                razorpayPaymentId: resp.razorpay_payment_id,
+                razorpaySignature: resp.razorpay_signature,
+                orderId: pending.orderId
+              })
+            }).then(r => r.json());
+            if (!v.success) throw new Error(v.message || 'Verification failed');
+            await CustomerAuth.clearCart();
+            localStorage.removeItem('flow_discount');
+            localStorage.removeItem('flow_pending_order');
+            location.href = `payment-callback.html?order=${encodeURIComponent(pending.orderNumber)}`;
+          } catch (err) {
+            FlowSite.toast(err.message, { type: 'error' });
+            btn.disabled = false;
+          }
+        }
+      });
+      rzp.on('payment.failed', (resp) => {
+        btn.disabled = false;
+        FlowSite.toast(resp.error?.description || 'Payment failed', { type: 'error' });
+      });
+      rzp.open();
+    } catch (err) {
+      FlowSite.toast(err.message, { type: 'error' });
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>

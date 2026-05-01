@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shop — Flow Hydration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@300;400;500&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="stylesheet" href="assets/css/customerAuth.css" />
+</head>
+<body>
+<div id="siteHeader"></div>
+
+<main class="page-wrap">
+  <span class="label" style="color: var(--muted);">— Shop / All</span>
+  <h1 class="page-title">The <em>collection.</em></h1>
+  <p class="page-sub">Lab-tested, made in India, calibrated for the way you actually move.</p>
+
+  <div class="shop-filters" id="filters">
+    <button class="filter-chip active" data-cat="all">All</button>
+    <button class="filter-chip" data-cat="hydration">Hydration</button>
+    <button class="filter-chip" data-cat="energy">Energy</button>
+    <button class="filter-chip" data-cat="recovery">Recovery</button>
+    <button class="filter-chip" data-cat="bundle">Bundles</button>
+  </div>
+
+  <section class="products" id="grid">
+    <div class="loading-state" style="grid-column: 1 / -1;"><div class="spinner"></div><span>Loading…</span></div>
+  </section>
+</main>
+
+<div id="siteFooter"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/customerAuth.js"></script>
+<script src="assets/js/common.js"></script>
+<script>
+  FlowSite.renderNav('shop');
+  FlowSite.renderFooter();
+
+  let allProducts = [];
+  const grid = document.getElementById('grid');
+
+  function render(cat = 'all') {
+    const list = (cat === 'all' ? allProducts : allProducts.filter(p => p.category === cat));
+    if (!list.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h2>Nothing here yet</h2><p>Check back soon — new drops weekly.</p></div>';
+      return;
+    }
+    grid.innerHTML = list.map((p, i) => {
+      const pack = (p.packSizes && p.packSizes[0]) || {};
+      const price = pack.price || 0;
+      const orig = pack.originalPrice;
+      const img = p.media?.find(m => m.type === 'image')?.url;
+      const tag = p.badges?.[0];
+      const tagClass = tag?.type === 'sale' ? 'orange' : tag?.type === 'new' ? 'lime' : '';
+      return `<a class="product" href="product.html?slug=${encodeURIComponent(p.slug)}">
+        ${tag ? `<span class="product-tag ${tagClass}">${tag.text}</span>` : ''}
+        <div class="product-visual">
+          ${img ? `<img src="${img}" alt="${p.name}" loading="lazy" />` : `<div class="sachet ${FlowSite.sachetClass(p.slug, i)}"></div>`}
+        </div>
+        <div class="product-info">
+          <div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-flavor">${(p.flavours || []).slice(0, 2).join(' · ') || p.shortDescription || ''}</div>
+          </div>
+          <div class="product-price">${orig && orig > price ? `<s>${FlowSite.fmt(orig)}</s>` : ''}${FlowSite.fmt(price)}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
+  document.getElementById('filters').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.cat);
+  });
+
+  (async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/products`);
+      const data = await res.json();
+      allProducts = (data.products || data || []).filter(p => p.isActive !== false);
+      const initial = new URLSearchParams(location.search).get('cat') || 'all';
+      const target = document.querySelector(`.filter-chip[data-cat="${initial}"]`);
+      if (target) {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        target.classList.add('active');
+      }
+      render(initial);
+    } catch (err) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h2>Couldn\'t load</h2><p>Please refresh and try again.</p></div>';
+    }
+  })();
+</script>
+</body>
+</html>

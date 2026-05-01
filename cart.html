@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cart — Flow Hydration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@300;400;500&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="stylesheet" href="assets/css/customerAuth.css" />
+</head>
+<body>
+<div id="siteHeader"></div>
+
+<main class="page-wrap">
+  <span class="label" style="color: var(--muted);">— Cart</span>
+  <h1 class="page-title">Your <em>cart.</em></h1>
+  <p class="page-sub">Review your items, apply a discount, and head to checkout.</p>
+
+  <div id="cartRoot"></div>
+</main>
+
+<div id="siteFooter"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/customerAuth.js"></script>
+<script src="assets/js/common.js"></script>
+<script>
+  FlowSite.renderNav();
+  FlowSite.renderFooter();
+
+  const root = document.getElementById('cartRoot');
+  let cart = [];
+  let discount = null; // {code, amount, percent}
+
+  async function init() {
+    cart = await CustomerAuth.initCart();
+    const saved = JSON.parse(localStorage.getItem('flow_discount') || 'null');
+    if (saved) discount = saved;
+    render();
+  }
+  init();
+
+  function subtotal() { return cart.reduce((s, i) => s + i.price * i.quantity, 0); }
+  function discountValue(sub) {
+    if (!discount) return 0;
+    return discount.amount || 0;
+  }
+  function shipping(sub) { return sub >= 999 || sub === 0 ? 0 : 49; }
+
+  function render() {
+    if (!cart.length) {
+      root.innerHTML = `<div class="empty-state">
+        <h2>Cart is empty.</h2>
+        <p>The collection is calling.</p>
+        <a href="shop.html" class="btn-primary"><span>Shop the line →</span></a>
+      </div>`;
+      return;
+    }
+    const sub = subtotal();
+    const disc = discountValue(sub);
+    const ship = shipping(sub);
+    const total = Math.max(0, sub - disc) + ship;
+
+    root.innerHTML = `
+      <div class="cart-grid">
+        <div class="cart-items">
+          ${cart.map((it, i) => `
+            <div class="cart-item">
+              <div class="cart-item-visual">
+                ${it.image ? `<img src="${it.image}" alt="${it.name}" />` : `<div class="sachet ${FlowSite.sachetClass(it.productSlug || '', i)}"></div>`}
+              </div>
+              <div>
+                <div class="cart-item-name">${it.name}</div>
+                ${it.flavour ? `<div class="cart-item-flavor">${it.flavour}</div>` : ''}
+                <div class="cart-qty">
+                  <button data-act="dec" data-i="${i}">−</button>
+                  <span>${it.quantity}</span>
+                  <button data-act="inc" data-i="${i}">+</button>
+                </div>
+              </div>
+              <div class="cart-item-right">
+                <div class="cart-item-price">${FlowSite.fmt(it.price * it.quantity)}</div>
+                <button class="cart-remove" data-act="rm" data-i="${i}">Remove</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <aside class="summary">
+          <h3>Order summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>${FlowSite.fmt(sub)}</span></div>
+          ${disc ? `<div class="summary-row muted"><span>Discount${discount?.code ? ` (${discount.code})` : ''}</span><span>− ${FlowSite.fmt(disc)}</span></div>` : ''}
+          <div class="summary-row muted"><span>Shipping</span><span>${ship === 0 ? 'Free' : FlowSite.fmt(ship)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${FlowSite.fmt(total)}</span></div>
+
+          <div class="discount-row">
+            <input id="discCode" placeholder="Discount code" value="${discount?.code || ''}" />
+            <button id="applyDisc">${discount ? 'Remove' : 'Apply'}</button>
+          </div>
+
+          <a class="btn-primary" href="checkout.html"><span>Checkout →</span></a>
+          <a href="shop.html" style="display:block;text-align:center;margin-top:16px;font-size:13px;color:var(--muted);">or continue shopping</a>
+        </aside>
+      </div>
+    `;
+
+    root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', onItemAction));
+    document.getElementById('applyDisc').addEventListener('click', onApplyDiscount);
+  }
+
+  async function onItemAction(e) {
+    const i = +e.currentTarget.dataset.i;
+    const act = e.currentTarget.dataset.act;
+    if (act === 'inc') cart = await CustomerAuth.updateCartItem(i, cart[i].quantity + 1);
+    else if (act === 'dec') cart = await CustomerAuth.updateCartItem(i, cart[i].quantity - 1);
+    else if (act === 'rm') cart = await CustomerAuth.removeFromCart(i);
+    FlowSite.updateCartCount();
+    render();
+  }
+
+  async function onApplyDiscount() {
+    if (discount) {
+      discount = null;
+      localStorage.removeItem('flow_discount');
+      render();
+      FlowSite.toast('Discount removed');
+      return;
+    }
+    const code = document.getElementById('discCode').value.trim();
+    if (!code) return FlowSite.toast('Enter a code first', { type: 'error' });
+    try {
+      const res = await fetch(`${API_BASE}/api/discount-codes/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, orderTotal: subtotal() })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Invalid code');
+      discount = { code: data.code.code, amount: data.code.discountAmount };
+      localStorage.setItem('flow_discount', JSON.stringify(discount));
+      FlowSite.toast(`${code} applied`, { type: 'success', title: 'Discount applied' });
+      render();
+    } catch (err) {
+      FlowSite.toast(err.message, { type: 'error' });
+    }
+  }
+</script>
+</body>
+</html>
