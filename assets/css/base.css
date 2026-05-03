@@ -61,10 +61,11 @@ nav.site-nav {
   display: flex; align-items: center; justify-content: space-between;
 }
 .logo { font-family: 'Fraunces', serif; font-weight: 400; font-size: 22px; letter-spacing: -0.04em; font-style: italic; display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.logo-img { height: 36px; width: auto; display: block; }
 .logo::before { content: ''; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2.4s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
 .nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a { color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: 0.02em; position: relative; padding: 4px 0; }
+.nav-links a { color: var(--ink); text-decoration: none; font-size: 15px; letter-spacing: 0.02em; position: relative; padding: 4px 0; }
 .nav-links a::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: var(--ink); transition: width 0.3s ease; }
 .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 .nav-right { display: flex; gap: 10px; align-items: center; }

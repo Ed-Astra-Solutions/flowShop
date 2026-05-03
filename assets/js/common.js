@@ -62,14 +62,15 @@
     </div></div>`;
 
     const links = [
+      ['index.html', 'Home'],
       ['shop.html', 'Shop'],
-      ['index.html#science', 'Science'],
+      ['index.html#ingredients', 'Science'],
       ['index.html#benefits', 'Benefits'],
       ['index.html#faq', 'FAQ']
     ].map(([h, l]) => `<li><a href="${h}" class="${active === l.toLowerCase() ? 'active' : ''}">${l}</a></li>`).join('');
 
     const nav = `<nav class="site-nav">
-      <a class="logo" href="index.html">Flow</a>
+      <a class="logo" href="index.html"><img src="assets/logo.png" alt="Flow" class="logo-img" /></a>
       <ul class="nav-links">${links}</ul>
       <div class="nav-right">
         <a class="nav-profile" href="profile.html" id="navProfile" aria-label="Account">
@@ -84,12 +85,13 @@
 
     const drawer = `<div class="mobile-drawer" id="mobileDrawer">
       <div class="top">
-        <a class="logo" href="index.html">Flow</a>
+        <a class="logo" href="index.html"><img src="assets/logo.png" alt="Flow" class="logo-img" /></a>
         <button class="nav-toggle" id="drawerClose">Close</button>
       </div>
       <ul>
+        <li><a href="index.html">Home</a></li>
         <li><a href="shop.html">Shop</a></li>
-        <li><a href="index.html#science">Science</a></li>
+        <li><a href="index.html#ingredients">Science</a></li>
         <li><a href="index.html#benefits">Benefits</a></li>
         <li><a href="index.html#faq">FAQ</a></li>
         <li><a href="cart.html">Cart</a></li>
@@ -124,7 +126,7 @@
     slot.innerHTML = `<footer class="site-footer">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="logo" href="index.html">Flow</a>
+          <a class="logo" href="index.html"><img src="assets/logo.png" alt="Flow" class="logo-img" /></a>
           <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
         </div>
         <div class="footer-col">
