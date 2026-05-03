@@ -2808,18 +2808,18 @@
         <div class="hero-content">
             <div class="hero-badge">Pan-India Delivery Available</div>
             <h1 id="heroTitle">
-                Find Your
-                <span>Flow</span>
+                The sachet that finishes the run
+                <span>with you.</span>
             </h1>
-            <p id="heroSubtitle">Clean hydration engineered for optimal performance. Precise electrolyte formulation to fuel your day, power your workouts, and support total body function.</p>
+            <p id="heroSubtitle">Precision electrolytes for the moments your body can't bluff — mid-run, post-workout, the second hour of a marathon, the Indian summer walk that wasn't supposed to be hard.<br><br>Five clean electrolytes, 6.9g glucose for absorption, zero artificial anything.</p>
             <div class="hero-buttons">
                 <a href="/shop/" class="btn-primary" id="heroCta">
-                    Buy Now
+                    Shop Flow
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="#ingredients" class="btn-secondary">Learn More</a>
+                <a href="#ingredients" class="btn-secondary">See the Ingredients</a>
             </div>
         </div>
         <div class="hero-visual" id="heroVisual">
@@ -3030,6 +3030,99 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section" id="compare">
+        <style>
+        .comparison-section {
+            padding: 80px 8%;
+            background: var(--flow-dark);
+            position: relative;
+        }
+        .comparison-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .comparison-section .section-header { text-align: center; margin-bottom: 12px; }
+        .comparison-section .section-tag { display: inline-block; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--flow-cyan); padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 500; margin-bottom: 16px; }
+        .comparison-section .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; color: var(--flow-white); margin-bottom: 8px; }
+        .comparison-section .section-subtitle { color: var(--flow-gray); font-size: 1rem; margin-bottom: 48px; }
+        .comparison-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .comparison-table { width: 100%; border-collapse: collapse; min-width: 620px; }
+        .comparison-table th, .comparison-table td { padding: 13px 18px; text-align: left; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .comparison-table thead tr { background: rgba(0,212,255,0.05); }
+        .comparison-table thead th { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: var(--flow-gray); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid rgba(0,212,255,0.25); }
+        .comparison-table thead th.col-flow { color: var(--flow-cyan); }
+        .comparison-table .group-row td { background: rgba(255,255,255,0.03); color: var(--flow-gray); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .comparison-table td.metric { color: rgba(255,255,255,0.6); }
+        .comparison-table td.flow-val { color: var(--flow-white); font-weight: 500; }
+        .comparison-table td.rival-val { color: rgba(255,255,255,0.5); }
+        .comparison-table .star { color: var(--flow-cyan); font-size: 13px; margin-left: 5px; }
+        .comparison-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+        .comparison-verdict { margin-top: 40px; background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 16px; padding: 28px 32px; }
+        .comparison-verdict h4 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--flow-cyan); margin-bottom: 14px; }
+        .comparison-verdict p { color: var(--flow-gray); font-size: 14px; line-height: 1.7; }
+        .comparison-verdict strong { color: var(--flow-white); }
+        .comparison-verdict .verdict-note { margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.35); font-style: italic; }
+        @media (max-width: 768px) {
+            .comparison-section { padding: 60px 5%; }
+            .comparison-table th, .comparison-table td { padding: 11px 12px; font-size: 13px; }
+            .comparison-verdict { padding: 20px; }
+        }
+        </style>
+        <div class="section-header">
+            <div class="section-tag">Hydration Sachet Showdown</div>
+            <h2 class="section-title">Flow vs Fast&amp;Up</h2>
+            <p class="section-subtitle">Powder Sachet Edition — A side-by-side nutritional breakdown</p>
+        </div>
+        <div class="comparison-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th style="width:36%">Category</th>
+                        <th class="col-flow" style="width:32%">Flow Hydration<br><span style="font-size:11px;font-weight:400;color:var(--flow-gray)">Powder Sachet · 12.5g</span></th>
+                        <th style="width:32%">Fast&amp;Up Reload<br><span style="font-size:11px;font-weight:400;color:var(--flow-gray)">Powder Sachet · ~5g</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Electrolytes -->
+                    <tr class="group-row"><td colspan="3">Electrolytes</td></tr>
+                    <tr><td class="metric">Sodium</td><td class="flow-val">✓ Present</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Potassium</td><td class="flow-val">✓ Present</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Calcium</td><td class="flow-val">✓ Present</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Magnesium</td><td class="flow-val">✓ Present</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Chloride</td><td class="flow-val">✓ Present<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Total Electrolytes</td><td class="flow-val"><strong>5 key electrolytes</strong><span class="star">★</span></td><td class="rival-val">4 key electrolytes</td></tr>
+                    <!-- Vitamins -->
+                    <tr class="group-row"><td colspan="3">Vitamins</td></tr>
+                    <tr><td class="metric">Vitamin C</td><td class="flow-val">✓ Present</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Vitamin B12</td><td class="flow-val">0.13 mcg</td><td class="rival-val">✓ Present</td></tr>
+                    <tr><td class="metric">Full B-Complex (B1–B7, B9)</td><td class="flow-val">✓ All present<span class="star">★</span></td><td class="rival-val">— Not present</td></tr>
+                    <tr><td class="metric">Vitamin A</td><td class="flow-val">62.5 mcg<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Vitamin D3</td><td class="flow-val">52 IU<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Vitamin E</td><td class="flow-val">✓ Present<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Vitamin K1</td><td class="flow-val">5 mcg<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Total Vitamins</td><td class="flow-val"><strong>12 vitamins</strong><span class="star">★</span></td><td class="rival-val">2 vitamins</td></tr>
+                    <!-- Formulation -->
+                    <tr class="group-row"><td colspan="3">Formulation</td></tr>
+                    <tr><td class="metric">Added Sugar</td><td class="flow-val">6.93g D-Glucose</td><td class="rival-val">~2g Fructose<span class="star">★</span></td></tr>
+                    <tr><td class="metric">Calories per Serving</td><td class="flow-val">37 kcal</td><td class="rival-val">~20 kcal<span class="star">★</span></td></tr>
+                    <tr><td class="metric">Caffeine Free</td><td class="flow-val">Yes</td><td class="rival-val">Yes</td></tr>
+                    <tr><td class="metric">3rd Party Certified</td><td class="flow-val">—</td><td class="rival-val">Informed Choice<span class="star">★</span></td></tr>
+                    <tr><td class="metric">Best For</td><td class="flow-val">Daily wellness + active use</td><td class="rival-val">Sport & workout focus</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="comparison-verdict">
+            <h4>The Bottom Line</h4>
+            <p><strong>Flow Hydration wins on comprehensive daily nutrition</strong> — delivering 12 vitamins including the full B-complex, Vitamins A, D3, E, K1, and Folic Acid that Fast&amp;Up's powder simply doesn't carry. Designed for people who want hydration and a meaningful micronutrient boost in one sachet.</p>
+            <p style="margin-top:10px"><strong>Fast&amp;Up Reload wins on lower sugar</strong>, 4 electrolytes, and Informed Choice certification — making it a cleaner, sport-focused choice for pure workout hydration.</p>
+            <p class="verdict-note">* Fast&amp;Up per-serving electrolyte mg values are not fully disclosed publicly; presence confirmed from official ingredient lists. Flow Hydration data sourced from product packaging. Always verify with current product labels before use.</p>
         </div>
     </section>
 
