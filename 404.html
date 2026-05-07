@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | Flow Hydration</title>
+    <script>
+        // Redirect /blog/<slug>/ → /blog-post/?slug=<slug>
+        (function() {
+            var path = window.location.pathname;
+            var blogMatch = path.match(/^\/blog\/([^\/]+)\/?$/);
+            if (blogMatch && blogMatch[1]) {
+                window.location.replace('/blog-post/?slug=' + encodeURIComponent(blogMatch[1]));
+                return;
+            }
+        })();
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e8e9ed; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .wrap { text-align: center; padding: 40px 24px; }
+        h1 { font-size: 80px; font-weight: 800; color: #00D4FF; line-height: 1; margin-bottom: 16px; }
+        h2 { font-size: 24px; color: #fff; margin-bottom: 12px; }
+        p { color: #8a8b94; margin-bottom: 32px; }
+        a { display: inline-block; background: #00D4FF; color: #000; padding: 12px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>404</h1>
+        <h2>Page not found</h2>
+        <p>The page you're looking for doesn't exist.</p>
+        <a href="/">Go Home</a>
+    </div>
+</body>
+</html>

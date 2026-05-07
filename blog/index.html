@@ -405,7 +405,7 @@
                 ? `<img src="${escapeAttr(b.coverImage)}" alt="${escapeAttr(b.title)}" loading="lazy">`
                 : '<div class="placeholder">💧</div>';
             return `
-                <a href="/blog/${encodeURIComponent(b.slug)}/" class="blog-card">
+                <a href="/blog-post/?slug=${encodeURIComponent(b.slug)}" class="blog-card">
                     <div class="blog-card-image">
                         ${img}
                         ${b.category ? `<span class="blog-category">${escapeHtml(b.category)}</span>` : ''}
