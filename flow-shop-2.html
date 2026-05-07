@@ -3399,9 +3399,8 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="index.html#about">About Us</a></li>
                     <li><a href="index.html#ingredients">Science</a></li>
-                    <li><a href="index.html#about">Contact</a></li>
+                    <li><a href="mailto:contact@flowhydration.in">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -3602,7 +3601,7 @@
             const uniqueId = `${product.slug}-${pack.size}`;
             const displayName = isBundle 
                 ? `${product.name} — Pack of ${pack.size}` 
-                : `${product.name} — ${pack.label}`;
+                : `${product.name} — ${pack.label || `Pack of ${pack.size}`}`;
             
             // Badge logic
             let badgeHtml = '';

@@ -505,6 +505,35 @@
             font-family: inherit;
         }
 
+        .order-actions-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .order-retry-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            border: none;
+            border-radius: 20px;
+            color: var(--flow-dark);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-retry-btn:disabled {
+            opacity: 0.6;
+        }
+
+        .order-retry-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -1111,6 +1140,12 @@
 
         <!-- Profile Content (shown when logged in) -->
         <div id="profileContent" style="display: none;">
+            <a href="/shop/" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; margin: 1rem 1rem 0; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; color: var(--flow-cyan); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.3s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Back to Shop
+            </a>
             <div class="profile-header">
                 <div class="avatar" id="userAvatar">?</div>
                 <div class="profile-info">
@@ -1582,6 +1617,8 @@
     <!-- API Configuration -->
     <script src="assets/js/config.js"></script>
     <script src="assets/js/customerAuth.js"></script>
+    <!-- Razorpay Checkout (used for retrying pending payments from order history) -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         // API path for this page
         const API_PATH = `${API_BASE}/api`;
@@ -1783,7 +1820,18 @@
                                 <span>Total:</span>
                                 <strong>₹${order.total.toLocaleString()}</strong>
                             </div>
-                            <button class="order-view-btn" onclick="viewOrder('${order._id}')">View Details</button>
+                            <div class="order-actions-row">
+                                ${(order.status === 'pending' && order.payment && order.payment.method === 'razorpay' && order.payment.status !== 'paid') ? `
+                                    <button class="order-retry-btn" onclick="retryPayment('${order._id}', this)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="23 4 23 10 17 10"/>
+                                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                                        </svg>
+                                        Retry
+                                    </button>
+                                ` : ''}
+                                <button class="order-view-btn" onclick="viewOrder('${order._id}')">View Details</button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1813,6 +1861,109 @@
 
         function viewOrder(orderId) {
             window.location.href = `order-details.html?id=${orderId}`;
+        }
+
+        // ==================== Retry Payment ====================
+        async function retryPayment(orderId, btnEl) {
+            if (typeof Razorpay === 'undefined') {
+                showToast('Payment SDK not loaded. Please refresh and try again.', true);
+                return;
+            }
+
+            const originalText = btnEl ? btnEl.innerHTML : '';
+            if (btnEl) {
+                btnEl.disabled = true;
+                btnEl.innerHTML = 'Loading...';
+            }
+
+            try {
+                const keyResp = await fetch(`${API_PATH}/orders/config/razorpay-key`);
+                const keyData = await keyResp.json();
+                if (!keyData.success || !keyData.key) throw new Error('Failed to initialize payment');
+
+                const resp = await fetch(`${API_PATH}/orders/${orderId}/retry-payment`, {
+                    method: 'POST',
+                    headers: {
+                        ...CustomerAuth.getAuthHeaders(),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await resp.json();
+                if (!data.success) throw new Error(data.message || 'Failed to retry payment');
+
+                const options = {
+                    key: keyData.key,
+                    amount: data.payment.amount,
+                    currency: data.payment.currency,
+                    name: data.payment.name,
+                    description: data.payment.description,
+                    order_id: data.payment.razorpayOrderId,
+                    prefill: data.payment.prefill,
+                    notes: data.payment.notes,
+                    theme: { color: '#00D4FF', backdrop_color: 'rgba(10, 22, 40, 0.9)' },
+                    modal: {
+                        ondismiss: function() {
+                            if (btnEl) {
+                                btnEl.disabled = false;
+                                btnEl.innerHTML = originalText;
+                            }
+                            showToast('Payment cancelled');
+                        }
+                    },
+                    handler: async function(response) {
+                        try {
+                            const verifyResp = await fetch(`${API_PATH}/orders/verify-payment`, {
+                                method: 'POST',
+                                headers: {
+                                    ...CustomerAuth.getAuthHeaders(),
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpaySignature: response.razorpay_signature,
+                                    orderId: orderId
+                                })
+                            });
+                            const verifyData = await verifyResp.json();
+                            if (verifyData.success) {
+                                showToast('Payment successful! Order confirmed.');
+                                loadOrders();
+                            } else {
+                                showToast(verifyData.message || 'Payment verification failed', true);
+                                if (btnEl) {
+                                    btnEl.disabled = false;
+                                    btnEl.innerHTML = originalText;
+                                }
+                            }
+                        } catch (verr) {
+                            console.error('Verify payment error:', verr);
+                            showToast('Payment received but verification failed. Please contact support.', true);
+                        }
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function(response) {
+                    console.error('Payment failed:', response.error);
+                    showToast(`Payment failed: ${response.error?.description || 'Please try again'}`, true);
+                    if (btnEl) {
+                        btnEl.disabled = false;
+                        btnEl.innerHTML = originalText;
+                    }
+                });
+                rzp.open();
+            } catch (err) {
+                console.error('Retry payment error:', err);
+                showToast(err.message || 'Failed to retry payment', true);
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = originalText;
+                }
+                if (err.message && err.message.toLowerCase().includes('expired')) {
+                    loadOrders();
+                }
+            }
         }
 
         // Load Addresses

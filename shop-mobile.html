@@ -2400,7 +2400,7 @@
                             ...product,
                             displayName: isBundle 
                                 ? `${product.name} — Pack of ${pack.size}` 
-                                : `${product.name} — ${pack.label}`,
+                                : `${product.name} — ${pack.label || `Pack of ${pack.size}`}`,
                             selectedFlavour: isBundle ? null : flavor,
                             selectedPack: pack,
                             uniqueId: `${product.slug}-${pack.size}`,

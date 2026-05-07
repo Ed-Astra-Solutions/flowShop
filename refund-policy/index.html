@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NXGC1SV1FW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NXGC1SV1FW');
+    </script>
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -21,522 +29,350 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refund Policy — Flow Hydration</title>
+    <meta name="description" content="Flow Hydration refund policy — refunds for damaged products or payment errors. Clear, fair, and transparent.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
         :root {
-            --flow-blue: #0A1628;
             --flow-cyan: #00D4FF;
-            --flow-teal: #00B4B4;
             --flow-white: #FAFCFF;
             --flow-gray: #94A3B8;
             --flow-dark: #020817;
             --flow-green: #22C55E;
             --flow-red: #EF4444;
+            --radius-card: 18px;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: var(--flow-dark); color: var(--flow-white); line-height: 1.7; min-height: 100vh; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Nav */
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 0.7rem 4%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; backdrop-filter: blur(20px); background: rgba(2,8,23,0.92); border-bottom: 1px solid rgba(0,212,255,0.08); }
+        .nav-left { display: flex; align-items: center; gap: 1rem; }
+        .back-btn { display: flex; align-items: center; gap: 0.45rem; color: var(--flow-gray); text-decoration: none; font-size: 0.88rem; padding: 0.45rem 0.9rem; border-radius: 8px; transition: all 0.25s; border: 1px solid transparent; }
+        .back-btn:hover { color: var(--flow-cyan); background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.15); }
+        .back-btn .material-icons-round { font-size: 18px; }
+        .logo { display: flex; align-items: center; text-decoration: none; }
+        .logo-img { height: 42px; width: auto; }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--flow-dark);
-            color: var(--flow-white);
-            line-height: 1.7;
-        }
+        /* Hero */
+        .policy-hero { padding: 7rem 5% 0; position: relative; overflow: hidden; }
+        .policy-hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 700px; height: 340px; background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.11) 0%, transparent 70%); pointer-events: none; }
+        .hero-inner { max-width: 860px; margin: 0 auto; text-align: center; padding: 3.5rem 0 0; position: relative; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: var(--flow-cyan); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 999px; margin-bottom: 1.5rem; }
+        .hero-badge .material-icons-round { font-size: 15px; }
+        .policy-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; background: linear-gradient(135deg, var(--flow-white) 30%, var(--flow-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .policy-hero p.hero-sub { color: var(--flow-gray); font-size: 1.05rem; max-width: 540px; margin: 0 auto 2.5rem; }
+        .stats-strip { display: flex; align-items: stretch; justify-content: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.1); border-radius: var(--radius-card); overflow: hidden; max-width: 680px; margin: 0 auto; }
+        .stat-item { flex: 1; padding: 1.25rem 1.5rem; text-align: center; border-right: 1px solid rgba(0,212,255,0.08); }
+        .stat-item:last-child { border-right: none; }
+        .stat-icon { display: flex; justify-content: center; margin-bottom: 0.4rem; }
+        .stat-icon .material-icons-round { font-size: 22px; color: var(--flow-cyan); }
+        .stat-value { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--flow-white); display: block; margin-bottom: 0.2rem; }
+        .stat-label { font-size: 0.75rem; color: var(--flow-gray); text-transform: uppercase; letter-spacing: 0.06em; }
+        .hero-divider { max-width: 860px; margin: 3rem auto 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.15), transparent); }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 0.75rem 4%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-            background: rgba(2, 8, 23, 0.9);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-        }
+        /* Body */
+        .policy-body { max-width: 860px; margin: 0 auto; padding: 3rem 5% 5rem; display: flex; flex-direction: column; gap: 1.5rem; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
+        /* Section card */
+        .section-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-card); overflow: hidden; transition: border-color 0.25s; }
+        .section-card:hover { border-color: rgba(0,212,255,0.18); }
+        .section-card.green:hover { border-color: rgba(34,197,94,0.25); }
+        .section-card.red:hover { border-color: rgba(239,68,68,0.25); }
+        .section-card-header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .section-icon { width: 42px; height: 42px; min-width: 42px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.18); border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+        .section-icon.green { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.22); }
+        .section-icon.red { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.22); }
+        .section-icon .material-icons-round { font-size: 20px; color: var(--flow-cyan); }
+        .section-icon.green .material-icons-round { color: var(--flow-green); }
+        .section-icon.red .material-icons-round { color: var(--flow-red); }
+        .section-card-header h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--flow-white); }
+        .section-card-body { padding: 1.5rem 1.75rem; }
+        .section-card-body p { color: var(--flow-gray); font-size: 0.93rem; margin-bottom: 1rem; line-height: 1.75; }
+        .section-card-body p:last-child { margin-bottom: 0; }
+        .section-card-body p strong { color: var(--flow-white); }
 
-        .logo-img {
-            height: 55px;
-            width: auto;
-        }
+        /* Sub-sections inside card */
+        .subsection { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .subsection:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .subsection-title { display: flex; align-items: center; gap: 0.6rem; font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--flow-white); margin-bottom: 0.85rem; }
+        .subsection-title .material-icons-round { font-size: 17px; color: var(--flow-cyan); }
 
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
+        /* Check/cross lists */
+        .check-list, .cross-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1rem; }
+        .check-list:last-child, .cross-list:last-child { margin-bottom: 0; }
+        .check-list li, .cross-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9rem; color: var(--flow-gray); line-height: 1.6; }
+        .check-list li .material-icons-round { font-size: 17px; color: var(--flow-green); margin-top: 0.15rem; flex-shrink: 0; }
+        .cross-list li .material-icons-round { font-size: 17px; color: var(--flow-red); margin-top: 0.15rem; flex-shrink: 0; }
 
-        .nav-links a {
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
+        /* Info callout */
+        .callout { display: flex; align-items: flex-start; gap: 0.85rem; border-radius: 12px; padding: 1rem 1.2rem; margin-top: 1rem; font-size: 0.88rem; line-height: 1.65; }
+        .callout.info { background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.15); }
+        .callout.warning { background: rgba(255,152,0,0.07); border: 1px solid rgba(255,152,0,0.2); }
+        .callout.note { background: rgba(148,163,184,0.07); border: 1px solid rgba(148,163,184,0.18); }
+        .callout .material-icons-round { font-size: 18px; flex-shrink: 0; margin-top: 0.05rem; }
+        .callout.info .material-icons-round { color: var(--flow-cyan); }
+        .callout.warning .material-icons-round { color: #FF9800; }
+        .callout.note .material-icons-round { color: var(--flow-gray); }
+        .callout p { color: var(--flow-gray); margin: 0; }
+        .callout strong { color: var(--flow-white); }
 
-        .nav-links a:hover {
-            color: var(--flow-white);
-        }
+        /* Process steps */
+        .process-steps { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.25rem; }
+        .process-step { display: flex; align-items: flex-start; gap: 1rem; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 0.9rem 1.1rem; }
+        .step-num { width: 28px; height: 28px; min-width: 28px; background: var(--flow-cyan); color: var(--flow-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; margin-top: 0.05rem; }
+        .step-text { font-size: 0.9rem; color: var(--flow-gray); line-height: 1.6; }
+        .step-text strong { color: var(--flow-white); }
 
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--flow-cyan);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
+        /* Timeline badges */
+        .timeline-badges { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.85rem; }
+        .t-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); color: var(--flow-cyan); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 999px; }
+        .t-badge .material-icons-round { font-size: 14px; }
 
-        .back-btn:hover {
-            gap: 0.75rem;
-        }
-
-        /* Content */
-        .policy-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 8rem 2rem 4rem;
-        }
-
-        .policy-header {
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-        }
-
-        .policy-header h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #00D4FF 0%, #00B4B4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .policy-header p {
-            color: var(--flow-gray);
-            font-size: 0.95rem;
-        }
-
-        .intro-text {
-            color: var(--flow-gray);
-            margin-bottom: 2.5rem;
-            font-size: 1.05rem;
-        }
-
-        .policy-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .policy-section h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--flow-cyan);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .policy-section h2.eligible::before {
-            content: '✅';
-        }
-
-        .policy-section h2.ineligible::before {
-            content: '❌';
-        }
-
-        .policy-section h2.how-to::before {
-            content: '🛠️';
-        }
-
-        .policy-section h2.note::before {
-            content: '📌';
-        }
-
-        .policy-section h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--flow-white);
-            margin-bottom: 0.75rem;
-            margin-top: 1.5rem;
-        }
-
-        .policy-section p {
-            color: var(--flow-gray);
-            margin-bottom: 1rem;
-        }
-
-        .policy-section ul {
-            list-style: none;
-            margin-left: 0;
-        }
-
-        .policy-section li {
-            color: var(--flow-gray);
-            padding-left: 1.5rem;
-            position: relative;
-            margin-bottom: 0.5rem;
-        }
-
-        .policy-section li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.6rem;
-            width: 6px;
-            height: 6px;
-            background: var(--flow-cyan);
-            border-radius: 50%;
-        }
-
-        .highlight {
-            color: var(--flow-white);
-            font-weight: 500;
-        }
-
-        .email-link {
-            color: var(--flow-cyan);
-            text-decoration: none;
-        }
-
-        .email-link:hover {
-            text-decoration: underline;
-        }
-
-        .info-box {
-            background: rgba(0, 212, 255, 0.08);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .info-box p {
-            margin-bottom: 0.5rem;
-        }
-
-        .info-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        .eligible-box {
-            background: rgba(34, 197, 94, 0.08);
-            border: 1px solid rgba(34, 197, 94, 0.25);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .ineligible-box {
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            padding: 2rem 4%;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-            text-align: center;
-        }
-
-        footer p {
-            color: var(--flow-gray);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .policy-header h1 {
-                font-size: 2rem;
-            }
-
-            .policy-container {
-                padding: 7rem 1.5rem 3rem;
-            }
-        }
+        /* Contact CTA */
+        .contact-cta { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; background: linear-gradient(135deg,rgba(0,212,255,0.08) 0%,rgba(0,180,180,0.04) 100%); border: 1px solid rgba(0,212,255,0.2); border-radius: var(--radius-card); padding: 1.75rem 2rem; margin-top: 1rem; flex-wrap: wrap; }
+        .contact-cta-text h3 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .contact-cta-text p { color: var(--flow-gray); font-size: 0.9rem; margin: 0; }
+        .contact-cta-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .btn-primary-sm { display: inline-flex; align-items: center; gap: 0.45rem; background: var(--flow-cyan); color: var(--flow-dark); font-weight: 700; font-size: 0.88rem; padding: 0.65rem 1.4rem; border-radius: 999px; text-decoration: none; transition: opacity 0.2s; }
+        .btn-primary-sm:hover { opacity: 0.88; }
+        .btn-ghost-sm { display: inline-flex; align-items: center; gap: 0.45rem; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--flow-white); font-size: 0.88rem; padding: 0.65rem 1.3rem; border-radius: 999px; text-decoration: none; transition: all 0.2s; }
+        .btn-ghost-sm:hover { border-color: rgba(0,212,255,0.4); color: var(--flow-cyan); }
+        .btn-primary-sm .material-icons-round, .btn-ghost-sm .material-icons-round { font-size: 16px; }
 
         /* Site Footer */
-        .site-footer {
-            padding: 4rem 8% 2rem;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-            margin-top: 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            gap: 2.5rem;
-            max-width: 1400px;
-            margin: 0 auto 3rem;
-        }
-
-        .footer-brand .logo {
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .footer-brand .logo-img {
-            height: 70px;
-        }
-
-        .footer-brand p {
-            color: var(--flow-gray);
-            font-size: 0.9rem;
-            max-width: 300px;
-        }
-
-        .footer-column h4 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 1.25rem;
-            color: var(--flow-white);
-        }
-
-        .footer-column ul {
-            list-style: none;
-        }
-
-        .footer-column li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-column a {
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-column a:hover {
-            color: var(--flow-cyan);
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-bottom p {
-            color: var(--flow-gray);
-            font-size: 0.85rem;
-        }
-
-        .footer-contact a {
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-contact a:hover {
-            color: var(--flow-cyan);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--flow-gray);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--flow-cyan);
-            color: var(--flow-dark);
-        }
-
-        @media (max-width: 768px) {
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-            }
-
-            .footer-brand {
-                grid-column: span 2;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-brand {
-                grid-column: span 1;
-            }
-        }
+        .site-footer { padding: 4rem 8% 2rem; border-top: 1px solid rgba(0,212,255,0.1); margin-top: 2rem; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 2.5rem; max-width: 1400px; margin: 0 auto 3rem; }
+        .footer-brand .logo { margin-bottom: 1rem; display: inline-block; }
+        .footer-brand .logo-img { height: 70px; }
+        .footer-brand p { color: var(--flow-gray); font-size: 0.9rem; max-width: 300px; }
+        .footer-column h4 { font-family: 'Syne', sans-serif; font-size: 1rem; margin-bottom: 1.25rem; color: var(--flow-white); }
+        .footer-column ul { list-style: none; }
+        .footer-column li { margin-bottom: 0.75rem; }
+        .footer-column a { color: var(--flow-gray); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-column a:hover { color: var(--flow-cyan); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); max-width: 1400px; margin: 0 auto; }
+        .footer-bottom p { color: var(--flow-gray); font-size: 0.85rem; }
+        .footer-contact a { color: var(--flow-gray); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .footer-contact a:hover { color: var(--flow-cyan); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-links a { width: 40px; height: 40px; background: rgba(0,212,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--flow-gray); text-decoration: none; transition: all 0.3s; }
+        .social-links a:hover { background: var(--flow-cyan); color: var(--flow-dark); }
 
         /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0, 212, 255, 0.15);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            color: var(--flow-white);
-            font-size: 0.95rem;
-            z-index: 10000;
-            opacity: 0;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); padding: 1rem 2rem; border-radius: 50px; color: var(--flow-white); font-size: 0.95rem; z-index: 10000; opacity: 0; transition: all 0.3s; backdrop-filter: blur(10px); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .policy-hero { padding-top: 5.5rem; }
+            .hero-inner { padding: 2.5rem 0 0; }
+            .stats-strip { flex-direction: column; max-width: 340px; }
+            .stat-item { border-right: none; border-bottom: 1px solid rgba(0,212,255,0.08); }
+            .stat-item:last-child { border-bottom: none; }
+            .policy-body { padding: 2rem 4% 4rem; gap: 1.25rem; }
+            .section-card-header, .section-card-body { padding-left: 1.25rem; padding-right: 1.25rem; }
+            .contact-cta { flex-direction: column; align-items: flex-start; }
+            .footer-content { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .footer-brand { grid-column: span 2; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+            .timeline-badges { flex-direction: column; gap: 0.5rem; }
+        }
+        @media (max-width: 480px) {
+            .footer-content { grid-template-columns: 1fr; }
+            .footer-brand { grid-column: span 1; }
+            .contact-cta-actions { flex-direction: column; width: 100%; }
+            .btn-primary-sm, .btn-ghost-sm { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
+
     <nav>
-        <a href="/" class="logo">
-            <img src="/logo.png" alt="Flow" class="logo-img">
-        </a>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/shop/">Shop</a></li>
-            <li><a href="/#ingredients">Ingredients</a></li>
-            <li><a href="/#benefits">Benefits</a></li>
-        </ul>
-        <a href="/" class="back-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Back
-        </a>
+        <div class="nav-left">
+            <a href="/" class="back-btn">
+                <span class="material-icons-round">arrow_back</span>
+                Back
+            </a>
+        </div>
+        <a href="/" class="logo"><img src="/logo.png" alt="Flow" class="logo-img"></a>
+        <div style="width:80px"></div>
     </nav>
 
-    <div class="policy-container">
-        <div class="policy-header">
-            <h1>Refund Policy</h1>
-            <p>Last updated: January 2026</p>
-        </div>
-
-        <p class="intro-text">We strive to ensure a high-quality experience for every customer. Due to the perishable and consumable nature of our products, we do not accept returns or cancellations under normal circumstances. Refunds or returns are processed only under specific conditions outlined below.</p>
-
-        <div class="policy-section">
-            <h2 class="eligible">Eligible Cases for Refund or Return</h2>
-            
-            <div class="eligible-box">
-                <h3>1. Defective or Damaged Product Delivery</h3>
-                <p>You are eligible for a refund or replacement only if:</p>
-                <ul>
-                    <li>The product delivered is physically damaged, defective, leaking, or spoiled at the time of delivery.</li>
-                    <li>Clear photographic proof is submitted to our customer support team within 24 hours of delivery.</li>
-                </ul>
-                <p>Upon verification, we will offer:</p>
-                <ul>
-                    <li>A full refund to the original payment method, or</li>
-                    <li>A replacement of the same product at no extra cost.</li>
-                </ul>
-
-                <h3>2. Technical or Payment Errors</h3>
-                <p>If you are charged for a payment and:</p>
-                <ul>
-                    <li>The order is not confirmed or not reflected in your order history, or</li>
-                    <li>A technical error (e.g., payment gateway glitch, duplicate charge) occurs,</li>
-                </ul>
-                <p>You may request a refund within 48 hours of the transaction by contacting our support team with:</p>
-                <ul>
-                    <li>Transaction ID / UTR</li>
-                    <li>Screenshot of the deduction</li>
-                    <li>Email ID / Phone number used for the transaction</li>
-                </ul>
-                <p>Upon internal verification with our payment partners, valid claims will be refunded within 7–10 working days.</p>
+    <div class="policy-hero">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <span class="material-icons-round">assignment_return</span>
+                Refund Policy
+            </div>
+            <h1>Fair Returns,<br>Zero Surprises</h1>
+            <p class="hero-sub">We stand behind every sachet. If something goes wrong, we'll make it right — quickly and fairly.</p>
+            <div class="stats-strip">
+                <div class="stat-item">
+                    <div class="stat-icon"><span class="material-icons-round">schedule</span></div>
+                    <span class="stat-value">24 hrs</span>
+                    <span class="stat-label">Product damage window</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><span class="material-icons-round">payments</span></div>
+                    <span class="stat-value">48 hrs</span>
+                    <span class="stat-label">Payment error window</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><span class="material-icons-round">autorenew</span></div>
+                    <span class="stat-value">7–10</span>
+                    <span class="stat-label">Days to refund</span>
+                </div>
             </div>
         </div>
-
-        <div class="policy-section">
-            <h2 class="ineligible">Ineligible Scenarios</h2>
-            <div class="ineligible-box">
-                <p>Refunds/returns are <span class="highlight">not applicable</span> in the following cases:</p>
-                <ul>
-                    <li>If you change your mind after ordering.</li>
-                    <li>If you provide an incorrect delivery address.</li>
-                    <li>If the product taste, texture, or colour does not meet personal expectations.</li>
-                    <li>If a claim is made after the stipulated timelines (24 hours for product issues, 48 hours for payment issues).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="policy-section">
-            <h2 class="how-to">How to Raise a Refund Request</h2>
-            <p>Please email us at <a href="mailto:support@flowhydration.in" class="email-link">support@flowhydration.in</a> with:</p>
-            <ul>
-                <li>Your order number</li>
-                <li>Date of purchase</li>
-                <li>Issue description</li>
-                <li>Supporting photographs/screenshots (if applicable)</li>
-            </ul>
-        </div>
-
-        <div class="policy-section">
-            <h2 class="note">Additional Notes</h2>
-            <div class="info-box">
-                <p>• Refunds will only be issued to the original payment method.</p>
-                <p>• We reserve the right to approve or reject refund claims at our sole discretion based on evidence and internal investigation.</p>
-            </div>
-        </div>
+        <div class="hero-divider"></div>
     </div>
 
-    <!-- Site Footer -->
+    <div class="policy-body">
+
+        <!-- Intro -->
+        <div class="callout info" style="margin-top:0;">
+            <span class="material-icons-round">info</span>
+            <p>Due to the perishable and consumable nature of our products, we do not accept returns or cancellations under normal circumstances. Refunds are processed only under the specific conditions outlined below.</p>
+        </div>
+
+        <!-- Eligible -->
+        <div class="section-card green">
+            <div class="section-card-header">
+                <div class="section-icon green">
+                    <span class="material-icons-round">check_circle</span>
+                </div>
+                <h2>Eligible Cases for Refund or Return</h2>
+            </div>
+            <div class="section-card-body">
+
+                <div class="subsection">
+                    <div class="subsection-title">
+                        <span class="material-icons-round">broken_image</span>
+                        Defective or Damaged Product
+                    </div>
+                    <p>You are eligible for a refund or replacement if the product delivered is physically damaged, defective, leaking, or spoiled at the time of delivery.</p>
+                    <p style="color:var(--flow-white);font-weight:600;font-size:0.88rem;margin-bottom:0.5rem;">Requirements</p>
+                    <ul class="check-list">
+                        <li><span class="material-icons-round">check_circle</span>Clear photographic proof submitted within <strong>24 hours of delivery</strong></li>
+                        <li><span class="material-icons-round">check_circle</span>Contact our support team via email</li>
+                    </ul>
+                    <p style="color:var(--flow-white);font-weight:600;font-size:0.88rem;margin-bottom:0.5rem;margin-top:0.75rem;">We will offer</p>
+                    <ul class="check-list">
+                        <li><span class="material-icons-round">check_circle</span>Full refund to the original payment method, <strong>or</strong></li>
+                        <li><span class="material-icons-round">check_circle</span>Replacement of the same product at no extra cost</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">
+                        <span class="material-icons-round">credit_card_off</span>
+                        Technical or Payment Errors
+                    </div>
+                    <p>If you were charged but the order was not confirmed or a duplicate charge occurred, you may request a refund within <strong>48 hours</strong>.</p>
+                    <p style="color:var(--flow-white);font-weight:600;font-size:0.88rem;margin-bottom:0.5rem;">Required information</p>
+                    <ul class="check-list">
+                        <li><span class="material-icons-round">check_circle</span>Transaction ID / UTR number</li>
+                        <li><span class="material-icons-round">check_circle</span>Screenshot of the deduction</li>
+                        <li><span class="material-icons-round">check_circle</span>Email ID / Phone number used for the transaction</li>
+                    </ul>
+                    <div class="timeline-badges">
+                        <span class="t-badge"><span class="material-icons-round">schedule</span>Submit within 48 hrs</span>
+                        <span class="t-badge"><span class="material-icons-round">autorenew</span>Refund in 7–10 working days</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Ineligible -->
+        <div class="section-card red">
+            <div class="section-card-header">
+                <div class="section-icon red">
+                    <span class="material-icons-round">cancel</span>
+                </div>
+                <h2>Ineligible Scenarios</h2>
+            </div>
+            <div class="section-card-body">
+                <p>Refunds or returns are <strong>not applicable</strong> in the following cases:</p>
+                <ul class="cross-list">
+                    <li><span class="material-icons-round">cancel</span>Change of mind after placing an order</li>
+                    <li><span class="material-icons-round">cancel</span>Incorrect delivery address provided by the customer</li>
+                    <li><span class="material-icons-round">cancel</span>Product taste, texture, or colour does not meet personal expectations</li>
+                    <li><span class="material-icons-round">cancel</span>Claim raised after the stipulated timeline (24 hrs for product issues, 48 hrs for payment issues)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- How to raise -->
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <span class="material-icons-round">support_agent</span>
+                </div>
+                <h2>How to Raise a Refund Request</h2>
+            </div>
+            <div class="section-card-body">
+                <p>Email us at <a href="mailto:contact@flowhydration.in" style="color:var(--flow-cyan);text-decoration:none;">contact@flowhydration.in</a> with the following details:</p>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-num">1</div>
+                        <div class="step-text"><strong>Order number</strong> — found in your confirmation email</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-num">2</div>
+                        <div class="step-text"><strong>Date of purchase</strong> and issue description</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-num">3</div>
+                        <div class="step-text"><strong>Supporting photos or screenshots</strong> — required for product damage or payment error claims</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <span class="material-icons-round">sticky_note_2</span>
+                </div>
+                <h2>Additional Notes</h2>
+            </div>
+            <div class="section-card-body">
+                <div class="callout note" style="margin-top:0;">
+                    <span class="material-icons-round">info</span>
+                    <p>Refunds will only be issued to the <strong>original payment method</strong>. We reserve the right to approve or reject refund claims at our sole discretion based on evidence and internal investigation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="contact-cta">
+            <div class="contact-cta-text">
+                <h3>Need help with a refund?</h3>
+                <p>Reach out with your order number and we'll resolve it as quickly as possible.</p>
+            </div>
+            <div class="contact-cta-actions">
+                <a href="mailto:contact@flowhydration.in" class="btn-primary-sm">
+                    <span class="material-icons-round">mail</span>
+                    Contact Support
+                </a>
+                <a href="/shop/" class="btn-ghost-sm">
+                    <span class="material-icons-round">storefront</span>
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+
+    </div>
+
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <a href="/" class="logo">
-                    <img src="/logo.png" alt="Flow" class="logo-img">
-                </a>
+                <a href="/" class="logo"><img src="/logo.png" alt="Flow" class="logo-img"></a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>
             <div class="footer-column">
@@ -550,9 +386,9 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="/#about">About Us</a></li>
                     <li><a href="/#ingredients">Science</a></li>
-                    <li><a href="/#about">Contact</a></li>
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="mailto:contact@flowhydration.in">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -560,14 +396,14 @@
                 <ul>
                     <li><a href="/#faq">FAQ</a></li>
                     <li><a href="/shipping-policy/">Shipping</a></li>
-                    <li><a href="/refund-policy/">Returns</a></li>
+                    <li><a href="/refund-policy/">Refund Policy</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Legal</h4>
                 <ul>
                     <li><a href="/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="/terms-conditions/">Terms & Conditions</a></li>
+                    <li><a href="/terms-conditions/">Terms &amp; Conditions</a></li>
                     <li><a href="/cookie-policy/">Cookie Policy</a></li>
                 </ul>
             </div>
@@ -579,37 +415,26 @@
             </div>
             <div class="social-links">
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="20" height="20" rx="5"/>
-                        <circle cx="12" cy="12" r="4"/>
-                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>
                 </a>
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Twitter">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="YouTube">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/></svg>
                 </a>
             </div>
         </div>
     </footer>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
-
     <script>
-        function showComingSoonToast(event) {
-            event.preventDefault();
-            const toast = document.getElementById('toast');
-            toast.textContent = 'Coming Soon!';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+        function showComingSoonToast(e) {
+            e.preventDefault();
+            const t = document.getElementById('toast');
+            t.textContent = 'Coming Soon!';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
     </script>
 </body>

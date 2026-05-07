@@ -3431,9 +3431,8 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="/#about">About Us</a></li>
                     <li><a href="/#ingredients">Science</a></li>
-                    <li><a href="/#about">Contact</a></li>
+                    <li><a href="mailto:contact@flowhydration.in">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -3950,7 +3949,7 @@
             `;
             
             // Update product title
-            document.querySelector('.product-title').innerHTML = `${product.name} <span>${selectedPackSize.label}</span>`;
+            document.querySelector('.product-title').innerHTML = `${product.name} <span>${selectedPackSize.label || `Pack of ${selectedPackSize.size}`}</span>`;
             
             // Update rating
             renderRating();
@@ -4920,7 +4919,7 @@
                         </a>
                         <div class="related-info">
                             <a href="${productUrl}" style="text-decoration: none; color: inherit;">
-                                <h4>${p.name} ${packSize.label}</h4>
+                                <h4>${p.name} ${packSize.label || `Pack of ${packSize.size}`}</h4>
                             </a>
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
                                 <div>
@@ -5006,7 +5005,7 @@
             
             // Build display name and unique ID
             const flavourName = targetFlavour ? targetFlavour.name : (targetProduct.category === 'bundle' ? 'Variety' : extractedFlavour.name);
-            const displayName = `Flow ${flavourName} — ${targetPackSize.label}`;
+            const displayName = `Flow ${flavourName} — ${targetPackSize.label || `Pack of ${targetPackSize.size}`}`;
             const uniqueId = targetFlavour 
                 ? `${targetProduct.slug}-${targetFlavour.slug}-${targetPackSize.size}`
                 : `${targetProduct.slug}-${targetPackSize.size}`;
@@ -5152,7 +5151,7 @@
             
             // Build display name
             const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
-            const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
+            const displayName = `Flow ${flavourName} — ${selectedPackSize.label || `Pack of ${selectedPackSize.size}`}`;
             const uniqueId = selectedFlavour 
                 ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
                 : `${product.slug}-${selectedPackSize.size}`;
@@ -5227,7 +5226,7 @@
             
             // Build display name
             const flavourName = selectedFlavour ? selectedFlavour.name : (product.category === 'bundle' ? 'Variety' : 'Original');
-            const displayName = `Flow ${flavourName} — ${selectedPackSize.label}`;
+            const displayName = `Flow ${flavourName} — ${selectedPackSize.label || `Pack of ${selectedPackSize.size}`}`;
             const uniqueId = selectedFlavour 
                 ? `${product.slug}-${selectedFlavour.slug}-${selectedPackSize.size}`
                 : `${product.slug}-${selectedPackSize.size}`;

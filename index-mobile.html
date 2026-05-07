@@ -1200,6 +1200,129 @@
         </div>
     </section>
 
+    <!-- Sponsorship Events -->
+    <section class="section" id="events">
+        <style>
+        .events-mosaic-mobile {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 8px;
+            grid-auto-flow: dense;
+            gap: 6px;
+        }
+        .events-mosaic-mobile .mosaic-tile {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .events-mosaic-mobile .mosaic-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .events-mosaic-mobile .mosaic-tile img.loaded { opacity: 1; }
+        .events-mosaic-mobile .mosaic-tile.has-meta::after {
+            content: attr(data-title);
+            position: absolute;
+            inset: auto 0 0 0;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(180deg, transparent 0%, rgba(2, 8, 23, 0.85) 100%);
+        }
+        .events-mosaic-mobile .mosaic-count {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(2, 8, 23, 0.7);
+            color: #fff;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 999px;
+        }
+        #eventsLightboxMobile {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 8, 23, 0.96);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            padding: 14px;
+            color: #fff;
+        }
+        #eventsLightboxMobile.open { display: flex; }
+        .lb-mobile-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .lb-mobile-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            margin: 0 0 2px;
+        }
+        .lb-mobile-header p {
+            color: var(--flow-gray);
+            font-size: 0.78rem;
+            margin: 0;
+        }
+        .lb-mobile-close {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        .lb-mobile-grid {
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 8px;
+            grid-auto-flow: dense;
+            gap: 6px;
+        }
+        .lb-mobile-grid .lb-tile {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.04);
+        }
+        .lb-mobile-grid .lb-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .lb-mobile-grid .lb-tile img.loaded { opacity: 1; }
+        </style>
+        <div class="section-header">
+            <div class="section-tag">Where Flow Shows Up</div>
+            <h2 class="section-title">Events We Power</h2>
+            <p class="section-subtitle">Marathons, rides, tournaments — wherever athletes are pushing through.</p>
+        </div>
+        <div class="events-mosaic-mobile" id="eventsMosaicMobile"></div>
+    </section>
+
+    <!-- Events Lightbox (mobile) -->
+    <div id="eventsLightboxMobile" role="dialog" aria-modal="true">
+        <div class="lb-mobile-header">
+            <div>
+                <h3 id="eventsLightboxMobileTitle">Event</h3>
+                <p id="eventsLightboxMobileMeta"></p>
+            </div>
+            <button class="lb-mobile-close" onclick="closeEventsLightboxMobile()">Close</button>
+        </div>
+        <div class="lb-mobile-grid" id="eventsLightboxMobileGrid"></div>
+    </div>
+
     <!-- How It Works -->
     <section class="section">
         <div class="section-header">
@@ -1376,7 +1499,8 @@
             await Promise.all([
                 loadWebsiteSettings(),
                 loadProducts(),
-                loadReviews()
+                loadReviews(),
+                loadSponsorshipEventsMobile()
             ]);
             
             // Sync cart if logged in
@@ -1654,6 +1778,7 @@
                     if (result.success && result.data) {
                         reviews = result.data.map(review => ({
                             name: review.author || 'Customer',
+                            profession: review.profession || '',
                             rating: review.rating,
                             comment: review.content || review.title,
                             verified: review.verified || false,
@@ -1709,6 +1834,7 @@
                             <div class="review-avatar">${initials}</div>
                             <div>
                                 <div class="review-author-name">${review.name}</div>
+                                ${review.profession ? `<div class="review-profession" style="font-size:11px;color:var(--flow-cyan);opacity:0.75;margin-top:1px;">${review.profession}</div>` : ''}
                                 ${review.verified ? '<div class="review-verified">✓ Verified Purchase</div>' : ''}
                             </div>
                         </div>
@@ -1798,6 +1924,163 @@
                 faqItem.classList.add('open');
             }
         }
+
+        // ====== Sponsorship Events Mosaic (mobile) ======
+        const M_EVENTS_ROW = 8;
+        const M_EVENTS_GAP = 6;
+        let _eventsCacheM = [];
+
+        function rowSpanForM(width, height, columnPx) {
+            if (!width || !height) return 32;
+            const aspect = height / width;
+            const tileHeight = columnPx * aspect;
+            return Math.max(12, Math.round((tileHeight + M_EVENTS_GAP) / (M_EVENTS_ROW + M_EVENTS_GAP)));
+        }
+
+        function setRowSpansM(container, sel) {
+            const tiles = container.querySelectorAll(sel);
+            if (!tiles.length) return;
+            const colWidth = tiles[0].getBoundingClientRect().width;
+            tiles.forEach(t => {
+                const w = parseFloat(t.dataset.w) || 0;
+                const h = parseFloat(t.dataset.h) || 0;
+                t.style.gridRow = `span ${rowSpanForM(w, h, colWidth)}`;
+            });
+        }
+
+        const _imgObsM = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src && !img.src) img.src = img.dataset.src;
+                    _imgObsM.unobserve(img);
+                }
+            });
+        }, { rootMargin: '300px 0px' }) : null;
+
+        function attachLazyImgM(img) {
+            img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+            if (_imgObsM) _imgObsM.observe(img); else img.src = img.dataset.src;
+        }
+
+        async function loadSponsorshipEventsMobile() {
+            const mosaic = document.getElementById('eventsMosaicMobile');
+            if (!mosaic) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/sponsorship-events?limit=18`);
+                if (!response.ok) throw new Error('Failed');
+                const data = await response.json();
+                const events = data.data || [];
+                _eventsCacheM = events;
+
+                const tiles = [];
+                events.forEach(ev => {
+                    const previews = (ev.preview && ev.preview.length) ? ev.preview : (ev.coverImage ? [{ url: ev.coverImage, width: 0, height: 0 }] : []);
+                    if (!previews.length) return;
+                    previews.forEach((img, i) => {
+                        tiles.push({
+                            slug: ev.slug,
+                            url: img.url,
+                            width: img.width,
+                            height: img.height,
+                            alt: img.alt || ev.title,
+                            title: i === 0 ? ev.title : '',
+                            count: i === 0 ? ev.galleryCount : 0
+                        });
+                    });
+                });
+
+                if (!tiles.length) {
+                    mosaic.style.display = 'none';
+                    return;
+                }
+                mosaic.innerHTML = tiles.map(t => `
+                    <div class="mosaic-tile ${t.title ? 'has-meta' : ''}"
+                         data-w="${t.width || 0}" data-h="${t.height || 0}"
+                         data-slug="${t.slug}"
+                         data-title="${(t.title || '').replace(/"/g, '&quot;')}">
+                        <img data-src="${t.url}" alt="${(t.alt || '').replace(/"/g, '&quot;')}" loading="lazy" decoding="async">
+                        ${t.count > 1 ? `<span class="mosaic-count">${t.count}</span>` : ''}
+                    </div>
+                `).join('');
+
+                setRowSpansM(mosaic, '.mosaic-tile');
+                mosaic.querySelectorAll('img[data-src]').forEach(attachLazyImgM);
+                mosaic.querySelectorAll('.mosaic-tile').forEach(tile => {
+                    tile.addEventListener('click', () => openEventsLightboxMobile(tile.dataset.slug));
+                });
+
+                if (!window._eventsResizeBoundM) {
+                    let t;
+                    window.addEventListener('resize', () => {
+                        clearTimeout(t);
+                        t = setTimeout(() => setRowSpansM(mosaic, '.mosaic-tile'), 120);
+                    });
+                    window._eventsResizeBoundM = true;
+                }
+            } catch (err) {
+                console.error('Failed to load events', err);
+                mosaic.style.display = 'none';
+            }
+        }
+
+        async function openEventsLightboxMobile(slug) {
+            const lightbox = document.getElementById('eventsLightboxMobile');
+            const grid = document.getElementById('eventsLightboxMobileGrid');
+            const titleEl = document.getElementById('eventsLightboxMobileTitle');
+            const metaEl = document.getElementById('eventsLightboxMobileMeta');
+            if (!lightbox || !grid) return;
+
+            const cached = _eventsCacheM.find(e => e.slug === slug);
+            if (cached) {
+                titleEl.textContent = cached.title;
+                metaEl.textContent = [cached.location, cached.eventDate ? new Date(cached.eventDate).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '']
+                    .filter(Boolean).join(' • ');
+                grid.innerHTML = (cached.preview || []).map(img => `
+                    <div class="lb-tile" data-w="${img.width || 0}" data-h="${img.height || 0}">
+                        <img data-src="${img.url}" alt="" loading="lazy" decoding="async">
+                    </div>
+                `).join('');
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                requestAnimationFrame(() => {
+                    setRowSpansM(grid, '.lb-tile');
+                    grid.querySelectorAll('img[data-src]').forEach(attachLazyImgM);
+                });
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/sponsorship-events/${slug}`);
+                if (!response.ok) return;
+                const data = await response.json();
+                const ev = data.data;
+                titleEl.textContent = ev.title;
+                metaEl.textContent = [ev.location, ev.eventDate ? new Date(ev.eventDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '']
+                    .filter(Boolean).join(' • ');
+                grid.innerHTML = (ev.gallery || []).map(img => `
+                    <div class="lb-tile" data-w="${img.width || 0}" data-h="${img.height || 0}">
+                        <img data-src="${img.url}" alt="${(img.alt || '').replace(/"/g, '&quot;')}" loading="lazy" decoding="async">
+                    </div>
+                `).join('');
+                requestAnimationFrame(() => {
+                    setRowSpansM(grid, '.lb-tile');
+                    grid.querySelectorAll('img[data-src]').forEach(attachLazyImgM);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function closeEventsLightboxMobile() {
+            const lightbox = document.getElementById('eventsLightboxMobile');
+            if (!lightbox) return;
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeEventsLightboxMobile();
+        });
     </script>
 </body>
 </html>

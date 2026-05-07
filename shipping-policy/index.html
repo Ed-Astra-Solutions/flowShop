@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NXGC1SV1FW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NXGC1SV1FW');
+    </script>
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -21,9 +29,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipping Policy — Flow Hydration</title>
+    <meta name="description" content="Flow Hydration shipping policy — pan-India delivery via Shadowfax, 1–4 business day timelines, free shipping on qualifying orders.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
         :root {
             --flow-blue: #0A1628;
@@ -32,744 +42,353 @@
             --flow-white: #FAFCFF;
             --flow-gray: #94A3B8;
             --flow-dark: #020817;
+            --radius-card: 18px;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: var(--flow-dark); color: var(--flow-white); line-height: 1.7; min-height: 100vh; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Nav */
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 0.7rem 4%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; backdrop-filter: blur(20px); background: rgba(2,8,23,0.92); border-bottom: 1px solid rgba(0,212,255,0.08); }
+        .nav-left { display: flex; align-items: center; gap: 1rem; }
+        .back-btn { display: flex; align-items: center; gap: 0.45rem; color: var(--flow-gray); text-decoration: none; font-size: 0.88rem; padding: 0.45rem 0.9rem; border-radius: 8px; transition: all 0.25s; border: 1px solid transparent; }
+        .back-btn:hover { color: var(--flow-cyan); background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.15); }
+        .back-btn svg { width: 16px; height: 16px; }
+        .logo { display: flex; align-items: center; text-decoration: none; }
+        .logo-img { height: 42px; width: auto; }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--flow-dark);
-            color: var(--flow-white);
-            line-height: 1.7;
-            min-height: 100vh;
-        }
+        /* Hero */
+        .policy-hero { padding: 7rem 5% 0; position: relative; overflow: hidden; }
+        .policy-hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 700px; height: 340px; background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.12) 0%, transparent 70%); pointer-events: none; }
+        .hero-inner { max-width: 860px; margin: 0 auto; text-align: center; padding: 3.5rem 0 0; position: relative; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: var(--flow-cyan); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 999px; margin-bottom: 1.5rem; }
+        .hero-badge svg { width: 14px; height: 14px; }
+        .policy-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; background: linear-gradient(135deg, var(--flow-white) 30%, var(--flow-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .policy-hero p.hero-sub { color: var(--flow-gray); font-size: 1.05rem; max-width: 520px; margin: 0 auto 2.5rem; }
+        .stats-strip { display: flex; align-items: stretch; justify-content: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.1); border-radius: var(--radius-card); overflow: hidden; max-width: 680px; margin: 0 auto; }
+        .stat-item { flex: 1; padding: 1.25rem 1.5rem; text-align: center; border-right: 1px solid rgba(0,212,255,0.08); }
+        .stat-item:last-child { border-right: none; }
+        .stat-value { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--flow-cyan); display: block; margin-bottom: 0.2rem; }
+        .stat-label { font-size: 0.75rem; color: var(--flow-gray); text-transform: uppercase; letter-spacing: 0.06em; }
+        .hero-divider { max-width: 860px; margin: 3rem auto 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.15), transparent); }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 0.75rem 4%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-            background: rgba(2, 8, 23, 0.95);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-        }
+        /* Body */
+        .policy-body { max-width: 860px; margin: 0 auto; padding: 3rem 5% 5rem; display: flex; flex-direction: column; gap: 1.5rem; }
 
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        /* Section card */
+        .section-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-card); overflow: hidden; transition: border-color 0.25s; }
+        .section-card:hover { border-color: rgba(0,212,255,0.18); }
+        .section-card-header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .section-icon { width: 42px; height: 42px; min-width: 42px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.18); border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+        .section-icon svg { width: 20px; height: 20px; stroke: var(--flow-cyan); stroke-width: 1.8; fill: none; }
+        .section-card-header h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--flow-white); }
+        .section-card-body { padding: 1.5rem 1.75rem; }
+        .section-card-body p { color: var(--flow-gray); font-size: 0.93rem; margin-bottom: 1rem; line-height: 1.75; }
+        .section-card-body p:last-child { margin-bottom: 0; }
+        .section-card-body ul { color: var(--flow-gray); font-size: 0.93rem; padding-left: 1.25rem; margin-bottom: 1rem; }
+        .section-card-body ul:last-child { margin-bottom: 0; }
+        .section-card-body li { margin-bottom: 0.45rem; line-height: 1.65; }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
+        /* Partner chip */
+        .partner-chip { display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg,rgba(0,212,255,0.08) 0%,rgba(0,180,180,0.04) 100%); border: 1px solid rgba(0,212,255,0.18); border-radius: 14px; padding: 1.1rem 1.4rem; margin-top: 1rem; }
+        .partner-chip-icon { width: 48px; height: 48px; min-width: 48px; background: rgba(0,212,255,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .partner-chip-text h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600; color: var(--flow-white); margin-bottom: 0.2rem; }
+        .partner-chip-text p { font-size: 0.85rem; color: var(--flow-gray); margin: 0; }
 
-        .back-btn:hover {
-            color: var(--flow-cyan);
-            background: rgba(0, 212, 255, 0.1);
-        }
+        /* Delivery rows */
+        .delivery-rows { margin-top: 1rem; }
+        .delivery-row { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .delivery-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .delivery-row:first-child { padding-top: 0; }
+        .delivery-emoji { width: 44px; height: 44px; min-width: 44px; background: rgba(0,212,255,0.08); border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+        .delivery-emoji .material-icons-round { font-size: 20px; color: var(--flow-cyan); }
+        .partner-chip-icon .material-icons-round { font-size: 24px; color: var(--flow-cyan); }
+        .callout-icon .material-icons-round { font-size: 18px; }
+        .callout.info .callout-icon .material-icons-round { color: var(--flow-cyan); }
+        .callout.warning .callout-icon .material-icons-round { color: #FF9800; }
+        .delivery-info { flex: 1; }
+        .delivery-info strong { display: block; color: var(--flow-white); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .delivery-info span { font-size: 0.8rem; color: var(--flow-gray); }
+        .delivery-badge { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.22); color: var(--flow-cyan); font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 999px; white-space: nowrap; }
 
-        .back-btn svg {
-            width: 18px;
-            height: 18px;
-        }
+        /* Callout */
+        .callout { display: flex; align-items: flex-start; gap: 0.85rem; border-radius: 12px; padding: 1rem 1.2rem; margin-top: 1rem; font-size: 0.88rem; line-height: 1.65; }
+        .callout.info { background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.15); }
+        .callout.warning { background: rgba(255,152,0,0.07); border: 1px solid rgba(255,152,0,0.2); }
+        .callout-icon { font-size: 1.1rem; margin-top: 0.05rem; flex-shrink: 0; }
+        .callout p { color: var(--flow-gray); margin: 0; }
+        .callout strong { color: var(--flow-white); }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
+        /* Tracking steps */
+        .tracking-steps { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .tracking-step { display: flex; align-items: flex-start; gap: 1rem; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 0.9rem 1.1rem; }
+        .step-num { width: 28px; height: 28px; min-width: 28px; background: var(--flow-cyan); color: var(--flow-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; margin-top: 0.05rem; }
+        .step-text { font-size: 0.9rem; color: var(--flow-gray); line-height: 1.6; }
 
-        .logo-img {
-            height: 45px;
-            width: auto;
-        }
-
-        /* Main Content */
-        .policy-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 8rem 2rem 4rem;
-        }
-
-        .policy-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-        }
-
-        .policy-icon {
-            width: 70px;
-            height: 70px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-        }
-
-        .policy-icon svg {
-            width: 36px;
-            height: 36px;
-            stroke: var(--flow-cyan);
-            stroke-width: 1.5;
-            fill: none;
-        }
-
-        .policy-header h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(135deg, var(--flow-white) 0%, var(--flow-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .policy-header p {
-            color: var(--flow-gray);
-            font-size: 1rem;
-        }
-
-        .policy-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .policy-section h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--flow-cyan);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .policy-section h2::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: var(--flow-cyan);
-            border-radius: 2px;
-        }
-
-        .policy-section p {
-            color: var(--flow-gray);
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .policy-section ul {
-            color: var(--flow-gray);
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .policy-section li {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        /* Delivery Timeline Card */
-        .delivery-timeline {
-            background: linear-gradient(145deg, rgba(10, 22, 40, 0.8) 0%, rgba(10, 22, 40, 0.4) 100%);
-            border: 1px solid rgba(0, 212, 255, 0.15);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .timeline-item:first-child {
-            padding-top: 0;
-        }
-
-        .timeline-icon {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .timeline-content {
-            flex: 1;
-        }
-
-        .timeline-content h4 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: var(--flow-white);
-        }
-
-        .timeline-content p {
-            font-size: 0.85rem;
-            color: var(--flow-gray);
-            margin: 0;
-        }
-
-        .timeline-badge {
-            background: rgba(0, 212, 255, 0.15);
-            color: var(--flow-cyan);
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        /* Partner Box */
-        .partner-box {
-            background: linear-gradient(145deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 180, 180, 0.04) 100%);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .partner-icon {
-            width: 56px;
-            height: 56px;
-            min-width: 56px;
-            background: rgba(0, 212, 255, 0.15);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-        }
-
-        .partner-content h4 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: var(--flow-white);
-        }
-
-        .partner-content p {
-            font-size: 0.9rem;
-            color: var(--flow-gray);
-            margin: 0;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: rgba(255, 193, 7, 0.08);
-            border: 1px solid rgba(255, 193, 7, 0.2);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            margin: 1.5rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-        }
-
-        .info-box.warning {
-            background: rgba(255, 152, 0, 0.08);
-            border-color: rgba(255, 152, 0, 0.2);
-        }
-
-        .info-box-icon {
-            font-size: 1.25rem;
-            flex-shrink: 0;
-            margin-top: 0.1rem;
-        }
-
-        .info-box p {
-            font-size: 0.9rem;
-            color: var(--flow-gray);
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        .info-box strong {
-            color: var(--flow-white);
-        }
-
-        /* Tracking Section */
-        .tracking-info {
-            background: linear-gradient(145deg, rgba(10, 22, 40, 0.8) 0%, rgba(10, 22, 40, 0.4) 100%);
-            border: 1px solid rgba(0, 212, 255, 0.15);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .tracking-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .tracking-step {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            background: var(--flow-cyan);
-            color: var(--flow-dark);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .step-text {
-            font-size: 0.95rem;
-            color: var(--flow-gray);
-        }
-
-        /* Footer */
-        .policy-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-            text-align: center;
-        }
-
-        .policy-footer p {
-            color: var(--flow-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .policy-footer a {
-            color: var(--flow-cyan);
-            text-decoration: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .policy-footer a:hover {
-            opacity: 0.8;
-        }
-
-        .back-to-shop {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            color: var(--flow-cyan);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .back-to-shop:hover {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: var(--flow-cyan);
-        }
-
-        .back-to-shop svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .policy-container {
-                padding: 6rem 1.25rem 3rem;
-            }
-
-            .policy-header h1 {
-                font-size: 2rem;
-            }
-
-            nav {
-                padding: 0.75rem 3%;
-            }
-
-            .logo-img {
-                height: 38px;
-            }
-
-            .timeline-item {
-                flex-wrap: wrap;
-            }
-
-            .timeline-badge {
-                margin-left: calc(48px + 1rem);
-                margin-top: 0.5rem;
-            }
-
-            .partner-box {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
+        /* Contact CTA */
+        .contact-cta { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; background: linear-gradient(135deg,rgba(0,212,255,0.08) 0%,rgba(0,180,180,0.04) 100%); border: 1px solid rgba(0,212,255,0.2); border-radius: var(--radius-card); padding: 1.75rem 2rem; margin-top: 1rem; flex-wrap: wrap; }
+        .contact-cta-text h3 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .contact-cta-text p { color: var(--flow-gray); font-size: 0.9rem; margin: 0; }
+        .contact-cta-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .btn-primary-sm { display: inline-flex; align-items: center; gap: 0.45rem; background: var(--flow-cyan); color: var(--flow-dark); font-weight: 700; font-size: 0.88rem; padding: 0.65rem 1.4rem; border-radius: 999px; text-decoration: none; transition: opacity 0.2s; }
+        .btn-primary-sm:hover { opacity: 0.88; }
+        .btn-ghost-sm { display: inline-flex; align-items: center; gap: 0.45rem; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--flow-white); font-size: 0.88rem; padding: 0.65rem 1.3rem; border-radius: 999px; text-decoration: none; transition: all 0.2s; }
+        .btn-ghost-sm:hover { border-color: rgba(0,212,255,0.4); color: var(--flow-cyan); }
+        .btn-primary-sm svg, .btn-ghost-sm svg { width: 15px; height: 15px; }
 
         /* Site Footer */
-        .site-footer {
-            padding: 4rem 8% 2rem;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-            margin-top: 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            gap: 2.5rem;
-            max-width: 1400px;
-            margin: 0 auto 3rem;
-        }
-
-        .footer-brand .logo {
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .footer-brand .logo-img {
-            height: 70px;
-        }
-
-        .footer-brand p {
-            color: var(--flow-gray);
-            font-size: 0.9rem;
-            max-width: 300px;
-        }
-
-        .footer-column h4 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 1.25rem;
-            color: var(--flow-white);
-        }
-
-        .footer-column ul {
-            list-style: none;
-        }
-
-        .footer-column li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-column a {
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-column a:hover {
-            color: var(--flow-cyan);
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-bottom p {
-            color: var(--flow-gray);
-            font-size: 0.85rem;
-        }
-
-        .footer-contact a {
-            color: var(--flow-gray);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-contact a:hover {
-            color: var(--flow-cyan);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--flow-gray);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--flow-cyan);
-            color: var(--flow-dark);
-        }
-
-        @media (max-width: 768px) {
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-            }
-
-            .footer-brand {
-                grid-column: span 2;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-brand {
-                grid-column: span 1;
-            }
-        }
+        .site-footer { padding: 4rem 8% 2rem; border-top: 1px solid rgba(0,212,255,0.1); margin-top: 2rem; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 2.5rem; max-width: 1400px; margin: 0 auto 3rem; }
+        .footer-brand .logo { margin-bottom: 1rem; display: inline-block; }
+        .footer-brand .logo-img { height: 70px; }
+        .footer-brand p { color: var(--flow-gray); font-size: 0.9rem; max-width: 300px; }
+        .footer-column h4 { font-family: 'Syne', sans-serif; font-size: 1rem; margin-bottom: 1.25rem; color: var(--flow-white); }
+        .footer-column ul { list-style: none; }
+        .footer-column li { margin-bottom: 0.75rem; }
+        .footer-column a { color: var(--flow-gray); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-column a:hover { color: var(--flow-cyan); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); max-width: 1400px; margin: 0 auto; }
+        .footer-bottom p { color: var(--flow-gray); font-size: 0.85rem; }
+        .footer-contact a { color: var(--flow-gray); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .footer-contact a:hover { color: var(--flow-cyan); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-links a { width: 40px; height: 40px; background: rgba(0,212,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--flow-gray); text-decoration: none; transition: all 0.3s; }
+        .social-links a:hover { background: var(--flow-cyan); color: var(--flow-dark); }
 
         /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0, 212, 255, 0.15);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            color: var(--flow-white);
-            font-size: 0.95rem;
-            z-index: 10000;
-            opacity: 0;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); padding: 1rem 2rem; border-radius: 50px; color: var(--flow-white); font-size: 0.95rem; z-index: 10000; opacity: 0; transition: all 0.3s; backdrop-filter: blur(10px); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .policy-hero { padding-top: 5.5rem; }
+            .hero-inner { padding: 2.5rem 0 0; }
+            .stats-strip { flex-direction: column; max-width: 340px; }
+            .stat-item { border-right: none; border-bottom: 1px solid rgba(0,212,255,0.08); }
+            .stat-item:last-child { border-bottom: none; }
+            .policy-body { padding: 2rem 4% 4rem; gap: 1.25rem; }
+            .section-card-header, .section-card-body { padding-left: 1.25rem; padding-right: 1.25rem; }
+            .contact-cta { flex-direction: column; align-items: flex-start; }
+            .footer-content { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .footer-brand { grid-column: span 2; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+            .delivery-row { flex-wrap: wrap; }
+            .delivery-badge { margin-left: calc(44px + 1rem); margin-top: 0.4rem; }
+        }
+        @media (max-width: 480px) {
+            .footer-content { grid-template-columns: 1fr; }
+            .footer-brand { grid-column: span 1; }
+            .contact-cta-actions { flex-direction: column; width: 100%; }
+            .btn-primary-sm, .btn-ghost-sm { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+
     <nav>
         <div class="nav-left">
             <a href="/" class="back-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Back
             </a>
         </div>
-        <a href="/" class="logo">
-            <img src="/logo.png" alt="Flow" class="logo-img">
-        </a>
-        <div style="width: 80px;"></div>
+        <a href="/" class="logo"><img src="/logo.png" alt="Flow" class="logo-img"></a>
+        <div style="width:80px"></div>
     </nav>
 
-    <!-- Policy Content -->
-    <div class="policy-container">
-        <div class="policy-header">
-            <div class="policy-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="1" y="3" width="15" height="13" rx="2"/>
-                    <path d="M16 8h4l3 3v5h-7V8z"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/>
-                    <circle cx="18.5" cy="18.5" r="2.5"/>
-                </svg>
+    <div class="policy-hero">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Shipping Policy
             </div>
-            <h1>Shipping Policy</h1>
-            <p>Last updated: January 2026</p>
-        </div>
-
-        <div class="policy-section">
-            <h2>Logistics Partner</h2>
-            <p>We partner with trusted third-party logistics providers to ensure your Flow Hydration products reach you safely and efficiently.</p>
-            
-            <div class="partner-box">
-                <div class="partner-icon">🚚</div>
-                <div class="partner-content">
-                    <h4>Shadowfax</h4>
-                    <p>Our trusted delivery partner for pan-India shipping with real-time tracking capabilities.</p>
+            <h1>We Deliver<br>Pan-India</h1>
+            <p class="hero-sub">From Bangalore to the furthest pin codes — Flow ships everywhere athletes train.</p>
+            <div class="stats-strip">
+                <div class="stat-item">
+                    <span class="stat-value">1–2</span>
+                    <span class="stat-label">Days · Bangalore</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">2–4</span>
+                    <span class="stat-label">Days · Rest of India</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">Free</span>
+                    <span class="stat-label">On qualifying orders</span>
                 </div>
             </div>
         </div>
-
-        <div class="policy-section">
-            <h2>Delivery Timeline</h2>
-            <p>Estimated delivery times vary based on your location. Once your order is dispatched, you will receive a tracking link via email and SMS.</p>
-            
-            <div class="delivery-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-icon">🏙️</div>
-                    <div class="timeline-content">
-                        <h4>Bangalore</h4>
-                        <p>Metro city with fastest delivery</p>
-                    </div>
-                    <div class="timeline-badge">1-2 Business Days</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon">🇮🇳</div>
-                    <div class="timeline-content">
-                        <h4>Other Areas (Pan-India)</h4>
-                        <p>All other serviceable locations across India</p>
-                    </div>
-                    <div class="timeline-badge">2-4 Business Days</div>
-                </div>
-            </div>
-
-            <div class="info-box">
-                <div class="info-box-icon">📦</div>
-                <p><strong>Note:</strong> Business days exclude Sundays and public holidays. Delivery timelines are estimates and may vary based on order volume and courier availability.</p>
-            </div>
-        </div>
-
-        <div class="policy-section">
-            <h2>Order Processing</h2>
-            <p>Orders placed before 2:00 PM IST on business days are typically processed and dispatched the same day. Orders placed after 2:00 PM or on weekends/holidays will be processed on the next business day.</p>
-            
-            <div class="tracking-info">
-                <h4 style="font-family: 'Syne', sans-serif; margin-bottom: 1rem; color: var(--flow-white);">How to Track Your Order</h4>
-                <div class="tracking-steps">
-                    <div class="tracking-step">
-                        <div class="step-number">1</div>
-                        <div class="step-text">You'll receive an email and SMS with tracking details once your order is shipped</div>
-                    </div>
-                    <div class="tracking-step">
-                        <div class="step-number">2</div>
-                        <div class="step-text">Click the tracking link or visit the courier partner's website</div>
-                    </div>
-                    <div class="tracking-step">
-                        <div class="step-number">3</div>
-                        <div class="step-text">Enter your tracking number to see real-time delivery status</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="policy-section">
-            <h2>Shipping Charges</h2>
-            <p>We offer free shipping on select orders across India. Shipping charges, if applicable, will be displayed at checkout before you complete your purchase.</p>
-            <ul>
-                <li>Free shipping available on qualifying orders</li>
-                <li>Standard shipping rates apply for other orders</li>
-                <li>No hidden fees – all charges shown upfront at checkout</li>
-            </ul>
-        </div>
-
-        <div class="policy-section">
-            <h2>Delivery Delays</h2>
-            <p>While we strive to ensure timely delivery, certain factors beyond our control may occasionally cause delays.</p>
-            
-            <div class="info-box warning">
-                <div class="info-box-icon">⚠️</div>
-                <p><strong>Important:</strong> Flow Hydration (Podium Performance LLP) is not responsible for delays caused by the courier partner, including but not limited to weather conditions, natural disasters, strikes, or other unforeseen circumstances.</p>
-            </div>
-
-            <p>If you experience significant delays, please contact our support team and we will assist in coordinating with the courier partner to resolve the issue.</p>
-        </div>
-
-        <div class="policy-section">
-            <h2>Delivery Attempts</h2>
-            <p>Our courier partner will make multiple delivery attempts. If delivery is unsuccessful after these attempts:</p>
-            <ul>
-                <li>The package may be held at the nearest courier hub for pickup</li>
-                <li>You will be notified via SMS/email with pickup details</li>
-                <li>Unclaimed packages may be returned to us after the holding period</li>
-            </ul>
-        </div>
-
-        <div class="policy-section">
-            <h2>Serviceable Areas</h2>
-            <p>We deliver to most pin codes across India. During checkout, you can verify if your location is serviceable by entering your pin code. If your area is not currently serviceable, please contact us and we'll try to find an alternative solution.</p>
-        </div>
-
-        <div class="policy-section">
-            <h2>Contact Us</h2>
-            <p>For any shipping-related queries, please reach out to our support team:</p>
-            <ul>
-                <li>Email: <a href="mailto:contact@flowhydration.in" style="color: var(--flow-cyan);">contact@flowhydration.in</a></li>
-                <li>Please include your order number for faster assistance</li>
-            </ul>
-        </div>
-
-        <div class="policy-footer">
-            <p>Have questions? <a href="mailto:contact@flowhydration.in">Contact our support team</a></p>
-            <a href="/shop/" class="back-to-shop">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                Continue Shopping
-            </a>
-        </div>
+        <div class="hero-divider"></div>
     </div>
 
-    <!-- Site Footer -->
+    <div class="policy-body">
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </div>
+                <h2>Logistics Partner</h2>
+            </div>
+            <div class="section-card-body">
+                <p>We partner with trusted third-party logistics providers to ensure your Flow products reach you safely and on time.</p>
+                <div class="partner-chip">
+                    <div class="partner-chip-icon"><span class="material-icons-round">local_shipping</span></div>
+                    <div class="partner-chip-text">
+                        <h4>Shadowfax</h4>
+                        <p>Pan-India delivery network with real-time tracking capabilities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h2>Delivery Timeline</h2>
+            </div>
+            <div class="section-card-body">
+                <p>Once dispatched, you'll receive a tracking link via email and SMS. Delivery windows vary by location:</p>
+                <div class="delivery-rows">
+                    <div class="delivery-row">
+                        <div class="delivery-emoji"><span class="material-icons-round">location_city</span></div>
+                        <div class="delivery-info">
+                            <strong>Bangalore</strong>
+                            <span>Metro city — fastest delivery</span>
+                        </div>
+                        <div class="delivery-badge">1–2 Business Days</div>
+                    </div>
+                    <div class="delivery-row">
+                        <div class="delivery-emoji"><span class="material-icons-round">map</span></div>
+                        <div class="delivery-info">
+                            <strong>Rest of India</strong>
+                            <span>All other serviceable pin codes</span>
+                        </div>
+                        <div class="delivery-badge">2–4 Business Days</div>
+                    </div>
+                </div>
+                <div class="callout info">
+                    <span class="callout-icon"><span class="material-icons-round">inventory_2</span></span>
+                    <p><strong>Note:</strong> Business days exclude Sundays and public holidays. Timelines are estimates and may vary based on order volume and courier availability.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                </div>
+                <h2>Order Processing</h2>
+            </div>
+            <div class="section-card-body">
+                <p>Orders placed before <strong>2:00 PM IST</strong> on business days are typically processed and dispatched the same day. Orders after 2:00 PM or on weekends/holidays are processed the next business day.</p>
+                <p style="color:var(--flow-white);font-weight:600;font-size:0.9rem;margin-bottom:0.5rem;">How to track your order</p>
+                <div class="tracking-steps">
+                    <div class="tracking-step">
+                        <div class="step-num">1</div>
+                        <div class="step-text">You'll receive an email and SMS with tracking details once your order ships.</div>
+                    </div>
+                    <div class="tracking-step">
+                        <div class="step-num">2</div>
+                        <div class="step-text">Click the tracking link or visit the courier partner's website.</div>
+                    </div>
+                    <div class="tracking-step">
+                        <div class="step-num">3</div>
+                        <div class="step-text">Enter your AWB/tracking number to see real-time delivery status.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <h2>Shipping Charges</h2>
+            </div>
+            <div class="section-card-body">
+                <p>We offer free shipping on qualifying orders across India. Any applicable shipping fees are shown at checkout — no surprises.</p>
+                <ul>
+                    <li>Free shipping on qualifying orders</li>
+                    <li>Standard rates apply for other orders — visible at checkout</li>
+                    <li>No hidden fees</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <h2>Delivery Delays</h2>
+            </div>
+            <div class="section-card-body">
+                <p>While we strive for timely delivery, certain factors beyond our control may occasionally cause delays.</p>
+                <div class="callout warning">
+                    <span class="callout-icon"><span class="material-icons-round">warning_amber</span></span>
+                    <p><strong>Important:</strong> Flow Hydration (Podium Performance LLP) is not responsible for delays caused by the courier partner, including weather conditions, natural disasters, strikes, or other unforeseen circumstances.</p>
+                </div>
+                <p>For significant delays, contact our support team — we'll coordinate directly with the courier to resolve your issue.</p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <h2>Delivery Attempts</h2>
+            </div>
+            <div class="section-card-body">
+                <p>Our courier partner makes multiple delivery attempts. If all attempts are unsuccessful:</p>
+                <ul>
+                    <li>The package may be held at the nearest courier hub for pickup</li>
+                    <li>You'll be notified via SMS/email with hub details</li>
+                    <li>Unclaimed packages may be returned to us after the holding period</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 14 8 14s8-8.75 8-14a8 8 0 0 0-8-8z"/></svg>
+                </div>
+                <h2>Serviceable Areas</h2>
+            </div>
+            <div class="section-card-body">
+                <p>We deliver to most pin codes across India. Enter your pin code at checkout to verify serviceability instantly. If your area isn't currently covered, contact us — we'll find an alternative solution.</p>
+            </div>
+        </div>
+
+        <div class="contact-cta">
+            <div class="contact-cta-text">
+                <h3>Questions about your shipment?</h3>
+                <p>Our support team is ready to help — include your order number for fastest resolution.</p>
+            </div>
+            <div class="contact-cta-actions">
+                <a href="mailto:contact@flowhydration.in" class="btn-primary-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Email Support
+                </a>
+                <a href="/shop/" class="btn-ghost-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+
+    </div>
+
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <a href="/" class="logo">
-                    <img src="/logo.png" alt="Flow" class="logo-img">
-                </a>
+                <a href="/" class="logo"><img src="/logo.png" alt="Flow" class="logo-img"></a>
                 <p>Clean hydration to fuel your day. Precision-engineered electrolyte formulation for optimal performance and recovery.</p>
             </div>
             <div class="footer-column">
@@ -783,9 +402,9 @@
             <div class="footer-column">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="/#about">About Us</a></li>
                     <li><a href="/#ingredients">Science</a></li>
-                    <li><a href="/#about">Contact</a></li>
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="mailto:contact@flowhydration.in">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -793,14 +412,14 @@
                 <ul>
                     <li><a href="/#faq">FAQ</a></li>
                     <li><a href="/shipping-policy/">Shipping</a></li>
-                    <li><a href="/refund-policy/">Returns</a></li>
+                    <li><a href="/refund-policy/">Refund Policy</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Legal</h4>
                 <ul>
                     <li><a href="/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="/terms-conditions/">Terms & Conditions</a></li>
+                    <li><a href="/terms-conditions/">Terms &amp; Conditions</a></li>
                     <li><a href="/cookie-policy/">Cookie Policy</a></li>
                 </ul>
             </div>
@@ -812,37 +431,26 @@
             </div>
             <div class="social-links">
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="20" height="20" rx="5"/>
-                        <circle cx="12" cy="12" r="4"/>
-                        <circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>
                 </a>
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="Twitter">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
                 <a href="https://www.instagram.com/flowhydration.in/" target="_blank" aria-label="YouTube">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"/></svg>
                 </a>
             </div>
         </div>
     </footer>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
-
     <script>
-        function showComingSoonToast(event) {
-            event.preventDefault();
-            const toast = document.getElementById('toast');
-            toast.textContent = 'Coming Soon!';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+        function showComingSoonToast(e) {
+            e.preventDefault();
+            const t = document.getElementById('toast');
+            t.textContent = 'Coming Soon!';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
     </script>
 </body>

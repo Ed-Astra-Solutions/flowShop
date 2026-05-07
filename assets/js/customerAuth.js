@@ -981,11 +981,18 @@ const CustomerAuth = (function() {
     // ==================== Initialize ====================
     
     function init() {
+        // Skip fetching cart from server during a Buy Now redirect — the
+        // product page has set localStorage to ONLY the buy-now item, and
+        // fetching the server cart here would overwrite it with the full cart.
+        const _isBuyNow = typeof window !== 'undefined'
+            && window.location
+            && new URLSearchParams(window.location.search).get('buynow') === 'true';
+
         // Check auth status
         checkAuth().then((isAuth) => {
             updateAuthUI();
-            // If logged in, sync cart from server
-            if (isAuth) {
+            // If logged in, sync cart from server (unless this is a Buy Now flow)
+            if (isAuth && !_isBuyNow) {
                 fetchCart();
             }
         });

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Meta Pixel Code -->
@@ -2181,6 +2180,7 @@
                             <div class="reviewer-avatar">${review.author.charAt(0)}</div>
                             <div class="reviewer-info">
                                 <div class="reviewer-name">${review.author}${review.verified ? '<span class="verified-badge">✓ Verified</span>' : ''}</div>
+                                ${review.profession ? `<div class="reviewer-profession" style="font-size:11px;color:var(--flow-cyan);opacity:0.8;margin-top:2px;">${review.profession}</div>` : ''}
                                 <div class="review-date">${new Date(review.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                             </div>
                             <div class="review-rating">${[1,2,3,4,5].map(i => `<svg viewBox="0 0 24 24" fill="${i <= review.rating ? '#FFD700' : 'none'}" stroke="${i <= review.rating ? '#FFD700' : 'var(--flow-gray)'}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}</div>
