@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NXGC1SV1FW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NXGC1SV1FW');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydration Blog | Flow Hydration — Science, Tips & Performance Guides</title>
+    <meta name="description" content="Expert hydration guides for runners, cyclists, gym-goers and busy Indians. Learn about electrolytes, sodium, marathon nutrition, sweat rates, and how to hydrate smarter.">
+    <meta name="keywords" content="hydration blog, electrolyte drink India, marathon hydration, sodium replacement, ORS vs electrolytes, sports drink, Flow Hydration">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://flowhydration.in/blog/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Hydration Blog | Flow Hydration">
+    <meta property="og:description" content="Expert guides on hydration, electrolytes, endurance and performance — written for Indian athletes and active people.">
+    <meta property="og:url" content="https://flowhydration.in/blog/">
+    <meta property="og:image" content="https://flowhydration.in/logo.png">
+    <meta property="og:site_name" content="Flow Hydration">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hydration Blog | Flow Hydration">
+    <meta name="twitter:description" content="Expert guides on hydration, electrolytes, endurance and performance for Indian athletes.">
+
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Schema.org Blog markup (CollectionPage) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Flow Hydration Blog",
+        "description": "Expert hydration, electrolyte and performance guides.",
+        "url": "https://flowhydration.in/blog/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Flow Hydration",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://flowhydration.in/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0f;
+            color: #e8e9ed;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        a { color: inherit; text-decoration: none; }
+        :root {
+            --primary: #00D4FF;
+            --bg: #0a0a0f;
+            --card-bg: #14141c;
+            --border: #232330;
+            --text: #e8e9ed;
+            --text-muted: #8a8b94;
+        }
+
+        /* Nav */
+        nav.site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 32px;
+        }
+        .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:20px;}
+        .logo img { height: 32px; }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a { color: var(--text-muted); font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-shop {
+            background: var(--primary);
+            color: #000;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            nav.site-nav { padding: 12px 16px; }
+        }
+
+        /* Hero */
+        .blog-hero {
+            text-align: center;
+            padding: 80px 24px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .blog-hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .blog-hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* Filters */
+        .filters {
+            max-width: 1200px;
+            margin: 0 auto 32px;
+            padding: 0 24px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .filter-chip {
+            padding: 8px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-chip:hover { border-color: var(--primary); color: var(--text); }
+        .filter-chip.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        /* Grid */
+        .blog-grid {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+        .blog-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .blog-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 32px rgba(0, 212, 255, 0.12);
+        }
+        .blog-card-image {
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #1a1a25, #0a0a0f);
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-card-image img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .blog-card:hover .blog-card-image img { transform: scale(1.05); }
+        .blog-card-image .placeholder {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px; color: var(--primary); opacity: 0.4;
+        }
+        .blog-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 212, 255, 0.18);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .blog-card-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .blog-card-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .blog-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        .blog-card-excerpt {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .blog-card-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .blog-card-footer .read-more {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Loading & empty */
+        .loading, .empty {
+            text-align: center;
+            padding: 80px 24px;
+            color: var(--text-muted);
+        }
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Pagination */
+        .pagination {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .pagination button {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination button.active { background: var(--primary); color: #000; border-color: var(--primary); }
+
+        /* Footer */
+        footer {
+            background: #050507;
+            border-top: 1px solid var(--border);
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        footer a { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="/" class="logo"><img src="/logo.png" alt="Flow"></a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/shop/">Shop</a></li>
+            <li><a href="/blog/" class="active">Blog</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+        </ul>
+        <a href="/shop/" class="nav-shop">Shop Flow</a>
+    </nav>
+
+    <header class="blog-hero">
+        <h1>Hydration, decoded.</h1>
+        <p>Evidence-based guides on electrolytes, endurance, sweat science and how to hydrate for Indian conditions — from marathon mornings to monsoon humidity.</p>
+    </header>
+
+    <div class="filters" id="filters">
+        <button class="filter-chip active" data-category="">All</button>
+    </div>
+
+    <main id="blogGrid" class="blog-grid">
+        <div class="loading"><div class="spinner"></div><p style="margin-top: 16px;">Loading articles…</p></div>
+    </main>
+
+    <div class="pagination" id="pagination" style="display:none;"></div>
+
+    <footer>
+        <p>© 2026 Podium Performance LLP · <a href="/">Home</a> · <a href="/shop/">Shop</a> · <a href="/privacy-policy/">Privacy</a></p>
+    </footer>
+
+    <script src="/assets/js/config.js"></script>
+    <script>
+        const grid = document.getElementById('blogGrid');
+        const filtersEl = document.getElementById('filters');
+        const paginationEl = document.getElementById('pagination');
+
+        const params = new URLSearchParams(location.search);
+        let currentCategory = params.get('category') || '';
+        let currentPage = parseInt(params.get('page')) || 1;
+        const PER_PAGE = 12;
+
+        function setHash(category, page) {
+            const u = new URL(location.href);
+            if (category) u.searchParams.set('category', category); else u.searchParams.delete('category');
+            if (page > 1) u.searchParams.set('page', page); else u.searchParams.delete('page');
+            history.replaceState({}, '', u);
+        }
+
+        async function loadCategories() {
+            try {
+                const res = await fetch(`${API_BASE}/api/blogs/categories`);
+                const data = await res.json();
+                if (!data.success) return;
+                data.data.forEach(c => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-chip' + (currentCategory === c.name ? ' active' : '');
+                    btn.dataset.category = c.name;
+                    btn.textContent = `${c.name} (${c.count})`;
+                    btn.addEventListener('click', () => {
+                        currentCategory = c.name === currentCategory ? '' : c.name;
+                        currentPage = 1;
+                        setHash(currentCategory, currentPage);
+                        document.querySelectorAll('.filter-chip').forEach(b => b.classList.toggle('active',
+                            b.dataset.category === currentCategory));
+                        loadBlogs();
+                    });
+                    filtersEl.appendChild(btn);
+                });
+                document.querySelector('.filter-chip[data-category=""]').addEventListener('click', () => {
+                    currentCategory = '';
+                    currentPage = 1;
+                    setHash('', 1);
+                    document.querySelectorAll('.filter-chip').forEach(b => b.classList.toggle('active', b.dataset.category === ''));
+                    loadBlogs();
+                });
+            } catch (e) {}
+        }
+
+        async function loadBlogs() {
+            grid.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top:16px;">Loading articles…</p></div>';
+            try {
+                const url = `${API_BASE}/api/blogs?page=${currentPage}&limit=${PER_PAGE}${currentCategory ? '&category=' + encodeURIComponent(currentCategory) : ''}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (!data.success || !data.data.length) {
+                    grid.innerHTML = '<div class="empty"><h3>No articles yet</h3><p>Check back soon!</p></div>';
+                    paginationEl.style.display = 'none';
+                    return;
+                }
+                grid.innerHTML = data.data.map(b => renderCard(b)).join('');
+                renderPagination(data.pages, data.page);
+            } catch (e) {
+                grid.innerHTML = '<div class="empty"><h3>Could not load articles</h3><p>Please try again later.</p></div>';
+            }
+        }
+
+        function renderCard(b) {
+            const date = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+            const img = b.coverImage
+                ? `<img src="${escapeAttr(b.coverImage)}" alt="${escapeAttr(b.title)}" loading="lazy">`
+                : '<div class="placeholder">💧</div>';
+            return `
+                <a href="/blog/${encodeURIComponent(b.slug)}/" class="blog-card">
+                    <div class="blog-card-image">
+                        ${img}
+                        ${b.category ? `<span class="blog-category">${escapeHtml(b.category)}</span>` : ''}
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="blog-card-meta">
+                            <span>${date}</span>
+                            <span>·</span>
+                            <span>${b.readTime || 5} min read</span>
+                        </div>
+                        <h2 class="blog-card-title">${escapeHtml(b.title)}</h2>
+                        <p class="blog-card-excerpt">${escapeHtml(b.excerpt || '')}</p>
+                        <div class="blog-card-footer">
+                            <span class="read-more">Read article →</span>
+                        </div>
+                    </div>
+                </a>`;
+        }
+
+        function renderPagination(pages, page) {
+            if (pages <= 1) { paginationEl.style.display = 'none'; return; }
+            paginationEl.style.display = 'flex';
+            paginationEl.innerHTML = '';
+            const prev = document.createElement('button');
+            prev.textContent = '← Prev';
+            prev.disabled = page === 1;
+            prev.addEventListener('click', () => { currentPage = page - 1; setHash(currentCategory, currentPage); loadBlogs(); window.scrollTo(0,0); });
+            paginationEl.appendChild(prev);
+            for (let i = 1; i <= pages; i++) {
+                const b = document.createElement('button');
+                b.textContent = i;
+                if (i === page) b.classList.add('active');
+                b.addEventListener('click', () => { currentPage = i; setHash(currentCategory, currentPage); loadBlogs(); window.scrollTo(0,0); });
+                paginationEl.appendChild(b);
+            }
+            const next = document.createElement('button');
+            next.textContent = 'Next →';
+            next.disabled = page === pages;
+            next.addEventListener('click', () => { currentPage = page + 1; setHash(currentCategory, currentPage); loadBlogs(); window.scrollTo(0,0); });
+            paginationEl.appendChild(next);
+        }
+
+        function escapeHtml(s) {
+            return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+        function escapeAttr(s) { return escapeHtml(s); }
+
+        loadCategories();
+        loadBlogs();
+    </script>
+</body>
+</html>

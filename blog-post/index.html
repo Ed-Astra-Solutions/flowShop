@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NXGC1SV1FW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NXGC1SV1FW');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO meta -->
+    <title>{{META_TITLE}}</title>
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta name="keywords" content="{{META_KEYWORDS}}">
+    <meta name="author" content="{{AUTHOR}}">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="{{CANONICAL_URL}}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{META_TITLE}}">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:url" content="{{CANONICAL_URL}}">
+    <meta property="og:image" content="{{OG_IMAGE}}">
+    <meta property="og:site_name" content="Flow Hydration">
+    <meta property="article:published_time" content="{{PUBLISHED_AT}}">
+    <meta property="article:modified_time" content="{{UPDATED_AT}}">
+    <meta property="article:author" content="{{AUTHOR}}">
+    <meta property="article:section" content="{{CATEGORY}}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{META_TITLE}}">
+    <meta name="twitter:description" content="{{META_DESCRIPTION}}">
+    <meta name="twitter:image" content="{{OG_IMAGE}}">
+
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Article schema (helps both Google rich results and AI bots) -->
+    <script type="application/ld+json">
+    {{ARTICLE_JSONLD}}
+    </script>
+
+    <!-- FAQ schema (boosts AI/GEO snippet eligibility) -->
+    {{FAQ_JSONLD_BLOCK}}
+
+    <!-- Breadcrumb schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://flowhydration.in/"},
+            {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://flowhydration.in/blog/"},
+            {"@type": "ListItem", "position": 3, "name": "{{TITLE_ESC}}", "item": "{{CANONICAL_URL}}"}
+        ]
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00D4FF;
+            --bg: #0a0a0f;
+            --card-bg: #14141c;
+            --border: #232330;
+            --text: #e8e9ed;
+            --text-muted: #8a8b94;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        nav.site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 32px;
+        }
+        nav.site-nav .logo img { height: 32px; }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a { color: var(--text-muted); font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
+        .nav-shop {
+            background: var(--primary);
+            color: #000;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .nav-shop:hover { text-decoration: none; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            nav.site-nav { padding: 12px 16px; }
+        }
+
+        article {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .breadcrumbs {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .breadcrumbs a { color: var(--text-muted); }
+        .breadcrumbs a:hover { color: var(--primary); }
+        .article-category {
+            display: inline-block;
+            background: rgba(0,212,255,0.15);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+        article h1 {
+            font-size: clamp(28px, 4.5vw, 44px);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .article-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .article-meta strong { color: var(--text); }
+        .article-cover {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-bottom: 36px;
+            background: var(--card-bg);
+        }
+        .key-takeaways {
+            background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,212,255,0.02));
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin: 0 0 36px;
+        }
+        .key-takeaways h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+        .key-takeaways ul {
+            margin: 0;
+            padding-left: 22px;
+        }
+        .key-takeaways li {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .article-content {
+            font-family: 'Lora', Georgia, serif;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #d4d5dc;
+        }
+        .article-content h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 48px 0 16px;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+        .article-content h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 36px 0 12px;
+            color: #fff;
+        }
+        .article-content h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 28px 0 10px;
+            color: #fff;
+        }
+        .article-content p { margin-bottom: 20px; }
+        .article-content ul, .article-content ol {
+            margin: 0 0 20px 28px;
+        }
+        .article-content li { margin-bottom: 8px; }
+        .article-content blockquote {
+            border-left: 3px solid var(--primary);
+            padding: 12px 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text);
+            background: rgba(0,212,255,0.04);
+        }
+        .article-content code {
+            background: var(--card-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 90%;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+        }
+        .article-content th, .article-content td {
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            text-align: left;
+        }
+        .article-content th { background: var(--card-bg); color: #fff; font-weight: 600; }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .article-content strong { color: #fff; }
+
+        .tags {
+            margin: 40px 0 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+        }
+
+        /* FAQ */
+        .article-faq {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .article-faq h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            padding: 18px 22px;
+        }
+        .faq-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 8px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+        .faq-item p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* CTA */
+        .article-cta {
+            margin-top: 48px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,212,255,0.02));
+            border: 1px solid rgba(0,212,255,0.25);
+            border-radius: 16px;
+            text-align: center;
+        }
+        .article-cta h3 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .article-cta p { color: var(--text-muted); margin-bottom: 18px; }
+        .article-cta .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: #000;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .article-cta .btn:hover { text-decoration: none; opacity: 0.9; }
+
+        /* Related */
+        .related {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .related h2 {
+            font-size: 22px;
+            margin-bottom: 24px;
+            color: #fff;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .related-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .related-card:hover { transform: translateY(-3px); border-color: var(--primary); text-decoration: none; }
+        .related-card .img {
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #1a1a25, #0a0a0f);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); font-size: 32px; opacity: 0.7;
+        }
+        .related-card .img img { width: 100%; height: 100%; object-fit: cover; }
+        .related-card .body { padding: 18px; }
+        .related-card h3 {
+            font-size: 15px;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .related-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        footer.site-footer {
+            background: #050507;
+            border-top: 1px solid var(--border);
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        footer.site-footer a { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="/" class="logo"><img src="/logo.png" alt="Flow"></a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/shop/">Shop</a></li>
+            <li><a href="/blog/" class="active">Blog</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+        </ul>
+        <a href="/shop/" class="nav-shop">Shop Flow</a>
+    </nav>
+
+    <article itemscope itemtype="https://schema.org/Article">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a> / <a href="/blog/">Blog</a> / <span>{{TITLE_ESC}}</span>
+        </nav>
+
+        <span class="article-category">{{CATEGORY}}</span>
+        <h1 itemprop="headline">{{TITLE_ESC}}</h1>
+
+        <div class="article-meta">
+            <span>By <strong itemprop="author">{{AUTHOR}}</strong></span>
+            <span>·</span>
+            <time datetime="{{PUBLISHED_AT}}" itemprop="datePublished">{{PUBLISHED_DATE_HUMAN}}</time>
+            <span>·</span>
+            <span>{{READ_TIME}} min read</span>
+        </div>
+
+        {{COVER_IMAGE_BLOCK}}
+
+        {{KEY_TAKEAWAYS_BLOCK}}
+
+        <div class="article-content" itemprop="articleBody">
+            {{CONTENT}}
+        </div>
+
+        {{FAQ_HTML_BLOCK}}
+
+        {{TAGS_BLOCK}}
+
+        <div class="article-cta">
+            <h3>Hydrate smarter today.</h3>
+            <p>Flow's precision electrolyte sachets — built for Indian conditions.</p>
+            <a href="/shop/" class="btn">Shop Flow Hydration</a>
+        </div>
+    </article>
+
+    <section class="related" id="relatedSection" style="display:none;">
+        <h2>Related articles</h2>
+        <div class="related-grid" id="relatedGrid"></div>
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2026 Podium Performance LLP · <a href="/">Home</a> · <a href="/shop/">Shop</a> · <a href="/blog/">Blog</a> · <a href="/privacy-policy/">Privacy</a></p>
+    </footer>
+
+    <script src="/assets/js/config.js"></script>
+    <script>
+        // Load related articles client-side
+        const slug = "{{SLUG}}";
+        (async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/blogs/${encodeURIComponent(slug)}`);
+                const data = await res.json();
+                if (!data.success || !data.related || !data.related.length) return;
+                const grid = document.getElementById('relatedGrid');
+                grid.innerHTML = data.related.map(b => `
+                    <a class="related-card" href="/blog/${encodeURIComponent(b.slug)}/">
+                        <div class="img">${b.coverImage ? `<img src="${b.coverImage}" alt="${escapeHtml(b.title)}" loading="lazy">` : '💧'}</div>
+                        <div class="body">
+                            <h3>${escapeHtml(b.title)}</h3>
+                            <p>${escapeHtml(b.excerpt || '')}</p>
+                        </div>
+                    </a>
+                `).join('');
+                document.getElementById('relatedSection').style.display = 'block';
+            } catch (e) {}
+        })();
+        function escapeHtml(s) {
+            return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+    </script>
+</body>
+</html>
