@@ -37,7 +37,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/customerAuth.css">
     <style>
         :root {
@@ -1188,6 +1188,188 @@
         </div>
     </section>
 
+    <!-- Sugar Honesty -->
+    <section class="section sugar-honesty-mobile" id="sugar">
+        <style>
+        .sugar-honesty-mobile {
+            background: var(--flow-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        .sugar-honesty-mobile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.08) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .sugar-honesty-mobile > * { position: relative; z-index: 1; }
+        .sugar-honesty-mobile .sh-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.25);
+            color: var(--flow-cyan);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .sugar-honesty-mobile .sh-label::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--flow-cyan);
+            box-shadow: 0 0 6px var(--flow-cyan);
+        }
+        .sugar-honesty-mobile h2 {
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 0 0 14px;
+            color: var(--flow-white);
+        }
+        .sugar-honesty-mobile h2 .accent {
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sugar-honesty-mobile .sh-lead {
+            font-size: 0.95rem;
+            color: var(--flow-gray);
+            line-height: 1.65;
+            margin: 0 0 28px;
+        }
+        .sugar-honesty-mobile .sh-lead strong {
+            color: var(--flow-white);
+            font-weight: 600;
+        }
+        .sugar-honesty-mobile .sh-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            margin: 0 0 28px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .sugar-honesty-mobile .sh-stat {
+            padding: 18px 8px;
+            text-align: center;
+        }
+        .sugar-honesty-mobile .sh-stat + .sh-stat {
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sugar-honesty-mobile .sh-stat .num {
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--flow-cyan);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        .sugar-honesty-mobile .sh-stat .desc {
+            font-size: 11px;
+            color: var(--flow-gray);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        .sugar-honesty-mobile .sh-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 18px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+        }
+        .sugar-honesty-mobile .sh-divider::before,
+        .sugar-honesty-mobile .sh-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        .sugar-honesty-mobile .sh-science {
+            color: var(--flow-gray);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+        .sugar-honesty-mobile .sh-science p + p { margin-top: 12px; }
+        .sugar-honesty-mobile .sh-science strong { color: var(--flow-white); font-weight: 600; }
+        .sugar-honesty-mobile .sh-no-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .sugar-honesty-mobile .sh-no-list li {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            color: rgba(255,255,255,0.55);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.02em;
+        }
+        .sugar-honesty-mobile .sh-no-list li::before {
+            content: '✕';
+            color: rgba(255,255,255,0.3);
+            font-size: 9px;
+        }
+        </style>
+        <div class="sh-label">Sugar Honesty</div>
+        <h2>Yes, there's <span class="accent">6.9g of glucose.</span> Here's exactly why.</h2>
+        <p class="sh-lead">Your gut absorbs sodium and water through a pathway called the <strong>sodium-glucose cotransporter</strong>. No glucose, no cotransport — slower absorption. Same mechanism that makes ORS work when you're sick.</p>
+
+        <div class="sh-stats">
+            <div class="sh-stat">
+                <div class="num">6.9g</div>
+                <div class="desc">Glucose per sachet — the functional kind</div>
+            </div>
+            <div class="sh-stat">
+                <div class="num">~28</div>
+                <div class="desc">Calories per serving — workouts burn 10–20×</div>
+            </div>
+            <div class="sh-stat">
+                <div class="num">0</div>
+                <div class="desc">Artificial sweeteners — zero sugar alcohols</div>
+            </div>
+        </div>
+
+        <div class="sh-divider">The Science</div>
+
+        <div class="sh-science">
+            <p>A "zero sugar" electrolyte mix is often just flavoured salt water — less effective, no matter how clean the label looks. Glucose isn't the enemy. <strong>Glucose is the mechanism.</strong></p>
+            <p><strong>What we won't use:</strong> sucralose, aspartame, stevia, erythritol, maltitol. A lot of "zero sugar" brands hide these behind the label. We don't.</p>
+            <p><strong>For the carb-conscious:</strong> one sachet is ~28 calories. Most training sessions burn 300–600 — the math works.</p>
+        </div>
+
+        <ul class="sh-no-list">
+            <li>No sucralose</li>
+            <li>No aspartame</li>
+            <li>No stevia</li>
+            <li>No erythritol</li>
+            <li>No maltitol</li>
+        </ul>
+    </section>
+
     <!-- Reviews -->
     <section class="section" style="background: rgba(0, 212, 255, 0.02);">
         <div class="section-header">
@@ -1304,9 +1486,9 @@
         .lb-mobile-grid .lb-tile img.loaded { opacity: 1; }
         </style>
         <div class="section-header">
-            <div class="section-tag">Where Flow Shows Up</div>
-            <h2 class="section-title">Events We Power</h2>
-            <p class="section-subtitle">Marathons, rides, tournaments — wherever athletes are pushing through.</p>
+            <div class="section-tag" id="eventsSectionTagM">Where Flow Shows Up</div>
+            <h2 class="section-title" id="eventsSectionTitleM">Events We Power</h2>
+            <p class="section-subtitle" id="eventsSectionSubtitleM">Marathons, rides, tournaments, training camps — wherever athletes are pushing through, Flow shows up to keep them hydrated.</p>
         </div>
         <div class="events-mosaic-mobile" id="eventsMosaicMobile"></div>
     </section>
@@ -1322,6 +1504,302 @@
         </div>
         <div class="lb-mobile-grid" id="eventsLightboxMobileGrid"></div>
     </div>
+
+    <!-- Comparison -->
+    <section class="section comparison-mobile" id="compare">
+        <style>
+        .comparison-mobile {
+            background: var(--flow-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        .comparison-mobile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.10) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(0,212,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .comparison-mobile > * { position: relative; z-index: 1; }
+        .comparison-mobile .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.25);
+            color: var(--flow-cyan);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .comparison-mobile .section-tag::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--flow-cyan);
+            box-shadow: 0 0 6px var(--flow-cyan);
+        }
+        .comparison-mobile .section-title {
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-weight: 800;
+            color: var(--flow-white);
+        }
+        .comparison-mobile .section-subtitle { color: var(--flow-gray); }
+
+        .comparison-wrapper-m {
+            margin: 28px -4px 0;
+            padding: 0 4px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 14px;
+        }
+        .comparison-table-m {
+            width: 100%;
+            min-width: 480px;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .comparison-table-m thead th {
+            padding: 16px 12px 12px;
+            text-align: left;
+            vertical-align: top;
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--flow-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .comparison-table-m thead th .brand-name {
+            display: block;
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--flow-white);
+            text-transform: none;
+            letter-spacing: -0.01em;
+            margin-bottom: 2px;
+        }
+        .comparison-table-m thead th .brand-meta {
+            display: block;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 9px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.4);
+            text-transform: none;
+            letter-spacing: 0.05em;
+        }
+        .comparison-table-m thead th.col-flow,
+        .comparison-table-m tbody td.flow-val {
+            background: linear-gradient(180deg, rgba(0,212,255,0.08) 0%, rgba(0,212,255,0.02) 100%);
+            position: relative;
+        }
+        .comparison-table-m thead th.col-flow {
+            border-top: 1px solid rgba(0,212,255,0.4);
+            border-left: 1px solid rgba(0,212,255,0.25);
+            border-right: 1px solid rgba(0,212,255,0.25);
+            border-bottom: 1px solid rgba(0,212,255,0.4);
+            border-radius: 10px 10px 0 0;
+        }
+        .comparison-table-m thead th.col-flow .brand-name {
+            background: linear-gradient(135deg, var(--flow-cyan), var(--flow-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .comparison-table-m thead th.col-flow .best-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            background: var(--flow-cyan);
+            color: var(--flow-dark);
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .comparison-table-m thead th.col-flow .best-badge::before { content: '★'; font-size: 9px; }
+        .comparison-table-m tbody td {
+            padding: 12px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            vertical-align: middle;
+        }
+        .comparison-table-m tbody td.flow-val {
+            border-left: 1px solid rgba(0,212,255,0.18);
+            border-right: 1px solid rgba(0,212,255,0.18);
+            color: var(--flow-white);
+            font-weight: 500;
+        }
+        .comparison-table-m tbody tr:last-child td.flow-val {
+            border-bottom: 1px solid rgba(0,212,255,0.4);
+            border-radius: 0 0 10px 10px;
+        }
+        .comparison-table-m .group-row td {
+            background: transparent !important;
+            color: rgba(255,255,255,0.45);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 16px 12px 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-left: none;
+            border-right: none;
+        }
+        .comparison-table-m .group-row td.col-flow-cell {
+            background: transparent !important;
+            border-left: 1px solid rgba(0,212,255,0.18);
+            border-right: 1px solid rgba(0,212,255,0.18);
+        }
+        .comparison-table-m td.metric { color: rgba(255,255,255,0.65); font-weight: 500; }
+        .comparison-table-m td.rival-val { color: rgba(255,255,255,0.45); }
+        .comparison-table-m .star {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            background: rgba(0,212,255,0.15);
+            color: var(--flow-cyan);
+            border-radius: 50%;
+            font-size: 9px;
+            vertical-align: middle;
+        }
+
+        .comparison-verdict-m {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .verdict-card-m {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 18px 18px;
+        }
+        .verdict-card-m.flow-card {
+            background: linear-gradient(180deg, rgba(0,212,255,0.08) 0%, rgba(0,212,255,0.02) 100%);
+            border: 1px solid rgba(0,212,255,0.3);
+            box-shadow: 0 6px 24px rgba(0,212,255,0.08);
+        }
+        .verdict-card-m .v-label {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 8px;
+        }
+        .verdict-card-m.flow-card .v-label { color: var(--flow-cyan); }
+        .verdict-card-m h4 {
+            font-family: 'Syne', 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--flow-white);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+        .verdict-card-m p {
+            color: var(--flow-gray);
+            font-size: 12.5px;
+            line-height: 1.65;
+        }
+        .verdict-card-m strong { color: var(--flow-white); font-weight: 600; }
+        .verdict-note-m {
+            margin-top: 16px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            font-style: italic;
+            line-height: 1.55;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+        .scroll-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        </style>
+        <div class="section-header">
+            <div class="section-tag">Hydration Sachet Showdown</div>
+            <h2 class="section-title">Flow vs Others</h2>
+            <p class="section-subtitle">Powder Sachet Edition — a side-by-side breakdown.</p>
+        </div>
+        <div class="comparison-wrapper-m">
+            <table class="comparison-table-m">
+                <thead>
+                    <tr>
+                        <th style="width:38%">Category</th>
+                        <th class="col-flow" style="width:31%">
+                            <span class="brand-name">Flow Hydration</span>
+                            <span class="brand-meta">Sachet · 12.5g</span>
+                            <span class="best-badge">Best</span>
+                        </th>
+                        <th style="width:31%">
+                            <span class="brand-name" style="color:rgba(255,255,255,0.6)">Others</span>
+                            <span class="brand-meta">Sachet · ~5g</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="group-row"><td>Electrolytes</td><td class="col-flow-cell"></td><td></td></tr>
+                    <tr><td class="metric">Sodium</td><td class="flow-val">✓</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">Potassium</td><td class="flow-val">✓</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">Calcium</td><td class="flow-val">✓</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">Magnesium</td><td class="flow-val">✓</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">Chloride</td><td class="flow-val">✓<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Total</td><td class="flow-val"><strong>5</strong><span class="star">★</span></td><td class="rival-val">4</td></tr>
+                    <tr class="group-row"><td>Vitamins</td><td class="col-flow-cell"></td><td></td></tr>
+                    <tr><td class="metric">Vitamin C</td><td class="flow-val">✓</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">Vitamin B12</td><td class="flow-val">0.13 mcg</td><td class="rival-val">✓</td></tr>
+                    <tr><td class="metric">B-Complex (B1–B7, B9)</td><td class="flow-val">✓<span class="star">★</span></td><td class="rival-val">—</td></tr>
+                    <tr><td class="metric">Total</td><td class="flow-val"><strong>12</strong><span class="star">★</span></td><td class="rival-val">2</td></tr>
+                    <tr class="group-row"><td>Formulation</td><td class="col-flow-cell"></td><td></td></tr>
+                    <tr><td class="metric">Best For</td><td class="flow-val">Daily wellness + active</td><td class="rival-val">Sport &amp; workout</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="scroll-hint">← swipe to compare →</div>
+
+        <div class="comparison-verdict-m">
+            <div class="verdict-card-m flow-card">
+                <div class="v-label">★ Why Flow Wins</div>
+                <h4>Comprehensive daily nutrition.</h4>
+                <p><strong>12 vitamins.</strong> The full B-complex, plus Vitamins A, D3, E, K1, and Folic Acid that the powder simply doesn't carry. Hydration <em>and</em> a meaningful micronutrient boost in one sachet.</p>
+            </div>
+            <div class="verdict-card-m">
+                <div class="v-label">Where Others Win</div>
+                <h4>Lower sugar, sport certification.</h4>
+                <p>Brands like Fast&amp;Up Reload offer <strong>lower sugar</strong>, 4 electrolytes, and certifications — a cleaner, sport-focused choice if you only need pure workout hydration.</p>
+            </div>
+        </div>
+        <p class="verdict-note-m">* Per-serving rival electrolyte values not fully disclosed publicly; presence confirmed from official ingredient lists. Flow data sourced from product packaging.</p>
+    </section>
 
     <!-- How It Works -->
     <section class="section">
@@ -1421,6 +1899,7 @@
             <a href="/terms-conditions/">Terms</a>
             <a href="/refund-policy/">Refunds</a>
             <a href="/shipping-policy/">Shipping</a>
+            <a href="/#events">Event Gallery</a>
             <a href="mailto:support@flowhydration.in">Contact</a>
         </div>
         <div class="footer-social">
@@ -1626,6 +2105,14 @@
                             </div>
                         `).join('');
                     }
+                }
+
+                // Apply Events Section headings
+                if (settings.eventsSection) {
+                    const es = settings.eventsSection;
+                    if (es.tag) { const el = document.getElementById('eventsSectionTagM'); if (el) el.textContent = es.tag; }
+                    if (es.title) { const el = document.getElementById('eventsSectionTitleM'); if (el) el.textContent = es.title; }
+                    if (es.subtitle) { const el = document.getElementById('eventsSectionSubtitleM'); if (el) el.textContent = es.subtitle; }
                 }
                 
             } catch (error) {

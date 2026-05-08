@@ -3166,9 +3166,9 @@
         }
         </style>
         <div class="section-header">
-            <div class="section-tag">Where Flow Shows Up</div>
-            <h2 class="section-title">Events We Power</h2>
-            <p class="section-subtitle">Marathons, rides, tournaments, training camps — wherever athletes are pushing through, Flow shows up to keep them hydrated.</p>
+            <div class="section-tag" id="eventsSectionTag">Where Flow Shows Up</div>
+            <h2 class="section-title" id="eventsSectionTitle">Events We Power</h2>
+            <p class="section-subtitle" id="eventsSectionSubtitle">Marathons, rides, tournaments, training camps — wherever athletes are pushing through, Flow shows up to keep them hydrated.</p>
         </div>
         <div class="events-cards" id="eventsMosaic"></div>
         <div class="events-empty" id="eventsEmpty" style="display: none;">More events coming soon.</div>
@@ -4109,6 +4109,7 @@
                 <ul>
                     <li><a href="#ingredients">Science</a></li>
                     <li><a href="/blog/">Blog</a></li>
+                    <li><a href="/#events">Event Gallery</a></li>
                     <li><a href="mailto:contact@flowhydration.in">Contact</a></li>
                 </ul>
             </div>
@@ -4710,6 +4711,23 @@
                     if (settings.sections.faq === false) {
                         const faqSection = document.getElementById('faq');
                         if (faqSection) faqSection.style.display = 'none';
+                    }
+                }
+
+                // Apply Events Section headings
+                if (settings.eventsSection) {
+                    const es = settings.eventsSection;
+                    if (es.tag) {
+                        const el = document.getElementById('eventsSectionTag');
+                        if (el) el.textContent = es.tag;
+                    }
+                    if (es.title) {
+                        const el = document.getElementById('eventsSectionTitle');
+                        if (el) el.textContent = es.title;
+                    }
+                    if (es.subtitle) {
+                        const el = document.getElementById('eventsSectionSubtitle');
+                        if (el) el.textContent = es.subtitle;
                     }
                 }
 
