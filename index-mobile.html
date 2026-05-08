@@ -1386,46 +1386,52 @@
     <section class="section" id="events">
         <style>
         .events-mosaic-mobile {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-auto-rows: 8px;
-            grid-auto-flow: dense;
-            gap: 6px;
+            display: block;
         }
         .events-mosaic-mobile .mosaic-tile {
             position: relative;
-            border-radius: 10px;
+            border-radius: 14px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.04);
+            aspect-ratio: 16/9;
+            cursor: pointer;
         }
         .events-mosaic-mobile .mosaic-tile img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.3s ease;
         }
         .events-mosaic-mobile .mosaic-tile img.loaded { opacity: 1; }
-        .events-mosaic-mobile .mosaic-tile.has-meta::after {
-            content: attr(data-title);
+        .events-mosaic-mobile .mosaic-tile .tile-overlay {
             position: absolute;
-            inset: auto 0 0 0;
-            padding: 10px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(180deg, transparent 0%, rgba(2, 8, 23, 0.85) 100%);
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(2, 8, 23, 0.88) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
         }
-        .events-mosaic-mobile .mosaic-count {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: rgba(2, 8, 23, 0.7);
+        .events-mosaic-mobile .mosaic-tile .tile-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
             color: #fff;
-            font-size: 10px;
-            padding: 3px 6px;
+            margin-bottom: 8px;
+        }
+        .events-mosaic-mobile .mosaic-tile .tile-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 12px;
             border-radius: 999px;
+            width: fit-content;
         }
         #eventsLightboxMobile {
             position: fixed;
@@ -2462,51 +2468,32 @@
                 const events = data.data || [];
                 _eventsCacheM = events;
 
-                const tiles = [];
-                events.forEach(ev => {
-                    const previews = (ev.preview && ev.preview.length) ? ev.preview : (ev.coverImage ? [{ url: ev.coverImage, width: 0, height: 0 }] : []);
-                    if (!previews.length) return;
-                    previews.forEach((img, i) => {
-                        tiles.push({
-                            slug: ev.slug,
-                            url: img.url,
-                            width: img.width,
-                            height: img.height,
-                            alt: img.alt || ev.title,
-                            title: i === 0 ? ev.title : '',
-                            count: i === 0 ? ev.galleryCount : 0
-                        });
-                    });
-                });
+                // Only show the first event as a single teaser card
+                const ev = events[0];
+                if (!ev) { mosaic.style.display = 'none'; return; }
 
-                if (!tiles.length) {
-                    mosaic.style.display = 'none';
-                    return;
-                }
-                mosaic.innerHTML = tiles.map(t => `
-                    <div class="mosaic-tile ${t.title ? 'has-meta' : ''}"
-                         data-w="${t.width || 0}" data-h="${t.height || 0}"
-                         data-slug="${t.slug}"
-                         data-title="${(t.title || '').replace(/"/g, '&quot;')}">
-                        <img data-src="${t.url}" alt="${(t.alt || '').replace(/"/g, '&quot;')}" loading="lazy" decoding="async">
-                        ${t.count > 1 ? `<span class="mosaic-count">${t.count}</span>` : ''}
-                    </div>
-                `).join('');
+                const coverUrl = (ev.preview && ev.preview[0]) ? ev.preview[0].url : ev.coverImage;
+                if (!coverUrl) { mosaic.style.display = 'none'; return; }
 
-                setRowSpansM(mosaic, '.mosaic-tile');
+                const totalPhotos = ev.galleryCount || (ev.preview ? ev.preview.length : 1);
+                const photoLabel = totalPhotos > 1 ? `${totalPhotos} photos` : '1 photo';
+
+                mosaic.innerHTML = `
+                    <div class="mosaic-tile" data-slug="${ev.slug}">
+                        <img data-src="${coverUrl}" alt="${(ev.title || '').replace(/"/g, '&quot;')}" loading="lazy" decoding="async">
+                        <div class="tile-overlay">
+                            <div class="tile-title">${ev.title || ''}</div>
+                            <div class="tile-cta">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                View Gallery · ${photoLabel}
+                            </div>
+                        </div>
+                    </div>`;
+
                 mosaic.querySelectorAll('img[data-src]').forEach(attachLazyImgM);
                 mosaic.querySelectorAll('.mosaic-tile').forEach(tile => {
                     tile.addEventListener('click', () => openEventsLightboxMobile(tile.dataset.slug));
                 });
-
-                if (!window._eventsResizeBoundM) {
-                    let t;
-                    window.addEventListener('resize', () => {
-                        clearTimeout(t);
-                        t = setTimeout(() => setRowSpansM(mosaic, '.mosaic-tile'), 120);
-                    });
-                    window._eventsResizeBoundM = true;
-                }
             } catch (err) {
                 console.error('Failed to load events', err);
                 mosaic.style.display = 'none';
